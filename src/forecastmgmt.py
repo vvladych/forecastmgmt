@@ -1,6 +1,6 @@
 from gi.repository import Gtk
 
-from forecastmgmt.ui.person_mask import PersonMask 
+from forecastmgmt.ui.person_list_mask import PersonListMask 
 
 
 class MainWindow(Gtk.Window):
@@ -43,7 +43,7 @@ class MainWindow(Gtk.Window):
     
     def set_main_area(self, main_area_type="person"):
         if main_area_type=="person":
-            self.main_area=PersonMask()
+            self.main_area=PersonListMask()
         elif main_area_type=="organization":
             self.main_area=OrganisationMask()
         else:
