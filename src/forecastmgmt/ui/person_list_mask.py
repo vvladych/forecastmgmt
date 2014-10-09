@@ -1,7 +1,7 @@
 from gi.repository import Gtk
+from forecastmgmt.dao.person_dao import PersonDAO
 
-
-class PersonMask():
+class PersonListMask():
 
     def __init__(self):
         self.vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
@@ -26,8 +26,10 @@ class PersonMask():
         
         
     def populate_person_view_table(self):
-        self.store.append(["Leo", "Tolstoi"])
-        self.store.append(["Fedor", "Dostojewski"])
+        persons = PersonDAO().get_all_persons()
+        for person in persons:
+            self.store.append(["%s" % person.get_sid(), person.get_common_name()])
+
         
     
     def add_column_to_treeview(self, columnname, counter):
