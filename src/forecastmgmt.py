@@ -1,6 +1,6 @@
 from gi.repository import Gtk
 
-from forecastmgmt.ui.person_list_mask import PersonListMask 
+from forecastmgmt.ui.person_window import PersonWindow 
 
 
 class MainWindow(Gtk.Window):
@@ -16,36 +16,46 @@ class MainWindow(Gtk.Window):
         uimanager=self.create_ui_manager()
         uimanager.insert_action_group(action_group)        
 
-        main_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        # The main VBox 
+        self.main_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         
         toolbar = uimanager.get_widget("/ToolBar")
         menubar = uimanager.get_widget("/MenuBar")
 
-        main_vbox.pack_start(menubar, False, False, 0)
-        main_vbox.pack_start(toolbar, False, False, 0)               
-        self.set_main_area()
-        main_vbox.pack_start(self.create_main_area(), True, True, 0)
+        self.main_vbox.pack_start(menubar, False, False, 0)
+        self.main_vbox.pack_start(toolbar, False, False, 0)
+
+        # Main working pane: contains left pane with actions and working area pane 
+        self.main_working_pane=Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        self.main_vbox.pack_start(self.main_working_pane, False, False, 0)
+        
+        # the left pane: actions
+        self.main_left_pane = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+
+        # the middle pane: working area
+        self.main_middle_pane = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+                       
+        self.main_working_pane.pack_start(self.main_left_pane, False, False, 0)
+        self.main_working_pane.pack_start(self.main_middle_pane, False, False, 0)
+
+        self.create_main_left_pane()
+
         self.create_status_bar()
-        main_vbox.pack_start(self.statusbar, False, False, 0)
-        self.add(main_vbox)
+        self.main_vbox.pack_start(self.statusbar, False, False, 0)
+        self.add(self.main_vbox)
         
     # 
-    # set main working area
+    # set main left pane
     # 
-    def create_main_area(self):
-        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        hbox.pack_start(self.mask_chooser(), False, False, 0)
-
-        mask = self.main_area
-        hbox.pack_start(mask.get_view(), True, True, 0)
-        return hbox
+    def create_main_left_pane(self):
+        self.main_left_pane.pack_start(self.mask_chooser(), False, False, 0)
     
     
     def set_main_area(self, main_area_type="person"):
         if main_area_type=="person":
-            self.main_area=PersonListMask()
+            self.main_middle_pane.pack_start(PersonWindow(), False, False, 0)
         elif main_area_type=="organization":
-            self.main_area=OrganisationMask()
+            self.main_middle_pane.pack_start(OrganisationMask(), False, False, 0)
         else:
             print("unimplemented")
     
