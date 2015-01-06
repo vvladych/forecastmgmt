@@ -46,5 +46,12 @@ class PersonWindow(Gtk.Box):
         if action=="list":
             self.person_working_area.pack_start(PersonListMask(), False, False, 0)
         elif action=="add":
-            self.person_working_area.pack_start(PersonAddMask(), False, False, 0)
+            self.person_working_area.pack_start(PersonAddMask(self.default_view), False, False, 0)
         self.person_working_area.show_all()
+
+    def default_view(self):
+        self.add_working_area("list")
+        
+
+    def reset_callback(self):
+        print("in reset_callback person_window")
