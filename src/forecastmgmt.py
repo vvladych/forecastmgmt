@@ -16,19 +16,21 @@ class MainWindow(Gtk.Window):
         uimanager=self.create_ui_manager()
         uimanager.insert_action_group(action_group)        
 
-        # The main VBox 
-        self.main_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        
+        # The main area, grid 
+        self.grid = Gtk.Grid()
+        self.grid.set_orientation(Gtk.Orientation.VERTICAL)
+        self.add(self.grid)
+
         toolbar = uimanager.get_widget("/ToolBar")
         menubar = uimanager.get_widget("/MenuBar")
 
-        self.main_vbox.pack_start(menubar, False, False, 0)
-        self.main_vbox.pack_start(toolbar, False, False, 0)
+        self.grid.add(menubar)
+        self.grid.add(toolbar)
 
         # Main working pane: contains left pane with actions and working area pane 
         self.main_working_pane=Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        self.main_vbox.pack_start(self.main_working_pane, False, False, 0)
-        
+        self.grid.add(self.main_working_pane)
+
         # the left pane: actions
         self.main_left_pane = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
 
@@ -37,12 +39,12 @@ class MainWindow(Gtk.Window):
                        
         self.main_working_pane.pack_start(self.main_left_pane, False, False, 0)
         self.main_working_pane.pack_start(self.main_middle_pane, False, False, 0)
+        
 
         self.create_main_left_pane()
 
         self.create_status_bar()
-        self.main_vbox.pack_start(self.statusbar, False, False, 0)
-        self.add(self.main_vbox)
+        self.grid.add(self.statusbar)
         
     # 
     # set main left pane
