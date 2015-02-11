@@ -8,20 +8,20 @@ class Person:
         self(None,None,None)
         
     def __init__(self, sid, common_name):
-        self.__sid=sid
-        self.__common_name=common_name
+        self.sid=sid
+        self.common_name=common_name
     
     
     def get_common_name(self):
-        return self.__common_name
+        return self.common_name
     
     def set_common_name(self, common_name):
-        self.__common_name=common_name
+        self.common_name=common_name
         
         
     def get_sid(self):
-        return self.__sid
+        return self.sid
     
-    def set_id(self, sid):
-        self.__sid=sid
+    def set_sid(self, sid):
+        self.sid=sid
 
