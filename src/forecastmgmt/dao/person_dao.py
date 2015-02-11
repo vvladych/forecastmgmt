@@ -11,7 +11,7 @@ class PersonDAO:
     
     def __init__(self):
         self.sql_select_dict={"get_all_persons":"SELECT sid, common_name FROM fc_person"}
-        self.sql_insert_dict={"insert_person":"INSERT INTO person(common_name) VALUES(%(str)s) RETURNING sid"}
+        self.sql_insert_dict={"insert_person":"INSERT INTO fc_person(common_name) VALUES(%(str)s) RETURNING sid"}
         
         
     def get_all_persons(self):
@@ -34,5 +34,3 @@ class PersonDAO:
         pass
     
     
-    def delete_person(self, Person):
-        sql_del="DELETE FROM fc_person WHERE sid=%s"
