@@ -5,10 +5,9 @@ class PersonListMask(Gtk.Box):
 
     def __init__(self):
         Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
-        self.store = Gtk.ListStore(str, str)        
+        self.store = Gtk.ListStore(str)        
         tree = Gtk.TreeView(self.store)                
-        tree.append_column(self.add_column_to_treeview("Vorname", 0))
-        tree.append_column(self.add_column_to_treeview("Nachname", 1))
+        tree.append_column(self.add_column_to_treeview("common name", 0))
         tree.set_size_request(200,300)
         self.pack_start(tree, False, False, 0)        
         self.populate_person_view_table()
@@ -25,5 +24,6 @@ class PersonListMask(Gtk.Box):
     def populate_person_view_table(self):
         persons = PersonDAO().get_all_persons()
         for person in persons:
-            self.store.append(["%s" % person.get_sid(), person.get_common_name()])
+            print("in person %s " % person.common_name)
+            self.store.append(["%s" % person.common_name])
         
