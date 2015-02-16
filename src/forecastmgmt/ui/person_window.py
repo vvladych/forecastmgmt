@@ -7,8 +7,9 @@ from person_list_mask import PersonListMask
 
 class PersonWindow(Gtk.Box):
 
-    def __init__(self):
+    def __init__(self, main_window):
         Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+        self.main_window=main_window
         self.person_action_area = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         self.pack_start(self.person_action_area, False, False, 0)
         self.person_working_area=Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
@@ -46,7 +47,7 @@ class PersonWindow(Gtk.Box):
         if action=="list":
             self.person_working_area.pack_start(PersonListMask(), False, False, 0)
         elif action=="add":
-            self.person_working_area.pack_start(PersonAddMask(self.default_view), False, False, 0)
+            self.person_working_area.pack_start(PersonAddMask(self.default_view, self.main_window), False, False, 0)
         self.person_working_area.show_all()
 
     def default_view(self):
