@@ -11,7 +11,7 @@ class PersonDAO:
     
     def __init__(self):
         self.sql_select_dict={"get_all_persons":"SELECT sid, common_name FROM fc_person"}
-        self.sql_insert_dict={"insert_person":"INSERT INTO fc_person(common_name) VALUES(%(str)s) RETURNING sid"}
+        self.sql_insert_dict={"insert_person":"INSERT INTO fc_person(common_name) VALUES(%s) RETURNING sid"}
         
         
     def get_all_persons(self):
@@ -24,10 +24,11 @@ class PersonDAO:
         return personlist
     
     
-    def insert_person(self, person):
+    def insert(self, person):
         cur = get_db_connection().cursor()
-        cur.execute(self.sql_insert_dict,(person.get_common_name(),))
-        person.set_sid(cursor.fetchone()[0])
+        data=(person.common_name,)
+        cur.execute(self.sql_insert_dict["insert_person"],data)
+        person.sid=cur.fetchone()[0]
     
         
     def get_uuid_from_sid(self,sid):
