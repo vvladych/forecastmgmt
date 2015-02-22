@@ -12,7 +12,7 @@ class PersonNameDAO:
     
     def __init__(self):
         self.sql_select_dict={"get_person_name_role":"SELECT sid, name_role FROM fc_person_name WHERE fc_person_sid=%s"}
-        self.sql_insert_dict={"insert_person":"INSERT INTO fc_person_name(name_role,fc_person_sid) VALUES(%s,%s) RETURNING sid"}
+        self.sql_insert_dict={"insert_person_name":"INSERT INTO fc_person_name(fc_person_sid,name_role) VALUES(%s, %s) RETURNING sid"}
         
         
     def get_person_names(self, person_sid):
@@ -27,8 +27,10 @@ class PersonNameDAO:
     
     def insert_person_name(self, personname):
         cur = get_db_connection().cursor()
-        cur.execute(self.sql_insert_dict,(personname.name_role,))
-        personname.set_sid(cursor.fetchone()[0])
+        print("name_role:%s" % personname.name_role)
+        data=(personname.person_sid, personname.name_role,)
+        cur.execute(self.sql_insert_dict["insert_person_name"], data)
+        personname.sid=cur.fetchone()[0]
     
     
 def get_person_name_roles():

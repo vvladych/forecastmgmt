@@ -1,9 +1,19 @@
 
 from gi.repository import Gtk
 from forecastmgmt.dao.person_dao import PersonDAO
+from forecastmgmt.dao.namepart_dao import NamepartDAO
+from forecastmgmt.dao.person_name_dao import PersonNameDAO
+
+from forecastmgmt.model.person import Person
+from forecastmgmt.model.namepart import Namepart
+from forecastmgmt.model.person_name import PersonName
+
+
 from forecastmgmt.dao.person_name_dao import get_person_name_roles
 from forecastmgmt.dao.namepart_dao import get_name_part_roles
-from forecastmgmt.model.person import Person
+
+from forecastmgmt.dao.db_connection import get_db_connection
+
 
 class PersonAddMask(Gtk.Grid):
     def __init__(self, reset_callback, main_window):
@@ -114,37 +124,72 @@ class PersonAddMask(Gtk.Grid):
     def new_person_func(self, widget):
         print("new person: unimplemented")
 
+    # Insert new person
+    #
     def save_person(self, widget):
+        common_name=self.common_name_text_entry.get_text()
+        if not common_name:
+            error_dialog = Gtk.MessageDialog(self.main_window, 0, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK, "Error: common name cannot be empty!")
+            error_dialog.run()
+            error_dialog.destroy()
+            return
         person=Person(None, self.common_name_text_entry.get_text())
         personDAO=PersonDAO()
         personDAO.insert(person)
         print("person added, sid is: %s" % person.sid)
+        # insert person names
+        # iterate over names treestore
+        iter=self.namepart_treestore.get_iter_first()
+        while iter:
+            (person_name_role)=self.namepart_treestore.get(iter, 1)
+            print("person_name_role: %s" % person_name_role)
+            personName=PersonName(None, person_name_role, person.sid)
+            personNameDAO=PersonNameDAO()
+            personNameDAO.insert_person_name(personName)
+            
+            # children of name a nameparts
+            if self.namepart_treestore.iter_has_child(iter):
+                child_iter=self.namepart_treestore.iter_children(iter)
+                while child_iter:
+                    (namepart_role,namepart_value)=self.namepart_treestore.get(child_iter,1,2)                    
+                    namepart=Namepart(None, namepart_role, namepart_value, personName.sid)
+                    namepartDAO=NamepartDAO()
+                    namepartDAO.insert_namepart(namepart)
+                    child_iter=self.namepart_treestore.iter_next(child_iter)
+                
+            iter=self.namepart_treestore.iter_next(iter)
+        get_db_connection().commit()
+        print("Done")
+
 
     def get_active_name_treestore(self):
         model,tree_iter=self.nameparts_treeview.get_selection().get_selected()
         return tree_iter
 
     # NamePart
-    def delete_name_part(self, callback):
+    def delete_name_part(self, widget):
         model,tree_iter = self.nameparts_treeview.get_selection().get_selected()
         model.remove(tree_iter)
 
-    def add_name_part(self,callback):
+    def add_name_part(self,widget):
         namepart_role_id,namepart_role_value=self.get_active_namepart_role()
         tree_iter=self.get_active_name_treestore()
 
         if tree_iter==None:
-            message = Gtk.MessageDialog(self.main_window, 0, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK, "Error: name part cannot be added as root element")
-            message.run()
+            error_dialog = Gtk.MessageDialog(self.main_window, 0, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK, "Error: name part cannot be added as root element")
+            error_dialog.run()
+            error_dialog.destroy()
             return
 
         if self.namepart_treestore.iter_depth(tree_iter)!=0:
-            message = Gtk.MessageDialog(self.main_window, 0, Gtk.MessageType.ERROR, Gtk.ButtonsType.CANCEL, "Error: name part can be added to a root element only")
-            message.run()
+            error_dialog = Gtk.MessageDialog(self.main_window, 0, Gtk.MessageType.ERROR, Gtk.ButtonsType.CANCEL, "Error: name part can be added to a root element only")
+            error_dialog.run()
+            error_dialog.destroy()
             return
 
         self.namepart_treestore.append(tree_iter,[namepart_role_id,namepart_role_value,self.namepart_role_value_entry.get_text()])
         self.namepart_role_value_entry.set_text('')
+            
             
     def get_active_namepart_role(self):
         tree_iter = self.namepart_role_combobox.get_active_iter()
@@ -152,7 +197,6 @@ class PersonAddMask(Gtk.Grid):
             model = self.namepart_role_combobox.get_model()
             name = model[tree_iter][:2]
         else:
-            row_id=0
             name = self.namepart_role_combobox.get_child()
         return name
 
