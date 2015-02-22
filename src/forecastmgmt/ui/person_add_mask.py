@@ -16,11 +16,20 @@ from forecastmgmt.dao.db_connection import get_db_connection
 
 
 class PersonAddMask(Gtk.Grid):
-    def __init__(self, reset_callback, main_window):
+    def __init__(self, reset_callback, main_window, person=None):
         Gtk.Grid.__init__(self)
 
         self.main_window=main_window
+        self.reset_callback = reset_callback
+        
+        self.create_layout()
+        
+        if person!=None:
+            self.load_person(person)
 
+        
+        
+    def create_layout(self):
         self.set_column_spacing(5)
 
         placeholder_label = Gtk.Label("")
@@ -42,6 +51,22 @@ class PersonAddMask(Gtk.Grid):
         self.attach(self.common_name_text_entry,1,row,1,1)
 
         row+=1
+        # Row: birth date
+        birth_date_label = Gtk.Label("Birth Date")
+        self.attach(birth_date_label,0,row,1,1)
+        self.birth_date_text_entry=Gtk.Entry()
+        self.attach(self.birth_date_text_entry,1,row,1,1)
+
+        row+=1
+        
+        # Row: birth place
+        birth_place_label = Gtk.Label("Birth Place")
+        self.attach(birth_place_label,0,row,1,1)
+        self.birth_place_text_entry=Gtk.Entry()
+        self.attach(self.birth_place_text_entry,1,row,1,1)
+
+        row+=1
+        
         # Row 2: name 
         name_label = Gtk.Label("Name")
         self.attach(name_label,0,row,1,1)
@@ -101,8 +126,13 @@ class PersonAddMask(Gtk.Grid):
         self.attach(new_button,2,row,1,1)
 
         cancel_button = Gtk.Button("Cancel", Gtk.STOCK_CANCEL)
-        cancel_button.connect("clicked", self.parent_callback_func, reset_callback)
+        cancel_button.connect("clicked", self.parent_callback_func, self.reset_callback)
         self.attach(cancel_button,3,row,1,1)
+        
+        
+    def load_person(self, person_to_load):
+        print("still unimplemented")
+        
 
     def add_name(self,widget):
         name_role_id,name_role_value = self.get_active_name_role()
@@ -117,7 +147,6 @@ class PersonAddMask(Gtk.Grid):
             model = self.name_roles_model
             name = model[name_combobox_iter][:2]
         else:
-            row_id=0
             name=self.name_role_combobox.get_child()
         return name
 
@@ -133,7 +162,7 @@ class PersonAddMask(Gtk.Grid):
             error_dialog.run()
             error_dialog.destroy()
             return
-        person=Person(None, self.common_name_text_entry.get_text())
+        person=Person(None, self.common_name_text_entry.get_text(), self.birth_date_text_entry.get_text(), self.birth_place_text_entry.get_text(), None)
         personDAO=PersonDAO()
         personDAO.insert(person)
         print("person added, sid is: %s" % person.sid)
