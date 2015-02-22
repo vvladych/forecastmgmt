@@ -23,6 +23,13 @@ class PersonWindow(Gtk.Box):
             self.add_new_person_button.set_size_request(30,30)
             self.add_new_person_button.connect("clicked", self.add_working_area, "add")
             self.person_action_area.pack_start(self.add_new_person_button, False, False, 0)
+            
+            self.delete_person_button=Gtk.Button.new_from_stock(Gtk.STOCK_DELETE)
+            self.delete_person_button.set_size_request(30,30)
+            self.delete_person_button.connect("clicked", self.delete_person, "delete")
+            self.person_action_area.pack_start(self.delete_person_button, False, False, 0)
+            
+            
         elif action=="add":
             save_new_person=Gtk.Button.new_from_stock(Gtk.STOCK_SAVE)
             self.person_action_area.pack_start(save_new_person, False, False, 0)
@@ -53,6 +60,26 @@ class PersonWindow(Gtk.Box):
     def default_view(self):
         self.add_working_area("list")
         
+    def delete_person(self,widget,callback):
+        confirm_dialog=DeletePersonConfirmationDialog(self.main_window)
+        response = confirm_dialog.run()
+        if response==Gtk.ResponseType.OK:
+            print("OK")
+        elif response==Gtk.ResponseType.CANCEL:
+            print("Cancel was clicked")
+        confirm_dialog.destroy()
+        
 
     def reset_callback(self):
         print("in reset_callback person_window")
+        
+class DeletePersonConfirmationDialog(Gtk.Dialog):
+    
+    def __init__(self,parent):
+        Gtk.Dialog.__init__(self, "Confirm delete person(s)", parent, 0, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OK, Gtk.ResponseType.OK))
+        self.set_default_size(150, 100)
+        label = Gtk.Label("Delete chosen person(s)?")
+        box = self.get_content_area()
+        box.add(label)
+        self.show_all()
+        
