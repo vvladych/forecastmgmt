@@ -31,10 +31,6 @@ class PersonWindow(Gtk.Box):
 
         self.person_action_area.show_all()
         
-
-    def clean_working_area_box(self):
-        for child in self.person_working_area.get_children():
-            self.person_working_area.remove(child)
             
 
     def clean_action_area_box(self):
@@ -47,10 +43,17 @@ class PersonWindow(Gtk.Box):
         self.clean_action_area_box()
         self.create_action_area(action)
         if action=="list":
-            self.person_working_area.pack_start(PersonListMask(), False, False, 0)
+            self.personListMask=PersonListMask()
+            self.person_working_area.pack_start(self.personListMask, False, False, 0)
         elif action=="add":
             self.person_working_area.pack_start(PersonAddMask(self.default_view, self.main_window), False, False, 0)
         self.person_working_area.show_all()
+
+
+    def clean_working_area_box(self):
+        for child in self.person_working_area.get_children():
+            self.person_working_area.remove(child)
+
 
     def default_view(self):
         self.add_working_area("list")
@@ -60,6 +63,7 @@ class PersonWindow(Gtk.Box):
         confirm_dialog=DeletePersonConfirmationDialog(self.main_window)
         response = confirm_dialog.run()
         if response==Gtk.ResponseType.OK:
+            self.personListMask.delete_person()
             print("OK")
         elif response==Gtk.ResponseType.CANCEL:
             print("Cancel was clicked")
