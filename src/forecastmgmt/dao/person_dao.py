@@ -10,14 +10,17 @@ import psycopg2.extras
 class PersonDAO:
     
     def __init__(self):
-        self.sql_select_dict={"get_all_persons":"SELECT sid, common_name, birth_date, birth_place, person_uuid FROM fc_person"}
-        self.sql_insert_dict={"insert_person":"INSERT INTO fc_person(common_name, birth_date, birth_place) VALUES(%s,%s,%s) RETURNING sid"}
+        self.sql_dict={"get_all_persons":"SELECT sid, common_name, birth_date, birth_place, person_uuid FROM fc_person", 
+                       "insert_person":"INSERT INTO fc_person(common_name, birth_date, birth_place) VALUES(%s,%s,%s) RETURNING sid",
+                       "delete_person":"DELETE FROM fc_person WHERE sid=%s"
+                       }
+        
         
         
     def get_all_persons(self):
         personlist=[]
         cur = get_db_connection().cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
-        cur.execute(self.sql_select_dict["get_all_persons"])
+        cur.execute(self.sql_dict["get_all_persons"])
         for person in cur.fetchall():
             personlist.append(Person(person.sid, person.common_name, person.birth_date, person.birth_place, person.person_uuid))
         cur.close()
@@ -27,8 +30,15 @@ class PersonDAO:
     def insert(self, person):
         cur = get_db_connection().cursor()
         data=(person.common_name,person.birth_date,person.birth_place)
-        cur.execute(self.sql_insert_dict["insert_person"],data)
+        cur.execute(self.sql_dict["insert_person"],data)
         person.sid=cur.fetchone()[0]
+        cur.close()
+        
+    def delete(self, person):
+        cur = get_db_connection().cursor()
+        data=(person.sid,)
+        cur.execute(self.sql_dict["delete_person"],data)
+        cur.close()
     
         
     def get_uuid_from_sid(self,sid):
