@@ -23,6 +23,12 @@ class PersonWindow(Gtk.Box):
             self.add_new_person_button.set_size_request(30,30)
             self.add_new_person_button.connect("clicked", self.add_working_area, "add")
             self.person_action_area.pack_start(self.add_new_person_button, False, False, 0)
+
+            self.edit_person_button=Gtk.Button.new_from_stock(Gtk.STOCK_EDIT)
+            self.edit_person_button.set_size_request(30,30)
+            self.edit_person_button.connect("clicked", self.add_working_area, "edit")
+            self.person_action_area.pack_start(self.edit_person_button, False, False, 0)
+
             
             self.delete_person_button=Gtk.Button.new_from_stock(Gtk.STOCK_DELETE)
             self.delete_person_button.set_size_request(30,30)
@@ -47,7 +53,16 @@ class PersonWindow(Gtk.Box):
             self.person_working_area.pack_start(self.personListMask, False, False, 0)
         elif action=="add":
             self.person_working_area.pack_start(PersonAddMask(self.default_view, self.main_window), False, False, 0)
+        elif action=="edit":
+            person=self.get_current_person()
+            self.person_working_area.pack_start(PersonAddMask(self.default_view, self.main_window, person), False, False, 0)
+
         self.person_working_area.show_all()
+
+    def get_current_person(self):
+        person=self.personListMask.get_current_person()
+        return person
+            
 
 
     def clean_working_area_box(self):
