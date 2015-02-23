@@ -1,7 +1,5 @@
 from gi.repository import Gtk
-from forecastmgmt.dao.person_dao import PersonDAO
 
-from person_edit_mask import PersonEditMask
 from person_add_mask import PersonAddMask
 from person_list_mask import PersonListMask
 
