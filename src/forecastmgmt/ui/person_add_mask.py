@@ -14,6 +14,8 @@ from forecastmgmt.dao.namepart_dao import get_name_part_roles
 
 from forecastmgmt.dao.db_connection import get_db_connection
 
+from ui_tools import add_column_to_treeview
+
 
 class PersonAddMask(Gtk.Grid):
     def __init__(self, reset_callback, main_window, person=None):
@@ -233,9 +235,9 @@ class PersonAddMask(Gtk.Grid):
     def create_namepart_treeview(self):
         self.namepart_treestore = Gtk.TreeStore(int,str,str)
         self.nameparts_treeview = Gtk.TreeView(self.namepart_treestore)
-        self.nameparts_treeview.append_column(self.add_column_to_treeview("id", 0, True))
-        self.nameparts_treeview.append_column(self.add_column_to_treeview("Role", 1, False))
-        self.nameparts_treeview.append_column(self.add_column_to_treeview("Value", 2, False))
+        self.nameparts_treeview.append_column(add_column_to_treeview("id", 0, True))
+        self.nameparts_treeview.append_column(add_column_to_treeview("Role", 1, False))
+        self.nameparts_treeview.append_column(add_column_to_treeview("Value", 2, False))
         self.nameparts_treeview.set_size_request(200,300)
         self.nameparts_treeview.connect("row-activated", self.on_row_selection)
 
@@ -245,14 +247,7 @@ class PersonAddMask(Gtk.Grid):
         self.namepart_role_value_entry.set_text(model[treeiter][2])
         
 
-    def add_column_to_treeview(self,columnname,counter,hidden):
-        column=Gtk.TreeViewColumn(columnname)
-        if hidden==True:
-            column.set_visible(False)
-        renderer=Gtk.CellRendererText()
-        column.pack_start(renderer,True)
-        column.add_attribute(renderer, "text", counter)
-        return column
+
 
     def populate_namepart_roles_model(self):
         namepart_roles_model = Gtk.ListStore(int, str)
