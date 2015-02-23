@@ -5,8 +5,6 @@ __date__ ="$08.10.2014 06:04:16$"
 from forecastmgmt.dao.db_connection import get_db_connection
 from forecastmgmt.model.person import Person
 import psycopg2.extras
-from psycopg2.extras import DateRange
-
 
 class PersonDAO:
     
