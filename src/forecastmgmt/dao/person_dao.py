@@ -5,6 +5,7 @@ __date__ ="$08.10.2014 06:04:16$"
 from forecastmgmt.dao.db_connection import get_db_connection
 from forecastmgmt.model.person import Person
 import psycopg2.extras
+from psycopg2.extras import DateRange
 
 
 class PersonDAO:
@@ -39,6 +40,7 @@ class PersonDAO:
         data=(person.sid,)
         cur.execute(self.sql_dict["delete_person"],data)
         cur.close()
+        get_db_connection().commit()
     
         
     def get_uuid_from_sid(self,sid):
