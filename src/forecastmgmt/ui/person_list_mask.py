@@ -50,6 +50,5 @@ class PersonListMask(Gtk.Box):
             if flag_to_delete=="True":
                 print("loesche: %s" % person_sid)
                 PersonDAO().delete(Person(person_sid))
+                self.store.remove(iter)
             iter=self.store.iter_next(iter)
-            
-        # delete from the database
