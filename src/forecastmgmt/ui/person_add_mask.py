@@ -33,6 +33,7 @@ class PersonAddMask(Gtk.Grid):
         
     def create_layout(self):
         self.set_column_spacing(5)
+        self.set_row_spacing(3)
 
         placeholder_label = Gtk.Label("")
         placeholder_label.set_size_request(1,40)
@@ -41,6 +42,7 @@ class PersonAddMask(Gtk.Grid):
         row = 0
         # Row 0: person uuid
         uuid_label = Gtk.Label("person UUID")
+        uuid_label.set_justify(Gtk.Justification.LEFT)
         self.attach(uuid_label,0,row,1,1)
         uuid_text_entry=Gtk.Entry()
         self.attach(uuid_text_entry,1,row,1,1)
@@ -48,6 +50,7 @@ class PersonAddMask(Gtk.Grid):
         row+=1
         # Row 1: common name
         common_name_label = Gtk.Label("Common Name")
+        common_name_label.set_justify(Gtk.Justification.LEFT)
         self.attach(common_name_label,0,row,1,1)
         self.common_name_text_entry=Gtk.Entry()
         self.attach(self.common_name_text_entry,1,row,1,1)
@@ -56,8 +59,33 @@ class PersonAddMask(Gtk.Grid):
         # Row: birth date
         birth_date_label = Gtk.Label("Birth Date")
         self.attach(birth_date_label,0,row,1,1)
-        self.birth_date_text_entry=Gtk.Entry()
-        self.attach(self.birth_date_text_entry,1,row,1,1)
+        
+        birthdate_grid=Gtk.Grid()
+        birthdate_grid.set_column_spacing(5)
+        self.birth_date_day_text_entry=Gtk.Entry()
+        self.birth_date_day_text_entry.set_max_length(2)
+        self.birth_date_day_text_entry.set_width_chars(2)
+        
+        birthdate_grid.attach(self.birth_date_day_text_entry,0,0,1,1)
+        
+        
+        self.birth_date_month_text_entry=Gtk.Entry()
+        self.birth_date_month_text_entry.set_max_length(2)
+        self.birth_date_month_text_entry.set_width_chars(2)
+        birthdate_grid.attach_next_to(self.birth_date_month_text_entry, self.birth_date_day_text_entry, Gtk.PositionType.RIGHT, 1, 1)
+        
+        self.birth_date_year_text_entry=Gtk.Entry()
+        self.birth_date_year_text_entry.set_max_length(4)
+        self.birth_date_year_text_entry.set_width_chars(4)
+        birthdate_grid.attach_next_to(self.birth_date_year_text_entry, self.birth_date_month_text_entry, Gtk.PositionType.RIGHT, 1, 1)
+        
+        birthdate_grid.attach(Gtk.Label("DD"),0,1,1,1)
+        birthdate_grid.attach(Gtk.Label("MM"),1,1,1,1)
+        birthdate_grid.attach(Gtk.Label("YYYY"),2,1,1,1)
+        
+        birthdate_grid.set_hexpand(False)
+
+        self.attach(birthdate_grid,1,row,1,1)
 
         row+=1
         
@@ -69,7 +97,7 @@ class PersonAddMask(Gtk.Grid):
 
         row+=1
         
-        # Row 2: name 
+        # name 
         name_label = Gtk.Label("Name")
         self.attach(name_label,0,row,1,1)
 
@@ -88,7 +116,7 @@ class PersonAddMask(Gtk.Grid):
         self.attach(name_delete_button,3,row,1,1)
         
         row+=1
-        # Row 2: name part role
+        # name part role
         namepart_label = Gtk.Label("Name part")
         self.attach(namepart_label,0,row,1,1)
 
@@ -115,7 +143,7 @@ class PersonAddMask(Gtk.Grid):
         row+=1
         # Row 4: treeview 
         self.create_namepart_treeview()
-        self.attach(self.nameparts_treeview,0,row,3,1)
+        self.attach(self.nameparts_treeview,0,row,1,1)
 
         row+=1
         # Row 5
