@@ -1,7 +1,6 @@
 
 
 from forecastmgmt.dao.db_connection import get_db_connection
-from forecastmgmt.model.person import Person
 import psycopg2.extras
 
 def enum_retrieve_valid_values(enum_type):

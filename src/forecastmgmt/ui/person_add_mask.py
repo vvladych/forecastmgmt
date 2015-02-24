@@ -1,16 +1,10 @@
 
 from gi.repository import Gtk
-from forecastmgmt.dao.person_dao import PersonDAO
-from forecastmgmt.dao.namepart_dao import NamepartDAO
-from forecastmgmt.dao.person_name_dao import PersonNameDAO
-
-from forecastmgmt.model.person import Person
-from forecastmgmt.model.namepart import Namepart
-from forecastmgmt.model.person_name import PersonName
 
 
-from forecastmgmt.dao.person_name_dao import get_person_name_roles
-from forecastmgmt.dao.namepart_dao import get_name_part_roles
+
+from forecastmgmt.model.person import Person, PersonName, get_person_name_roles, Namepart, get_name_part_roles
+
 
 from forecastmgmt.dao.db_connection import get_db_connection
 
@@ -192,10 +186,13 @@ class PersonAddMask(Gtk.Grid):
             error_dialog.run()
             error_dialog.destroy()
             return
-        person=Person(None, self.common_name_text_entry.get_text(), self.birth_date_text_entry.get_text(), self.birth_place_text_entry.get_text(), None)
-        personDAO=PersonDAO()
-        personDAO.insert(person)
-        print("person added, sid is: %s" % person.sid)
+        person=Person(None, 
+                      self.common_name_text_entry.get_text(), 
+                      "%s-%s-%s" % (self.birth_date_year_text_entry.get_text(), self.birth_date_month_text_entry.get_text(), self.birth_date_day_text_entry.get_text()), 
+                      self.birth_place_text_entry.get_text(), 
+                      None)
+        
+        person.insert()
         # insert person names
         # iterate over names treestore
         iter=self.namepart_treestore.get_iter_first()
@@ -203,8 +200,7 @@ class PersonAddMask(Gtk.Grid):
             (person_name_role)=self.namepart_treestore.get(iter, 1)
             print("person_name_role: %s" % person_name_role)
             personName=PersonName(None, person_name_role, person.sid)
-            personNameDAO=PersonNameDAO()
-            personNameDAO.insert_person_name(personName)
+            personName.insert()
             
             # children of name a nameparts
             if self.namepart_treestore.iter_has_child(iter):
@@ -212,8 +208,7 @@ class PersonAddMask(Gtk.Grid):
                 while child_iter:
                     (namepart_role,namepart_value)=self.namepart_treestore.get(child_iter,1,2)                    
                     namepart=Namepart(None, namepart_role, namepart_value, personName.sid)
-                    namepartDAO=NamepartDAO()
-                    namepartDAO.insert_namepart(namepart)
+                    namepart.insert()
                     child_iter=self.namepart_treestore.iter_next(child_iter)
                 
             iter=self.namepart_treestore.iter_next(iter)

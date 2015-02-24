@@ -1,6 +1,5 @@
 from gi.repository import Gtk
-from forecastmgmt.dao.person_dao import PersonDAO
-from forecastmgmt.model.person import Person
+from forecastmgmt.model.person import Person, get_all_persons
 
 from ui_tools import add_column_to_treeview
 
@@ -25,7 +24,7 @@ class PersonListMask(Gtk.Box):
         
 
     def populate_person_view_table(self):
-        persons = PersonDAO().get_all_persons()
+        persons = get_all_persons()
         for person in persons:
             self.store.append(["%s" % person.common_name, "%s" % person.birth_date, "%s" % person.birth_place, "%s" % person.person_uuid, "%s" % person.sid])
         
@@ -33,7 +32,7 @@ class PersonListMask(Gtk.Box):
     def delete_person(self):
         model,tree_iter = self.tree.get_selection().get_selected()
         (person_sid)=self.store.get(tree_iter, 4)
-        PersonDAO().delete(Person(person_sid))
+        Person(person_sid).delete()
         self.store.remove(tree_iter)
             
     def get_current_person(self):

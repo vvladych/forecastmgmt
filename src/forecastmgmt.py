@@ -56,8 +56,8 @@ class MainWindow(Gtk.Window):
     def set_main_area(self, main_area_type="person"):
         if main_area_type=="person":
             self.main_middle_pane.pack_start(PersonWindow(self), False, False, 0)
-        elif main_area_type=="organization":
-            self.main_middle_pane.pack_start(OrganisationMask(), False, False, 0)
+        #elif main_area_type=="organization":
+        #    self.main_middle_pane.pack_start(OrganisationMask(), False, False, 0)
         else:
             print("unimplemented")
     
