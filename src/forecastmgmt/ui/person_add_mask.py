@@ -155,7 +155,8 @@ class PersonAddMask(Gtk.Grid):
         
         
     def load_person(self, person_to_load):
-        print("still unimplemented")
+        person_to_load.load()
+        self.common_name_text_entry.set_text(person_to_load.common_name)
         
 
     def add_name(self,widget):
