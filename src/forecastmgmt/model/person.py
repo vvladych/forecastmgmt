@@ -22,13 +22,25 @@ class Person:
         self.birth_place=birth_place
         self.person_uuid=person_uuid
         self.names=[]
-        
+
+    def __str__(self):
+        return str(self.__dict__)
+            
+    def __eq__(self, other):
+        return self.__dict__==other.__dict__
+
+       
     def insert(self):
         cur = get_db_connection().cursor()
         data=(self.common_name,self.birth_date,self.birth_place)
         cur.execute(Person.sql_dict["insert_person"],data)
         self.sid=cur.fetchone()[0]
         cur.close()
+        for name in self.names:
+            name.person_sid=self.sid
+            name.insert()
+        get_db_connection().commit()
+        
     
     def add_name(self, name):
         self.names.append(name)
@@ -74,12 +86,22 @@ class PersonName:
         self.name_role=name_role
         self.person_sid=person_sid
         self.nameparts=nameparts
+
+    def __str__(self):
+        return str(self.__dict__)
+            
+    def __eq__(self, other):
+        return self.__dict__==other.__dict__
+
     
     def insert(self):
         cur = get_db_connection().cursor()
         data=(self.person_sid, self.name_role,)
         cur.execute(PersonName.sql_dict["insert_person_name"], data)
         self.sid=cur.fetchone()[0]
+        for namepart in self.nameparts:
+            namepart.person_name_sid=self.sid
+            namepart.insert()
         
     def add_namepart(self, namepart):
         self.nameparts.append(namepart)
@@ -110,12 +132,18 @@ class Namepart:
         self.namepart_value=namepart_value
         self.person_name_sid=person_name_sid
             
+    def __str__(self):
+        return str(self.__dict__)
+            
+    def __eq__(self, other):
+        return self.__dict__==other.__dict__
     
     def insert(self):
         cur = get_db_connection().cursor()
         cur.execute(Namepart.sql_dict["insert_namepart"],(self.namepart_role, self.namepart_value, self.person_name_sid,))
         self.sid = cur.fetchone()[0]
         cur.close()
+        
 
 def get_all_name_parts(name_sid):
     namepart_list=[]

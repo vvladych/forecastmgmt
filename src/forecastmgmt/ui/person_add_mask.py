@@ -38,8 +38,9 @@ class PersonAddMask(Gtk.Grid):
         uuid_label = Gtk.Label("person UUID")
         uuid_label.set_justify(Gtk.Justification.LEFT)
         self.attach(uuid_label,0,row,1,1)
-        uuid_text_entry=Gtk.Entry()
-        self.attach(uuid_text_entry,1,row,1,1)
+        self.person_uuid_text_entry=Gtk.Entry()
+        self.person_uuid_text_entry.set_editable(False)
+        self.attach(self.person_uuid_text_entry,1,row,1,1)
         
         row+=1
         # Row 1: common name
@@ -105,9 +106,6 @@ class PersonAddMask(Gtk.Grid):
         name_add_button.connect("clicked", self.add_name)
         self.attach(name_add_button,2,row,1,1)
 
-        name_delete_button = Gtk.Button("Delete", Gtk.STOCK_DELETE)
-        name_delete_button.connect("clicked", self.delete_name)
-        self.attach(name_delete_button,3,row,1,1)
         
         row+=1
         # name part role
@@ -156,15 +154,22 @@ class PersonAddMask(Gtk.Grid):
         
     def load_person(self, person_to_load):
         person_to_load.load()
+        self.person_uuid_text_entry.set_text(person_to_load.person_uuid)
         self.common_name_text_entry.set_text(person_to_load.common_name)
+        self.birth_place_text_entry.set_text(person_to_load.birth_place)
+        self.birth_date_year_text_entry.set_text("%s" % person_to_load.birth_date.year)
+        self.birth_date_month_text_entry.set_text("%s" % person_to_load.birth_date.month)
+        self.birth_date_day_text_entry.set_text("%s" % person_to_load.birth_date.day)
+        for name in person_to_load.names:
+            tree_iter=self.namepart_treestore.append(None,[name.sid, name.name_role, None])
+            for namepart in name.nameparts:
+                self.namepart_treestore.append(tree_iter,[namepart.sid, namepart.namepart_role, namepart.namepart_value])
         
 
     def add_name(self,widget):
         name_role_id,name_role_value = self.get_active_name_role()
         self.namepart_treestore.append(None,[name_role_id,name_role_value,None])
 
-    def delete_name(self,widget):
-        print("delete_name: unimplemented")
 
     def get_active_name_role(self):
         name_combobox_iter = self.name_role_combobox.get_active_iter()
@@ -175,8 +180,9 @@ class PersonAddMask(Gtk.Grid):
             name=self.name_role_combobox.get_child()
         return name
 
-    def new_person_func(self, widget):
-        print("new person: unimplemented")
+
+    def new_person_func(self):
+        print("still unimplemented")
 
     # Insert new person
     #
@@ -193,28 +199,26 @@ class PersonAddMask(Gtk.Grid):
                       self.birth_place_text_entry.get_text(), 
                       None)
         
-        person.insert()
+
         # insert person names
         # iterate over names treestore
         iter=self.namepart_treestore.get_iter_first()
         while iter:
             (person_name_role)=self.namepart_treestore.get(iter, 1)
-            print("person_name_role: %s" % person_name_role)
-            personName=PersonName(None, person_name_role, person.sid)
-            personName.insert()
+            person_name=PersonName(None, person_name_role, None)
+            person.add_name(person_name)
             
             # children of name a nameparts
             if self.namepart_treestore.iter_has_child(iter):
                 child_iter=self.namepart_treestore.iter_children(iter)
                 while child_iter:
                     (namepart_role,namepart_value)=self.namepart_treestore.get(child_iter,1,2)                    
-                    namepart=Namepart(None, namepart_role, namepart_value, personName.sid)
-                    namepart.insert()
+                    namepart=Namepart(None, namepart_role, namepart_value, None)
+                    person_name.add_namepart(namepart)
                     child_iter=self.namepart_treestore.iter_next(child_iter)
                 
             iter=self.namepart_treestore.iter_next(iter)
-        get_db_connection().commit()
-        print("Done")
+        person.insert()
 
 
     def get_active_name_treestore(self):
