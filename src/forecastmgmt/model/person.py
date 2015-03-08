@@ -23,11 +23,18 @@ class Person:
         self.person_uuid=person_uuid
         self.names=[]
 
-    def __str__(self):
-        return str(self.__dict__)
             
     def __eq__(self, other):
-        return self.__dict__==other.__dict__
+        if isinstance(other, self.__class__):
+            print("self: %s " % self.__dict__)
+            print("other: %s " % other.__dict__)
+            
+            return self.__dict__==other.__dict__
+        else:
+            return False
+        
+    def __ne__(self, other):
+        return not self==other
 
        
     def insert(self):
@@ -87,11 +94,15 @@ class PersonName:
         self.person_sid=person_sid
         self.nameparts=nameparts
 
-    def __str__(self):
-        return str(self.__dict__)
+
             
     def __eq__(self, other):
-        return self.__dict__==other.__dict__
+        if isinstance(other, self.__class__):
+            print("name self: %s " % self.__dict__)
+            print("name other: %s " % other.__dict__)
+            return self.__dict__==other.__dict__
+        else:
+            return False
 
     
     def insert(self):
@@ -132,12 +143,16 @@ class Namepart:
         self.namepart_value=namepart_value
         self.person_name_sid=person_name_sid
             
-    def __str__(self):
-        return str(self.__dict__)
-            
-    def __eq__(self, other):
-        return self.__dict__==other.__dict__
     
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            print("namepart self: %s " % self.__dict__)
+            print("namepart other: %s " % other.__dict__)
+
+            return self.__dict__==other.__dict__
+        else:
+            return False
+
     def insert(self):
         cur = get_db_connection().cursor()
         cur.execute(Namepart.sql_dict["insert_namepart"],(self.namepart_role, self.namepart_value, self.person_name_sid,))

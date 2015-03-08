@@ -6,10 +6,9 @@ from gi.repository import Gtk
 from forecastmgmt.model.person import Person, PersonName, get_person_name_roles, Namepart, get_name_part_roles
 
 
-from forecastmgmt.dao.db_connection import get_db_connection
 
 from ui_tools import add_column_to_treeview
-
+import datetime
 
 class PersonAddMask(Gtk.Grid):
     def __init__(self, reset_callback, main_window, person=None):
@@ -20,8 +19,8 @@ class PersonAddMask(Gtk.Grid):
         
         self.create_layout()
         
-        if person!=None:
-            self.load_person(person)
+        
+        self.load_person(person)
 
         
         
@@ -152,18 +151,24 @@ class PersonAddMask(Gtk.Grid):
         self.attach(cancel_button,3,row,1,1)
         
         
-    def load_person(self, person_to_load):
-        person_to_load.load()
-        self.person_uuid_text_entry.set_text(person_to_load.person_uuid)
-        self.common_name_text_entry.set_text(person_to_load.common_name)
-        self.birth_place_text_entry.set_text(person_to_load.birth_place)
-        self.birth_date_year_text_entry.set_text("%s" % person_to_load.birth_date.year)
-        self.birth_date_month_text_entry.set_text("%s" % person_to_load.birth_date.month)
-        self.birth_date_day_text_entry.set_text("%s" % person_to_load.birth_date.day)
-        for name in person_to_load.names:
-            tree_iter=self.namepart_treestore.append(None,[name.sid, name.name_role, None])
-            for namepart in name.nameparts:
-                self.namepart_treestore.append(tree_iter,[namepart.sid, namepart.namepart_role, namepart.namepart_value])
+    def load_person(self, person_to_load=None):
+        if person_to_load!=None:
+            person_to_load.load()
+            self.loaded_person=person_to_load
+            self.loaded_person_sid=person_to_load.sid
+            self.person_uuid_text_entry.set_text(person_to_load.person_uuid)
+            self.common_name_text_entry.set_text(person_to_load.common_name)
+            self.birth_place_text_entry.set_text(person_to_load.birth_place)
+            self.birth_date_year_text_entry.set_text("%s" % person_to_load.birth_date.year)
+            self.birth_date_month_text_entry.set_text("%s" % person_to_load.birth_date.month)
+            self.birth_date_day_text_entry.set_text("%s" % person_to_load.birth_date.day)
+            for name in person_to_load.names:
+                tree_iter=self.namepart_treestore.append(None,[name.sid, name.name_role, None])
+                for namepart in name.nameparts:
+                    self.namepart_treestore.append(tree_iter,[namepart.sid, namepart.namepart_role, namepart.namepart_value])
+        else:
+            self.loaded_person=None
+            self.loaded_person_sid=None
         
 
     def add_name(self,widget):
@@ -187,39 +192,51 @@ class PersonAddMask(Gtk.Grid):
     # Insert new person
     #
     def save_person(self, widget):
+        person=self.create_person_from_mask()
+        if self.loaded_person==None:
+            person.insert()
+        else:                
+            if self.loaded_person!=None and self.loaded_person!=person:
+                print(self.loaded_person.__dict__)
+                print(person.__dict__)
+                print("Person updaten")
+            else:
+                print("An der Person hat sich nichts geaendert")
+            
+    def create_person_from_mask(self):
         common_name=self.common_name_text_entry.get_text()
         if not common_name:
             error_dialog = Gtk.MessageDialog(self.main_window, 0, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK, "Error: common name cannot be empty!")
             error_dialog.run()
             error_dialog.destroy()
             return
-        person=Person(None, 
+        
+        person=Person(self.loaded_person_sid, 
                       self.common_name_text_entry.get_text(), 
-                      "%s-%s-%s" % (self.birth_date_year_text_entry.get_text(), self.birth_date_month_text_entry.get_text(), self.birth_date_day_text_entry.get_text()), 
-                      self.birth_place_text_entry.get_text(), 
-                      None)
+                      datetime.date(int(self.birth_date_year_text_entry.get_text()), int(self.birth_date_month_text_entry.get_text()), int(self.birth_date_day_text_entry.get_text())), 
+                      self.birth_place_text_entry.get_text(),
+                      self.person_uuid_text_entry.get_text())
         
 
         # insert person names
         # iterate over names treestore
-        iter=self.namepart_treestore.get_iter_first()
-        while iter:
-            (person_name_role)=self.namepart_treestore.get(iter, 1)
-            person_name=PersonName(None, person_name_role, None)
+        name_iter=self.namepart_treestore.get_iter_first()
+        while name_iter:
+            (person_name_sid, person_name_role)=self.namepart_treestore.get(name_iter, 0, 1)
+            person_name=PersonName(person_name_sid, person_name_role, self.loaded_person_sid)
             person.add_name(person_name)
             
             # children of name a nameparts
-            if self.namepart_treestore.iter_has_child(iter):
-                child_iter=self.namepart_treestore.iter_children(iter)
+            if self.namepart_treestore.iter_has_child(name_iter):
+                child_iter=self.namepart_treestore.iter_children(name_iter)
                 while child_iter:
-                    (namepart_role,namepart_value)=self.namepart_treestore.get(child_iter,1,2)                    
-                    namepart=Namepart(None, namepart_role, namepart_value, None)
+                    (namepart_sid,namepart_role,namepart_value)=self.namepart_treestore.get(child_iter,0,1,2)                    
+                    namepart=Namepart(namepart_sid, namepart_role, namepart_value, person_name_sid)
                     person_name.add_namepart(namepart)
                     child_iter=self.namepart_treestore.iter_next(child_iter)
                 
-            iter=self.namepart_treestore.iter_next(iter)
-        person.insert()
-
+            name_iter=self.namepart_treestore.iter_next(name_iter)
+        return person
 
     def get_active_name_treestore(self):
         model,tree_iter=self.nameparts_treeview.get_selection().get_selected()
