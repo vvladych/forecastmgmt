@@ -12,7 +12,8 @@ class Person:
     sql_dict={"get_all_persons":"SELECT sid, common_name, birth_date, birth_place, person_uuid FROM fc_person", 
                "insert_person":"INSERT INTO fc_person(common_name, birth_date, birth_place) VALUES(%s,%s,%s) RETURNING sid",
                "delete_person":"DELETE FROM fc_person WHERE sid=%s",
-               "load_person":"SELECT sid, common_name, birth_date, birth_place, person_uuid FROM fc_person WHERE sid=%s"
+               "load_person":"SELECT sid, common_name, birth_date, birth_place, person_uuid FROM fc_person WHERE sid=%s",
+               "update_person":"UPDATE fc_person SET common_name=%s, birth_date=%s, birth_place=%s WHERE sid=%s"
                }
         
     def __init__(self, sid=None, common_name=None, birth_date=None, birth_place=None, person_uuid=None):
@@ -26,9 +27,6 @@ class Person:
             
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            print("self: %s " % self.__dict__)
-            print("other: %s " % other.__dict__)
-            
             return self.__dict__==other.__dict__
         else:
             return False
@@ -69,8 +67,28 @@ class Person:
             self.birth_date=p.birth_date
             self.birth_place=p.birth_place
             self.person_uuid=p.person_uuid
+            self.names=[]
             self.names = get_person_names(self.sid)
         cur.close()   
+        
+    def update(self, other):
+        cur=get_db_connection().cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
+        data=(other.common_name, other.birth_date, other.birth_place, self.sid)
+        cur.execute(Person.sql_dict["update_person"],data)
+        cur.close()
+        
+        # update person_names
+        # delete outdated person_names
+        for person_name in self.names:
+            if person_name not in other.names:
+                person_name.delete()
+                
+        for person_name in other.names:
+            if person_name not in self.names:
+                person_name.insert()
+            
+        get_db_connection().commit()
+        
 
 
 def get_all_persons():
@@ -85,7 +103,9 @@ def get_all_persons():
         
 class PersonName:
     sql_dict={"get_person_name_role":"SELECT sid, name_role FROM fc_person_name WHERE fc_person_sid=%s",
-              "insert_person_name":"INSERT INTO fc_person_name(fc_person_sid,name_role) VALUES(%s, %s) RETURNING sid"
+              "insert_person_name":"INSERT INTO fc_person_name(fc_person_sid,name_role) VALUES(%s, %s) RETURNING sid",
+              "update_person_name":"UPDATE fc_person_name SET name_role=%s WHERE sid=%s",
+              "delete_person_name":"DELETE FROM fc_person_name WHERE sid=%s"
               }    
                 
     def __init__(self, sid=None, name_role=None, person_sid=None, nameparts=[]):
@@ -94,16 +114,18 @@ class PersonName:
         self.person_sid=person_sid
         self.nameparts=nameparts
 
+    
+    def __ne__(self, other):
+        return not self==other
 
             
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            print("name self: %s " % self.__dict__)
-            print("name other: %s " % other.__dict__)
             return self.__dict__==other.__dict__
         else:
             return False
 
+            
     
     def insert(self):
         cur = get_db_connection().cursor()
@@ -113,6 +135,23 @@ class PersonName:
         for namepart in self.nameparts:
             namepart.person_name_sid=self.sid
             namepart.insert()
+            
+#     def update(self, other):
+#         # update name parts
+#         # delete outdated name parts
+#         for namepart_to_del in list(set(self.nameparts)-set(other.nameparts)):
+#             namepart_to_del.delete()
+#         # insert new person_names
+#         for namepart_to_insert in list(set(other.nameparts)-set(self.nameparts)):
+#             namepart_to_insert.person_name_sid=self.sid
+#             namepart_to_insert.insert()        
+        
+    def delete(self):
+        cur = get_db_connection().cursor()
+        data=(self.sid,)
+        cur.execute(PersonName.sql_dict["delete_person_name"], data)
+        cur.close()
+        
         
     def add_namepart(self, namepart):
         self.nameparts.append(namepart)
@@ -135,7 +174,8 @@ def get_person_name_roles():
 class Namepart:
     
     sql_dict={"get_nameparts_for_name_sid":"SELECT sid, name_part_role, name_part_value, person_name_sid FROM fc_person_name_part WHERE person_name_sid=%s",
-                "insert_namepart":"INSERT INTO fc_person_name_part(name_part_role, name_part_value, person_name_sid) VALUES(%s, %s, %s) RETURNING sid"}
+                "insert_namepart":"INSERT INTO fc_person_name_part(name_part_role, name_part_value, person_name_sid) VALUES(%s, %s, %s) RETURNING sid",
+                "delete_namepart":"DELETE FROM fc_person_name_part WHERE sid=%s"}
         
     def __init__(self, sid=None, namepart_role=None, namepart_value=None, person_name_sid=None):
         self.sid=sid
@@ -146,18 +186,26 @@ class Namepart:
     
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            print("namepart self: %s " % self.__dict__)
-            print("namepart other: %s " % other.__dict__)
-
             return self.__dict__==other.__dict__
         else:
             return False
+
+    def __ne__(self, other):
+        return not self==other
+
 
     def insert(self):
         cur = get_db_connection().cursor()
         cur.execute(Namepart.sql_dict["insert_namepart"],(self.namepart_role, self.namepart_value, self.person_name_sid,))
         self.sid = cur.fetchone()[0]
         cur.close()
+
+    def delete(self):
+        cur = get_db_connection().cursor()
+        cur.execute(Namepart.sql_dict["delete_namepart"],(self.sid,))
+        cur.close()
+        
+    
         
 
 def get_all_name_parts(name_sid):

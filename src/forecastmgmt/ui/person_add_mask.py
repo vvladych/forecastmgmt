@@ -138,7 +138,7 @@ class PersonAddMask(Gtk.Grid):
 
         row+=1
         # Row 5
-        save_button = Gtk.Button("save", Gtk.STOCK_SAVE)
+        save_button = Gtk.Button("Save", Gtk.STOCK_SAVE)
         save_button.connect("clicked", self.save_person)
         self.attach(save_button,1,row,1,1)
 
@@ -146,9 +146,9 @@ class PersonAddMask(Gtk.Grid):
         new_button.connect("clicked", self.new_person_func)
         self.attach(new_button,2,row,1,1)
 
-        cancel_button = Gtk.Button("Cancel", Gtk.STOCK_CANCEL)
-        cancel_button.connect("clicked", self.parent_callback_func, self.reset_callback)
-        self.attach(cancel_button,3,row,1,1)
+        back_button = Gtk.Button("Back", Gtk.STOCK_GO_BACK)
+        back_button.connect("clicked", self.parent_callback_func, self.reset_callback)
+        self.attach(back_button,3,row,1,1)
         
         
     def load_person(self, person_to_load=None):
@@ -162,6 +162,7 @@ class PersonAddMask(Gtk.Grid):
             self.birth_date_year_text_entry.set_text("%s" % person_to_load.birth_date.year)
             self.birth_date_month_text_entry.set_text("%s" % person_to_load.birth_date.month)
             self.birth_date_day_text_entry.set_text("%s" % person_to_load.birth_date.day)
+            self.namepart_treestore.clear()
             for name in person_to_load.names:
                 tree_iter=self.namepart_treestore.append(None,[name.sid, name.name_role, None])
                 for namepart in name.nameparts:
@@ -197,11 +198,15 @@ class PersonAddMask(Gtk.Grid):
             person.insert()
         else:                
             if self.loaded_person!=None and self.loaded_person!=person:
-                print(self.loaded_person.__dict__)
-                print(person.__dict__)
+                self.loaded_person.update(person)
                 print("Person updaten")
+                self.loaded_person=person
+                self.loaded_person_sid=person.sid
             else:
-                print("An der Person hat sich nichts geaendert")
+                error_dialog = Gtk.MessageDialog(self.main_window, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Nothing changed, nothing to update!")
+                error_dialog.run()
+                error_dialog.destroy()
+                
             
     def create_person_from_mask(self):
         common_name=self.common_name_text_entry.get_text()
@@ -223,19 +228,21 @@ class PersonAddMask(Gtk.Grid):
         name_iter=self.namepart_treestore.get_iter_first()
         while name_iter:
             (person_name_sid, person_name_role)=self.namepart_treestore.get(name_iter, 0, 1)
-            person_name=PersonName(person_name_sid, person_name_role, self.loaded_person_sid)
-            person.add_name(person_name)
             
+            namepart_list=[]
             # children of name a nameparts
             if self.namepart_treestore.iter_has_child(name_iter):
                 child_iter=self.namepart_treestore.iter_children(name_iter)
                 while child_iter:
                     (namepart_sid,namepart_role,namepart_value)=self.namepart_treestore.get(child_iter,0,1,2)                    
                     namepart=Namepart(namepart_sid, namepart_role, namepart_value, person_name_sid)
-                    person_name.add_namepart(namepart)
+                    namepart_list.append(namepart)
                     child_iter=self.namepart_treestore.iter_next(child_iter)
-                
+            
+            person.add_name(PersonName(person_name_sid, person_name_role, self.loaded_person_sid, namepart_list))
             name_iter=self.namepart_treestore.iter_next(name_iter)
+            
+            
         return person
 
     def get_active_name_treestore(self):
