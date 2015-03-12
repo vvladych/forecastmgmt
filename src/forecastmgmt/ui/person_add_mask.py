@@ -3,7 +3,9 @@ from gi.repository import Gtk
 
 
 
-from forecastmgmt.model.person import Person, PersonName, get_person_name_roles, Namepart, get_name_part_roles
+from forecastmgmt.model.person import Person#, PersonName, get_person_name_roles, Namepart, get_name_part_roles
+from forecastmgmt.model.person_namepart import Namepart
+from forecastmgmt.dao.dao_utils import enum_retrieve_valid_values
 
 
 
@@ -242,7 +244,7 @@ class PersonAddMask(Gtk.Grid):
                     namepart_list.append(namepart)
                     child_iter=self.namepart_treestore.iter_next(child_iter)
             
-            person.add_name(PersonName(person_name_sid, person_name_role, self.loaded_person_sid, namepart_list))
+            person.add_name(person_name_sid, person_name_role, self.loaded_person_sid, namepart_list)
             name_iter=self.namepart_treestore.iter_next(name_iter)
             
             
@@ -306,7 +308,7 @@ class PersonAddMask(Gtk.Grid):
 
     def populate_namepart_roles_model(self):
         namepart_roles_model = Gtk.ListStore(int, str)
-        namepart_roles_list=get_name_part_roles()
+        namepart_roles_list=enum_retrieve_valid_values("t_person_name_part_role")
         counter=0
         for namepart_role in namepart_roles_list:
             namepart_roles_model.append([counter,namepart_role])
@@ -315,7 +317,7 @@ class PersonAddMask(Gtk.Grid):
 
     def populate_name_roles_model(self):
         name_roles_model = Gtk.ListStore(int,str)
-        nameroles_list = get_person_name_roles()
+        nameroles_list = enum_retrieve_valid_values("t_person_name_role")
         counter=0
         for namerole in nameroles_list:
             name_roles_model.append([counter,namerole])
