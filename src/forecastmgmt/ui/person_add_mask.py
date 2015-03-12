@@ -157,7 +157,6 @@ class PersonAddMask(Gtk.Grid):
         if person_to_load!=None:
             person_to_load.load()
             self.loaded_person=person_to_load
-            self.loaded_person_sid=person_to_load.sid
             self.person_uuid_text_entry.set_text(person_to_load.person_uuid)
             self.common_name_text_entry.set_text(person_to_load.common_name)
             self.birth_place_text_entry.set_text(person_to_load.birth_place)
@@ -171,7 +170,7 @@ class PersonAddMask(Gtk.Grid):
                     self.namepart_treestore.append(tree_iter,[namepart.sid, namepart.namepart_role, namepart.namepart_value])
         else:
             self.loaded_person=None
-            self.loaded_person_sid=None
+
         
 
     def add_name(self,widget):
@@ -207,7 +206,6 @@ class PersonAddMask(Gtk.Grid):
             if self.loaded_person!=None and self.loaded_person!=person:
                 self.loaded_person.update(person)
                 self.loaded_person=person
-                self.loaded_person_sid=person.sid
                 self.show_info_dialog("Person updated")
             else:
                 self.show_info_dialog("Nothing has changed, nothing to update!")
@@ -221,7 +219,11 @@ class PersonAddMask(Gtk.Grid):
             error_dialog.destroy()
             return
         
-        person=Person(self.loaded_person_sid, 
+        loaded_person_sid=None
+        if self.loaded_person!=None:
+            loaded_person_sid=self.loaded_person.sid
+        
+        person=Person(loaded_person_sid, 
                       self.common_name_text_entry.get_text(), 
                       datetime.date(int(self.birth_date_year_text_entry.get_text()), int(self.birth_date_month_text_entry.get_text()), int(self.birth_date_day_text_entry.get_text())), 
                       self.birth_place_text_entry.get_text(),
@@ -244,7 +246,7 @@ class PersonAddMask(Gtk.Grid):
                     namepart_list.append(namepart)
                     child_iter=self.namepart_treestore.iter_next(child_iter)
             
-            person.add_name(person_name_sid, person_name_role, self.loaded_person_sid, namepart_list)
+            person.add_name(person_name_sid, person_name_role, loaded_person_sid, namepart_list)
             name_iter=self.namepart_treestore.iter_next(name_iter)
             
             

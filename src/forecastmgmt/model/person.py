@@ -4,7 +4,6 @@ __date__ ="$09.10.2014 23:01:15$"
 
 
 from forecastmgmt.dao.db_connection import get_db_connection
-from forecastmgmt.dao.dao_utils import enum_retrieve_valid_values
 import psycopg2.extras
 
 from person_name import PersonName
