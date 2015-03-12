@@ -190,6 +190,11 @@ class PersonAddMask(Gtk.Grid):
     def new_person_func(self):
         print("still unimplemented")
 
+    def show_info_dialog(self, message):
+        info_dialog = Gtk.MessageDialog(self.main_window, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, message)
+        info_dialog.run()
+        info_dialog.destroy()
+
     # Insert new person
     #
     def save_person(self, widget):
@@ -199,13 +204,11 @@ class PersonAddMask(Gtk.Grid):
         else:                
             if self.loaded_person!=None and self.loaded_person!=person:
                 self.loaded_person.update(person)
-                print("Person updaten")
                 self.loaded_person=person
                 self.loaded_person_sid=person.sid
+                self.show_info_dialog("Person updated")
             else:
-                error_dialog = Gtk.MessageDialog(self.main_window, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Nothing changed, nothing to update!")
-                error_dialog.run()
-                error_dialog.destroy()
+                self.show_info_dialog("Nothing has changed, nothing to update!")
                 
             
     def create_person_from_mask(self):
