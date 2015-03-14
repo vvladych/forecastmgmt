@@ -19,8 +19,7 @@ class PersonAddMask(Gtk.Grid):
         self.main_window=main_window
         self.reset_callback = reset_callback
         
-        self.create_layout()
-        
+        self.create_layout()        
         
         self.load_person(person)
 
