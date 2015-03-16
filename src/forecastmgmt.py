@@ -11,13 +11,17 @@ class MainWindow(Gtk.Window):
         Gtk.Window.__init__(self, title="Forecaster")
         self.set_default_size(800,600)
         
-        toolbar=self.create_toolbar()       
+        
 
         # The main area, grid 
         self.grid = Gtk.Grid()
         self.grid.set_orientation(Gtk.Orientation.VERTICAL)
         self.add(self.grid)
 
+        menubar=self.create_menubar()
+        self.grid.add(menubar)
+        
+        toolbar=self.create_toolbar()       
         self.grid.add(toolbar)
         
         self.working_area=Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
@@ -53,7 +57,29 @@ class MainWindow(Gtk.Window):
         toolbutton_quit.connect("clicked", self.on_menu_file_quit)
         toolbar.add(toolbutton_quit)
 
-        return toolbar    
+        return toolbar 
+    
+    def create_menubar(self):
+        menubar = Gtk.MenuBar()
+        
+        file_menu_entry = Gtk.MenuItem("File")
+        
+        menu = Gtk.Menu()
+        mitem_file_new=Gtk.MenuItem("New")
+        
+        mitem_quit = Gtk.MenuItem("Quit")
+        mitem_quit.connect("activate", self.on_menu_file_quit)
+        menu.insert(mitem_file_new, 0)
+        menu.insert(mitem_quit, 1)
+        
+        file_menu_entry.set_submenu(menu)
+        
+        #filemenu.append(file_menu_entry)
+        
+        menubar.append(file_menu_entry)
+        
+        return menubar
+       
     
     def clean_working_area(self):
         for child in self.working_area.get_children():
