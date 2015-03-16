@@ -16,6 +16,8 @@ class PersonListMask(Gtk.Box):
         self.tree.append_column(add_column_to_treeview("person uuid", 3, False))
         self.tree.append_column(add_column_to_treeview("person_sid", 4, True))
         
+        self.tree.get_column(0).set_sort_order(Gtk.SortType.ASCENDING)
+        self.tree.get_column(0).set_sort_column_id(0)
         
         self.tree.set_size_request(200,300)
         self.pack_start(self.tree, False, False, 0)        

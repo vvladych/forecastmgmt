@@ -6,9 +6,11 @@ Created on 14.03.2015
 
 from gi.repository import Gtk
 
+from project_overview_window import ProjectOverviewWindow
+
 from ui_tools import add_column_to_treeview
 
-class ForecastMask(Gtk.Grid):
+class ProjectMask(Gtk.Grid):
     
     def __init__(self, main_window, person=None):
         Gtk.Grid.__init__(self)
@@ -50,3 +52,12 @@ class ForecastMask(Gtk.Grid):
     def __populate_forecast_treestore(self):
         self.forecasts_treestore.append(None,[1,"project1"])
         self.forecasts_treestore.append(None,[2,"project2"]) 
+        
+        
+    def set_main_area(self, main_area_type="forecast"):
+        if main_area_type=="forecast":
+            self.main_middle_pane.pack_start(PersonWindow(self), False, False, 0)
+        #elif main_area_type=="organization":
+        #    self.main_middle_pane.pack_start(OrganisationMask(), False, False, 0)
+        else:
+            print("unimplemented")

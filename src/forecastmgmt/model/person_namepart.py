@@ -30,7 +30,7 @@ class Namepart:
 
     def delete(self):
         cur = get_db_connection().cursor()
-        cur.execute(Namepart.sql_dict["delete_namepart"],(self.sid,))
+        cur.execute(self.sql_dict["delete_namepart"],(self.sid,))
         cur.close()
         
 

@@ -2,7 +2,7 @@ from gi.repository import Gtk
 
 
 from forecastmgmt.ui.masterdata_mask import MasterdataMask
-from forecastmgmt.ui.forecast_mask import ForecastMask
+from forecastmgmt.ui.project_mask import ProjectMask
 
 
 class MainWindow(Gtk.Window):
@@ -64,7 +64,7 @@ class MainWindow(Gtk.Window):
         if action=="masterdata":
             self.working_area.pack_start(MasterdataMask(self), False, False, 0)
         elif action=="forecast":
-            self.working_area.pack_start(ForecastMask(self), False, False, 0)
+            self.working_area.pack_start(ProjectMask(self), False, False, 0)
         else:
             print("unimplemented")
 
