@@ -4,6 +4,8 @@ from gi.repository import Gtk
 from forecastmgmt.ui.masterdata_mask import MasterdataMask
 from forecastmgmt.ui.project_mask import ProjectMask
 
+from forecastmgmt.ui.forecast_new_dialog import ForecastNewDialog
+
 
 class MainWindow(Gtk.Window):
 
@@ -11,8 +13,6 @@ class MainWindow(Gtk.Window):
         Gtk.Window.__init__(self, title="Forecaster")
         self.set_default_size(800,600)
         
-        
-
         # The main area, grid 
         self.grid = Gtk.Grid()
         self.grid.set_orientation(Gtk.Orientation.VERTICAL)
@@ -59,13 +59,14 @@ class MainWindow(Gtk.Window):
 
         return toolbar 
     
+    
     def create_menubar(self):
         menubar = Gtk.MenuBar()
         
         file_menu_entry = Gtk.MenuItem("File")
         
         menu = Gtk.Menu()
-        mitem_file_new=Gtk.MenuItem("New")
+        mitem_file_new=Gtk.MenuItem("New forecast...")
         
         mitem_quit = Gtk.MenuItem("Quit")
         mitem_quit.connect("activate", self.on_menu_file_quit)
@@ -74,9 +75,28 @@ class MainWindow(Gtk.Window):
         
         file_menu_entry.set_submenu(menu)
         
+        forecast_menu_entry = Gtk.MenuItem("Forecast")
+        forecast_menu = Gtk.Menu()
+        mitem_forecast_new=Gtk.MenuItem("New")
+        mitem_forecast_new.connect("activate", self.on_new_forecast)
+        forecast_menu.insert(mitem_forecast_new,0)
+        
+        forecast_menu_entry.set_submenu(forecast_menu)
+
+
+        masterdata_menu_entry = Gtk.MenuItem("Master data")
+        masterdata_menu = Gtk.Menu()
+        mitem_masterdata_person=Gtk.MenuItem("Person")
+        masterdata_menu.insert(mitem_masterdata_person,0)
+        
+        masterdata_menu_entry.set_submenu(masterdata_menu)
+
+        
         #filemenu.append(file_menu_entry)
         
         menubar.append(file_menu_entry)
+        menubar.append(forecast_menu_entry)
+        menubar.append(masterdata_menu_entry)
         
         return menubar
        
@@ -96,15 +116,33 @@ class MainWindow(Gtk.Window):
 
         self.working_area.show_all()
         
+        
     def on_menu_file_quit(self, widget):
         Gtk.main_quit()
+        
 
     def on_toolbutton_masterdata(self, widget):
         self.set_working_area("masterdata")
         
+        
     def on_toolbutton_forecast(self, widget):
         self.set_working_area("forecast")
-    
+        
+    def on_new_forecast(self, widget):
+        new_forecast_dialog=ForecastNewDialog(self)
+        response = new_forecast_dialog.run()
+        
+        if response==Gtk.ResponseType.OK:
+            new_forecast_dialog.perform_insert()
+            self.clean_working_area()
+            self.set_working_area("forecast")
+                
+        elif response==Gtk.ResponseType.CANCEL:
+            print("nichts inserten")
+        else:
+            print("unknown action")
+        
+        new_forecast_dialog.destroy()
 
             
 

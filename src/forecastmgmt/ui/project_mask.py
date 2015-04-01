@@ -8,7 +8,9 @@ from gi.repository import Gtk
 
 from project_overview_window import ProjectOverviewWindow
 
+
 from ui_tools import add_column_to_treeview
+from forecastmgmt.model.fc_project import FcProject, get_project_list
 
 class ProjectMask(Gtk.Grid):
     
@@ -50,13 +52,14 @@ class ProjectMask(Gtk.Grid):
         
         
     def __populate_forecast_treestore(self):
-        self.forecasts_treestore.append(None,[1,"project1"])
-        self.forecasts_treestore.append(None,[2,"project2"]) 
+        for project in get_project_list():
+            self.forecasts_treestore.append(None,[project.sid,project.common_name])
+             
         
         
     def set_main_area(self, main_area_type="forecast"):
         if main_area_type=="forecast":
-            self.main_middle_pane.pack_start(PersonWindow(self), False, False, 0)
+            self.main_middle_pane.pack_start(ProjectOverviewWindow(self), False, False, 0)
         #elif main_area_type=="organization":
         #    self.main_middle_pane.pack_start(OrganisationMask(), False, False, 0)
         else:
