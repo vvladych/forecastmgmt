@@ -54,6 +54,7 @@ class Person:
     def add_name(self, person_name_sid, person_name_role, person_sid, namepart_list):
         self.names.append(PersonName(person_name_sid, person_name_role, person_sid, namepart_list))
         
+        
     def delete(self):
         cur = get_db_connection().cursor()
         data=(self.sid,)
@@ -61,18 +62,19 @@ class Person:
         cur.close()
         get_db_connection().commit()
         
+        
     def load(self):
         cur=get_db_connection().cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
         data=(self.sid,)
         cur.execute(Person.sql_dict["load_person"],data)
         for p in cur.fetchall():
-            self.sid=p.sid
             self.common_name=p.common_name
             self.birth_date=p.birth_date
             self.birth_place=p.birth_place
             self.person_uuid=p.person_uuid
             self._load_person_names()
-        cur.close()   
+        cur.close()
+           
         
     def _load_person_names(self):
         self.names=[]

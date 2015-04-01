@@ -46,7 +46,7 @@ class ProjectMask(Gtk.Grid):
         self.forecasts_treeview = Gtk.TreeView(self.forecasts_treestore)
         self.forecasts_treeview.append_column(add_column_to_treeview("id", 0, True))
         self.forecasts_treeview.append_column(add_column_to_treeview("Forecast", 1, False))
-        
+        self.forecasts_treeview.connect("row-activated", self.on_row_select)
         self.forecasts_treeview.set_size_request(200,300)
         
         
@@ -54,13 +54,17 @@ class ProjectMask(Gtk.Grid):
     def __populate_forecast_treestore(self):
         for project in get_project_list():
             self.forecasts_treestore.append(None,[project.sid,project.common_name])
+            
+    def __clear_main_middle_pane(self):
+        for child in self.main_middle_pane.get_children():
+            self.main_middle_pane.remove(child)        
              
         
+    def on_row_select(self,widget,path,data):
+        project_sid=self.forecasts_treestore.get(self.forecasts_treestore.get_iter(path),0)
+        project=FcProject(project_sid)
+        project.load()
+        self.__clear_main_middle_pane()
+        self.main_middle_pane.pack_start(ProjectOverviewWindow(self,project), False, False, 0)
+        self.main_middle_pane.show_all()
         
-    def set_main_area(self, main_area_type="forecast"):
-        if main_area_type=="forecast":
-            self.main_middle_pane.pack_start(ProjectOverviewWindow(self), False, False, 0)
-        #elif main_area_type=="organization":
-        #    self.main_middle_pane.pack_start(OrganisationMask(), False, False, 0)
-        else:
-            print("unimplemented")
