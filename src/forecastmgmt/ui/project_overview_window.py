@@ -7,13 +7,17 @@ Created on 14.03.2015
 from gi.repository import Gtk
 
 
+from ui_tools import add_column_to_treeview
+
+
 class ProjectOverviewWindow(Gtk.Grid):
     
     def __init__(self, main_window, forecast=None):
         Gtk.Grid.__init__(self)
         self.main_window=main_window
         self.create_layout()
-        self.load_forecast(forecast)
+        self.forecast=forecast
+        self.load_forecast()
         
         
     def create_layout(self):
@@ -33,8 +37,40 @@ class ProjectOverviewWindow(Gtk.Grid):
         self.forecast_uuid_text_entry.set_editable(False)
         self.attach(self.forecast_uuid_text_entry,1,row,1,1)
         
+        row += 1
+        # project publications
+        publications_label = Gtk.Label("Publications")
+        publications_label.set_justify(Gtk.Justification.LEFT)
+        self.attach(publications_label,0,row,2,1)
         
-    def load_forecast(self, forecast=None):
-        if forecast!=None:
-            self.forecast_uuid_text_entry.set_text(forecast.forecast_uuid)
+        row += 1
+        self.__add_forecast_publications_treeview()
+        self.attach(self.publications_treeview,0,row,2,1)
+        
+        row += 1
+        self.add_publication_button=Gtk.Button("Add", Gtk.STOCK_ADD)
+        self.attach(self.add_publication_button,0,row,1,1)
+        self.remove_publication_button=Gtk.Button("Delete", Gtk.STOCK_DELETE)
+        self.attach(self.remove_publication_button,1,row,1,1)
+        
+        row += 1
+        # project model
+        model_label = Gtk.Label("Model")
+        model_label.set_justify(Gtk.Justification.LEFT)
+        self.attach(model_label,0,row,2,1)
+        
+        
+    def load_forecast(self):
+        if self.forecast!=None:
+            self.forecast_uuid_text_entry.set_text(self.forecast.forecast_uuid)
+            
+    def __add_forecast_publications_treeview(self):
+        self.publications_treestore = Gtk.TreeStore(int,str,str)
+        self.publications_treeview = Gtk.TreeView(self.publications_treestore)
+        self.publications_treeview.append_column(add_column_to_treeview("id", 0, True))
+        self.publications_treeview.append_column(add_column_to_treeview("Role", 1, False))
+        self.publications_treeview.append_column(add_column_to_treeview("Value", 2, False))
+        self.publications_treeview.set_size_request(200,100)
+        #self.publications_treeview.connect("row-activated", self.on_row_selection)
+        
         
