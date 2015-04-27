@@ -138,7 +138,7 @@ class MainWindow(Gtk.Window):
             self.set_working_area("forecast")
                 
         elif response==Gtk.ResponseType.CANCEL:
-            print("nichts inserten")
+            print("insert nothing")
         else:
             print("unknown action")
         

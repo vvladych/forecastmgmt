@@ -5,7 +5,8 @@ Created on 14.03.2015
 '''
 from gi.repository import Gtk
 
-from forecastmgmt.ui.person_window import PersonWindow 
+from forecastmgmt.ui.person_window import PersonWindow
+from forecastmgmt.ui.organisation_window import OrganisationWindow 
 
 class MasterdataMask(Gtk.Grid):
     
@@ -49,7 +50,10 @@ class MasterdataMask(Gtk.Grid):
     
     def set_main_area(self, main_area_type="person"):
         if main_area_type=="person":
-            self.main_middle_pane.pack_start(PersonWindow(self), False, False, 0)
+            self.main_middle_pane.pack_start(PersonWindow(self.main_window), False, False, 0)
+        elif main_area_type=="organisation":
+            self.main_middle_pane.pack_start(OrganisationWindow(self.main_window), False, False, 0)
+
         #elif main_area_type=="organization":
         #    self.main_middle_pane.pack_start(OrganisationMask(), False, False, 0)
         else:
