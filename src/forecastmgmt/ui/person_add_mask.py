@@ -143,13 +143,9 @@ class PersonAddMask(Gtk.Grid):
         save_button.connect("clicked", self.save_person)
         self.attach(save_button,1,row,1,1)
 
-        new_button = Gtk.Button("New", Gtk.STOCK_NEW)
-        new_button.connect("clicked", self.new_person_func)
-        self.attach(new_button,2,row,1,1)
-
         back_button = Gtk.Button("Back", Gtk.STOCK_GO_BACK)
         back_button.connect("clicked", self.parent_callback_func, self.reset_callback)
-        self.attach(back_button,3,row,1,1)
+        self.attach(back_button,2,row,1,1)
         
         
     def load_person(self, person_to_load=None):
@@ -187,9 +183,6 @@ class PersonAddMask(Gtk.Grid):
         return name
 
 
-    def new_person_func(self):
-        print("still unimplemented")
-
     def show_info_dialog(self, message):
         info_dialog = Gtk.MessageDialog(self.main_window, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, message)
         info_dialog.run()
@@ -224,7 +217,9 @@ class PersonAddMask(Gtk.Grid):
         
         person=Person(loaded_person_sid, 
                       self.common_name_text_entry.get_text(), 
-                      datetime.date(int(self.birth_date_year_text_entry.get_text()), int(self.birth_date_month_text_entry.get_text()), int(self.birth_date_day_text_entry.get_text())), 
+                      datetime.date(int(self.birth_date_year_text_entry.get_text()), 
+                                    int(self.birth_date_month_text_entry.get_text()), 
+                                    int(self.birth_date_day_text_entry.get_text())), 
                       self.birth_place_text_entry.get_text(),
                       self.person_uuid_text_entry.get_text())
         
@@ -326,5 +321,4 @@ class PersonAddMask(Gtk.Grid):
         return name_roles_model
 
     def parent_callback_func(self, widget, cb_func=None):
-        print("in reset_callback")
         cb_func()

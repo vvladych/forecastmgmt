@@ -12,13 +12,13 @@ class PersonWindow(MasterdataAbstractWindow):
     
 
     def add_action(self,widget,callback=None):
-        self.recreate_working_area()
+        self.reset_working_area()
         self.working_area.pack_start(PersonAddMask(self.default_view, self.main_window), False, False, 0)
         self.working_area.show_all()   
         
     
     def edit_action(self,widget,callback):
-        self.recreate_working_area()
+        self.reset_working_area()
         self.working_area.pack_start(PersonAddMask(self.default_view, self.main_window, self.listmask.get_current_object()), False, False, 0)
         self.working_area.show_all()
         

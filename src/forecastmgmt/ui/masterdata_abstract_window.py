@@ -25,7 +25,7 @@ class MasterdataAbstractWindow(Gtk.Box):
         
 
         
-    def recreate_working_area(self):
+    def reset_working_area(self):
         for child in self.working_area.get_children():
             self.working_area.remove(child)
         
@@ -61,7 +61,7 @@ class MasterdataAbstractWindow(Gtk.Box):
 
     
     def add_working_area(self, widget):
-        self.recreate_working_area()
+        self.reset_working_area()
         self.working_area.pack_start(self.listmask, False, False, 0)
         self.working_area.show_all()   
     
