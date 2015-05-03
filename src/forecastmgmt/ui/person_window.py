@@ -27,7 +27,7 @@ class PersonWindow(MasterdataAbstractWindow):
         confirm_dialog=DeletePersonConfirmationDialog(self.main_window)
         response = confirm_dialog.run()
         if response==Gtk.ResponseType.OK:
-            self.lsitmask.delete_object()
+            self.listmask.delete_object()
             print("OK")
         elif response==Gtk.ResponseType.CANCEL:
             print("Cancel was clicked")

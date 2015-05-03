@@ -12,17 +12,12 @@ from forecastmgmt.dao.dao_utils import enum_retrieve_valid_values
 from ui_tools import add_column_to_treeview
 import datetime
 
-class PersonAddMask(Gtk.Grid):
+from masterdata_abstract_add_mask import AbstractAddMask
+
+class PersonAddMask(AbstractAddMask):
+
     def __init__(self, reset_callback, main_window, person=None):
-        Gtk.Grid.__init__(self)
-
-        self.main_window=main_window
-        self.reset_callback = reset_callback
-        
-        self.create_layout()        
-        
-        self.load_person(person)
-
+        super(PersonAddMask, self).__init__(reset_callback, main_window, person)
         
         
     def create_layout(self):
@@ -148,18 +143,18 @@ class PersonAddMask(Gtk.Grid):
         self.attach(back_button,2,row,1,1)
         
         
-    def load_person(self, person_to_load=None):
-        if person_to_load!=None:
-            person_to_load.load()
-            self.loaded_person=person_to_load
-            self.person_uuid_text_entry.set_text(person_to_load.person_uuid)
-            self.common_name_text_entry.set_text(person_to_load.common_name)
-            self.birth_place_text_entry.set_text(person_to_load.birth_place)
-            self.birth_date_year_text_entry.set_text("%s" % person_to_load.birth_date.year)
-            self.birth_date_month_text_entry.set_text("%s" % person_to_load.birth_date.month)
-            self.birth_date_day_text_entry.set_text("%s" % person_to_load.birth_date.day)
+    def load_object(self, masterdata_object=None):
+        if masterdata_object!=None:
+            masterdata_object.load()
+            self.loaded_person=masterdata_object
+            self.person_uuid_text_entry.set_text(masterdata_object.person_uuid)
+            self.common_name_text_entry.set_text(masterdata_object.common_name)
+            self.birth_place_text_entry.set_text(masterdata_object.birth_place)
+            self.birth_date_year_text_entry.set_text("%s" % masterdata_object.birth_date.year)
+            self.birth_date_month_text_entry.set_text("%s" % masterdata_object.birth_date.month)
+            self.birth_date_day_text_entry.set_text("%s" % masterdata_object.birth_date.day)
             self.namepart_treestore.clear()
-            for name in person_to_load.names:
+            for name in masterdata_object.names:
                 tree_iter=self.namepart_treestore.append(None,[name.sid, name.name_role, None])
                 for namepart in name.nameparts:
                     self.namepart_treestore.append(tree_iter,[namepart.sid, namepart.namepart_role, namepart.namepart_value])
@@ -183,17 +178,15 @@ class PersonAddMask(Gtk.Grid):
         return name
 
 
-    def show_info_dialog(self, message):
-        info_dialog = Gtk.MessageDialog(self.main_window, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, message)
-        info_dialog.run()
-        info_dialog.destroy()
 
-    # Insert new person
+    # save person
     #
     def save_person(self, widget):
-        person=self.create_person_from_mask()
+        person=self.create_object_from_mask()
         if self.loaded_person==None:
             person.insert()
+            self.show_info_dialog("Person inserted")
+            self.parent_callback_func(widget,self.reset_callback)
         else:                
             if self.loaded_person!=None and self.loaded_person!=person:
                 self.loaded_person.update(person)
@@ -203,12 +196,10 @@ class PersonAddMask(Gtk.Grid):
                 self.show_info_dialog("Nothing has changed, nothing to update!")
                 
             
-    def create_person_from_mask(self):
+    def create_object_from_mask(self):
         common_name=self.common_name_text_entry.get_text()
         if not common_name:
-            error_dialog = Gtk.MessageDialog(self.main_window, 0, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK, "Error: common name cannot be empty!")
-            error_dialog.run()
-            error_dialog.destroy()
+            self.show_error_dialog("Error: common name cannot be empty!")
             return
         
         loaded_person_sid=None
@@ -254,6 +245,7 @@ class PersonAddMask(Gtk.Grid):
     def delete_name_part(self, widget):
         model,tree_iter = self.nameparts_treeview.get_selection().get_selected()
         model.remove(tree_iter)
+        
 
     def add_name_part(self,widget):
         namepart_role_id,namepart_role_value=self.get_active_namepart_role()
@@ -300,8 +292,6 @@ class PersonAddMask(Gtk.Grid):
         self.namepart_role_value_entry.set_text(model[treeiter][2])
         
 
-
-
     def populate_namepart_roles_model(self):
         namepart_roles_model = Gtk.ListStore(int, str)
         namepart_roles_list=enum_retrieve_valid_values("t_person_name_part_role")
@@ -310,6 +300,7 @@ class PersonAddMask(Gtk.Grid):
             namepart_roles_model.append([counter,namepart_role])
             counter+=1
         return namepart_roles_model
+    
 
     def populate_name_roles_model(self):
         name_roles_model = Gtk.ListStore(int,str)
@@ -320,5 +311,3 @@ class PersonAddMask(Gtk.Grid):
             counter+=1
         return name_roles_model
 
-    def parent_callback_func(self, widget, cb_func=None):
-        cb_func()
