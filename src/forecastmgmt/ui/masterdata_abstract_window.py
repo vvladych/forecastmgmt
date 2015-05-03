@@ -59,9 +59,12 @@ class MasterdataAbstractWindow(Gtk.Box):
     def add_action(self,widget,callback):
         raise NotImplementedError("Add action not implemented")
 
-
+    
     def add_working_area(self, widget):
-        raise NotImplementedError("add_working_area not implemented")
+        self.recreate_working_area()
+        self.working_area.pack_start(self.listmask, False, False, 0)
+        self.working_area.show_all()   
+    
     
 
     

@@ -9,16 +9,6 @@ class PersonWindow(MasterdataAbstractWindow):
 
     def __init__(self, main_window):
         super(PersonWindow, self).__init__(main_window, PersonListMask())
-
-        
-    def add_working_area(self, widget):
-        self.recreate_working_area()
-        self.working_area.pack_start(self.listmask, False, False, 0)
-        self.working_area.show_all()   
-
-
-    def get_current_person(self):
-        return self.listmask.get_current_object()
     
 
     def add_action(self,widget,callback=None):
@@ -29,7 +19,7 @@ class PersonWindow(MasterdataAbstractWindow):
     
     def edit_action(self,widget,callback):
         self.recreate_working_area()
-        self.working_area.pack_start(PersonAddMask(self.default_view, self.main_window, self.get_current_person()), False, False, 0)
+        self.working_area.pack_start(PersonAddMask(self.default_view, self.main_window, self.listmask.get_current_object()), False, False, 0)
         self.working_area.show_all()
         
         
