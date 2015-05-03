@@ -49,6 +49,10 @@ class MasterdataMask(Gtk.Grid):
     
     
     def set_main_area(self, main_area_type="person"):
+        self.main_working_pane.remove(self.main_middle_pane)
+        self.main_middle_pane = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        self.main_working_pane.pack_start(self.main_middle_pane, False, False, 0)
+
         if main_area_type=="person":
             self.main_middle_pane.pack_start(PersonWindow(self.main_window), False, False, 0)
         elif main_area_type=="organisation":
@@ -58,6 +62,7 @@ class MasterdataMask(Gtk.Grid):
         #    self.main_middle_pane.pack_start(OrganisationMask(), False, False, 0)
         else:
             print("unimplemented")
+        self.main_working_pane.show_all()
     
     def mask_chooser(self):
         vbox=Gtk.Box(orientation=Gtk.Orientation.VERTICAL)

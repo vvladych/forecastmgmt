@@ -6,6 +6,7 @@ Created on 26.04.2015
 from gi.repository import Gtk
 
 from masterdata_abstract_window import MasterdataAbstractWindow
+from organisation_list_mask import OrganisationListMask
 
 
 class OrganisationWindow(MasterdataAbstractWindow):
@@ -15,14 +16,12 @@ class OrganisationWindow(MasterdataAbstractWindow):
         self.add_working_area(None, "list")
         
         
-        
     def add_working_area(self, widget, action="list"):
-        self.clean_working_area_box()
-        self.clean_action_area_box()
-        self.create_action_area()
+        self.recreate_working_area()
         if action=="list":
-            print("hier in list")
-        self.working_area.show_all()   
+            self.organisationListMask=OrganisationListMask()
+            self.working_area.pack_start(self.organisationListMask, False, False, 0)
+        self.working_area.show_all()
 
                 
     def delete_action(self,widget,callback):

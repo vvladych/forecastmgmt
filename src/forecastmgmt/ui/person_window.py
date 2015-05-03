@@ -8,43 +8,43 @@ from person_list_mask import PersonListMask
 class PersonWindow(MasterdataAbstractWindow):
 
     def __init__(self, main_window):
-        super(PersonWindow, self).__init__(main_window)
-        self.add_working_area(None, "list")
+        super(PersonWindow, self).__init__(main_window, PersonListMask())
 
         
-    def add_working_area(self, widget, action="list"):
-        self.clean_working_area_box()
-        self.clean_action_area_box()
-        self.create_action_area()
-        if action=="list":
-            self.personListMask=PersonListMask()
-            self.working_area.pack_start(self.personListMask, False, False, 0)
-        elif action=="add":
-            self.working_area.pack_start(PersonAddMask(self.default_view, self.main_window), False, False, 0)
-        elif action=="edit":
-            self.working_area.pack_start(PersonAddMask(self.default_view, self.main_window, self.get_current_person()), False, False, 0)
-
+    def add_working_area(self, widget):
+        self.recreate_working_area()
+        self.working_area.pack_start(self.listmask, False, False, 0)
         self.working_area.show_all()   
 
 
     def get_current_person(self):
-        return self.personListMask.get_current_person()
+        return self.listmask.get_current_object()
+    
 
-
-    def default_view(self):
-        self.add_working_area("list")
+    def add_action(self,widget,callback=None):
+        self.recreate_working_area()
+        self.working_area.pack_start(PersonAddMask(self.default_view, self.main_window), False, False, 0)
+        self.working_area.show_all()   
+        
+    
+    def edit_action(self,widget,callback):
+        self.recreate_working_area()
+        self.working_area.pack_start(PersonAddMask(self.default_view, self.main_window, self.get_current_person()), False, False, 0)
+        self.working_area.show_all()
         
         
     def delete_action(self,widget,callback):
         confirm_dialog=DeletePersonConfirmationDialog(self.main_window)
         response = confirm_dialog.run()
         if response==Gtk.ResponseType.OK:
-            self.personListMask.delete_person()
+            self.lsitmask.delete_object()
             print("OK")
         elif response==Gtk.ResponseType.CANCEL:
             print("Cancel was clicked")
         confirm_dialog.destroy()
         
+    def default_view(self):
+        self.add_working_area(None)
 
         
 class DeletePersonConfirmationDialog(Gtk.Dialog):
