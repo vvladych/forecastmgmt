@@ -8,20 +8,8 @@ from person_list_mask import PersonListMask
 class PersonWindow(MasterdataAbstractWindow):
 
     def __init__(self, main_window):
-        super(PersonWindow, self).__init__(main_window, PersonListMask())
+        super(PersonWindow, self).__init__(main_window, PersonListMask(), PersonAddMask(main_window, self.add_working_area))
     
-
-    def add_action(self,widget,callback=None):
-        self.reset_working_area()
-        self.working_area.pack_start(PersonAddMask(self.default_view, self.main_window), False, False, 0)
-        self.working_area.show_all()   
-        
-    
-    def edit_action(self,widget,callback):
-        self.reset_working_area()
-        self.working_area.pack_start(PersonAddMask(self.default_view, self.main_window, self.listmask.get_current_object()), False, False, 0)
-        self.working_area.show_all()
-        
         
     def delete_action(self,widget,callback):
         confirm_dialog=DeletePersonConfirmationDialog(self.main_window)
@@ -33,9 +21,6 @@ class PersonWindow(MasterdataAbstractWindow):
             print("Cancel was clicked")
         confirm_dialog.destroy()
         
-    def default_view(self):
-        self.add_working_area(None)
-
         
 class DeletePersonConfirmationDialog(Gtk.Dialog):
     

@@ -9,10 +9,11 @@ from gi.repository import Gtk
 
 class MasterdataAbstractWindow(Gtk.Box):
     
-    def __init__(self, main_window, listmask):
+    def __init__(self, main_window, listmask, addmask):
         Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
         self.main_window=main_window
         self.listmask=listmask
+        self.addmask=addmask
         
         self.action_area = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         self.pack_start(self.action_area, False, False, 0)
@@ -21,7 +22,7 @@ class MasterdataAbstractWindow(Gtk.Box):
         self.pack_start(self.working_area, False, False, 0)
 
         self.add_action_area_box()
-        self.add_working_area(None)
+        self.add_working_area()
         
 
         
@@ -53,15 +54,25 @@ class MasterdataAbstractWindow(Gtk.Box):
     def delete_action(self):
         raise NotImplementedError("Delete action not implemented")
     
+    
+    def add_action(self,widget,callback=None):
+        self.reset_working_area()
+        self.addmask.load_object(None)
+        self.working_area.pack_start(self.addmask, False, False, 0)
+        self.working_area.show_all()   
+        
+    
     def edit_action(self,widget,callback):
-        raise NotImplementedError("Edit action not implemented")
-
-    def add_action(self,widget,callback):
-        raise NotImplementedError("Add action not implemented")
+        self.reset_working_area()
+        self.addmask.set_masterdata_object(self.listmask.get_current_object())
+        self.working_area.pack_start(self.addmask, False, False, 0)
+        self.working_area.show_all()
+    
 
     
-    def add_working_area(self, widget):
+    def add_working_area(self):
         self.reset_working_area()
+        self.listmask.populate_object_view_table()
         self.working_area.pack_start(self.listmask, False, False, 0)
         self.working_area.show_all()   
     

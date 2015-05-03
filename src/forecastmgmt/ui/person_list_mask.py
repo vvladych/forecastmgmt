@@ -12,6 +12,7 @@ class PersonListMask(AbstractListMask):
                 
 
     def populate_object_view_table(self):
+        self.store.clear()
         persons = get_all_persons()
         for person in persons:
             self.store.append(["%s" % person.common_name, "%s" % person.birth_date, "%s" % person.birth_place, "%s" % person.person_uuid, "%s" % person.sid])

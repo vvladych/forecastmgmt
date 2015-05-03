@@ -16,8 +16,9 @@ from masterdata_abstract_add_mask import AbstractAddMask
 
 class PersonAddMask(AbstractAddMask):
 
-    def __init__(self, reset_callback, main_window, person=None):
-        super(PersonAddMask, self).__init__(reset_callback, main_window, person)
+    def __init__(self, main_window, reset_callback=None):
+        super(PersonAddMask, self).__init__(main_window, reset_callback)
+        self.loaded_person=None
         
         
     def create_layout(self):
@@ -160,6 +161,15 @@ class PersonAddMask(AbstractAddMask):
                     self.namepart_treestore.append(tree_iter,[namepart.sid, namepart.namepart_role, namepart.namepart_value])
         else:
             self.loaded_person=None
+            self.person_uuid_text_entry.set_text("")
+            self.common_name_text_entry.set_text("")
+            self.birth_place_text_entry.set_text("")
+            self.birth_date_day_text_entry.set_text("")
+            self.birth_date_month_text_entry.set_text("")
+            self.birth_date_year_text_entry.set_text("")
+            self.namepart_treestore.clear()
+            
+            
 
         
 
