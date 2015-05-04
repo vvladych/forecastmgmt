@@ -1,15 +1,19 @@
+'''
+Created on 03.05.2015
 
+@author: vvladych
+'''
 from gi.repository import Gtk
 
 
 
-from forecastmgmt.model.person import Person#, PersonName, get_person_name_roles, Namepart, get_name_part_roles
+from forecastmgmt.model.person import Person
 from forecastmgmt.model.person_namepart import Namepart
 from forecastmgmt.dao.dao_utils import enum_retrieve_valid_values
 
 
 
-from ui_tools import add_column_to_treeview
+from forecastmgmt.ui.ui_tools import add_column_to_treeview
 import datetime
 
 from masterdata_abstract_add_mask import AbstractAddMask

@@ -7,7 +7,7 @@ Created on 03.05.2015
 from gi.repository import Gtk
 
 
-from ui_tools import add_column_to_treeview
+from forecastmgmt.ui.ui_tools import add_column_to_treeview
 
 class AbstractListMask(Gtk.Box):
 

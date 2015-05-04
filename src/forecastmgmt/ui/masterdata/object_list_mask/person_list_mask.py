@@ -1,3 +1,8 @@
+'''
+Created on 02.05.2015
+
+@author: vvladych
+'''
 from gi.repository import Gtk
 from masterdata_abstract_list_mask import AbstractListMask
 from forecastmgmt.model.person import Person, get_all_persons

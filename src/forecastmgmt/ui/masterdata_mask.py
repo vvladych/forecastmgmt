@@ -5,8 +5,8 @@ Created on 14.03.2015
 '''
 from gi.repository import Gtk
 
-from forecastmgmt.ui.person_window import PersonWindow
-from forecastmgmt.ui.organisation_window import OrganisationWindow 
+from masterdata.object_window.person_window import PersonWindow
+from masterdata.object_window.organisation_window import OrganisationWindow 
 
 class MasterdataMask(Gtk.Grid):
     
