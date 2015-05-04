@@ -7,11 +7,12 @@ Created on 03.05.2015
 from gi.repository import Gtk
 
 from forecastmgmt.model.organisation import Organisation
+from forecastmgmt.ui.masterdata_abstract_add_mask import AbstractAddMask
 
 
-class OrganisationAddMask(Gtk.Grid):
-    def __init__(self, reset_callback, main_window, organisation=None):
-        super(OrganisationAddMask, self).__init__(reset_callback, main_window, organisation)
+class OrganisationAddMask(AbstractAddMask):
+    def __init__(self, main_window, reset_callback):
+        super(OrganisationAddMask, self).__init__(main_window, reset_callback)
 
 
     def create_layout(self):
@@ -38,6 +39,8 @@ class OrganisationAddMask(Gtk.Grid):
         self.attach(common_name_label,0,row,1,1)
         self.common_name_text_entry=Gtk.Entry()
         self.attach(self.common_name_text_entry,1,row,1,1)
+
+        row+=1
         
         # last row
         save_button = Gtk.Button("Save", Gtk.STOCK_SAVE)

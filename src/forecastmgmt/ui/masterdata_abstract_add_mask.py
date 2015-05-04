@@ -11,8 +11,6 @@ class AbstractAddMask(Gtk.Grid):
         Gtk.Grid.__init__(self)
         self.main_window=main_window
         self.reset_callback=reset_callback
-        print("reset_callback: ")
-        print(reset_callback)
         self.create_layout()        
         
         
