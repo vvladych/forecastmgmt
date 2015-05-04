@@ -76,4 +76,10 @@ class OrganisationAddMask(AbstractAddMask):
                 self.show_info_dialog("Nothing has changed, nothing to update!")
             
         
-        
+    def create_object_from_mask(self):
+        common_name = self.common_name_text_entry.get_text()
+        if common_name is None:
+            self.show_error_dialog("common name cannot be null")
+            return
+        organisation=Organisation(None,common_name)
+        return organisation

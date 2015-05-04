@@ -7,7 +7,7 @@ Created on 27.04.2015
 from gi.repository import Gtk
 
 
-class MasterdataAbstractWindow(Gtk.Box):
+class  MasterdataAbstractWindow(Gtk.Box):
     
     def __init__(self, main_window, listmask, addmask):
         Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
@@ -51,8 +51,15 @@ class MasterdataAbstractWindow(Gtk.Box):
 
         self.action_area.show_all()
         
-    def delete_action(self):
-        raise NotImplementedError("Delete action not implemented")
+    def delete_action(self,widget,callback):
+        confirm_dialog=DeleteConfirmationDialog(self.main_window)
+        response = confirm_dialog.run()
+        if response==Gtk.ResponseType.OK:
+            self.listmask.delete_object()
+            print("OK")
+        elif response==Gtk.ResponseType.CANCEL:
+            print("Cancel was clicked")
+        confirm_dialog.destroy()
     
     
     def add_action(self,widget,callback=None):
@@ -77,6 +84,15 @@ class MasterdataAbstractWindow(Gtk.Box):
         self.working_area.show_all()   
     
     
+class DeleteConfirmationDialog(Gtk.Dialog):
+    
+    def __init__(self,parent,object_name=None):
+        Gtk.Dialog.__init__(self, "Confirm delete %s(s)" % object_name, parent, 0, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OK, Gtk.ResponseType.OK))
+        self.set_default_size(150, 100)
+        label = Gtk.Label("Delete chosen %s(s)?" % object_name)
+        box = self.get_content_area()
+        box.add(label)
+        self.show_all()
 
     
 

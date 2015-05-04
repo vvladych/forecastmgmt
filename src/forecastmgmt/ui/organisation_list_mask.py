@@ -18,7 +18,7 @@ class OrganisationListMask(AbstractListMask):
     def populate_object_view_table(self):
         organisations = get_all_organisations()
         for organisation in organisations:
-            self.store.append(["%s" % organisation.common_name, "%s" % organisation.organisation_uuid, "%s" % organisation.sid])
+            self.store.append(["%s" % organisation.common_name, "%s" % organisation.organisation_uuid, "%s" % organisation.sid, "", ""])
         
 
     def delete_object(self):
