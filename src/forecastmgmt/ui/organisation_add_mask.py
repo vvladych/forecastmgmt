@@ -61,12 +61,17 @@ class OrganisationAddMask(AbstractAddMask):
             self.common_name_text_entry.set_text(organisation_to_load.common_name)
         else:
             self.loaded_organisation=None
+            self.organisation_uuid_text_entry.set_text("")
+            self.common_name_text_entry.set_text("")
         
             
     def save_organisation(self, widget):
         organisation=self.create_object_from_mask()
         if self.loaded_organisation==None:
             organisation.insert()
+            self.show_info_dialog("Organisation successful inserted")
+            self.loaded_organisation=organisation
+            self.reset_callback()
         else:                
             if self.loaded_organisation!=None and self.loaded_organisation!=organisation:
                 self.loaded_organisation.update(organisation)
@@ -83,3 +88,4 @@ class OrganisationAddMask(AbstractAddMask):
             return
         organisation=Organisation(None,common_name)
         return organisation
+    

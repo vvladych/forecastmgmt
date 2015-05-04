@@ -9,13 +9,14 @@ from forecastmgmt.model.organisation import Organisation, get_all_organisations
 
 class OrganisationListMask(AbstractListMask):
 
-    treeview_columns=[{"column":"common_name","hide":"False"},{"column":"organisation uuid","hide":"False"},{"column":"organisation_sid","hide":"True"}]
+    treeview_columns=[{"column":"common_name","hide":False},{"column":"organisation uuid","hide":False},{"column":"organisation_sid","hide":True}]
 
     def __init__(self):
         super(OrganisationListMask, self).__init__(OrganisationListMask.treeview_columns)        
         
 
     def populate_object_view_table(self):
+        self.store.clear()        
         organisations = get_all_organisations()
         for organisation in organisations:
             self.store.append(["%s" % organisation.common_name, "%s" % organisation.organisation_uuid, "%s" % organisation.sid, "", ""])

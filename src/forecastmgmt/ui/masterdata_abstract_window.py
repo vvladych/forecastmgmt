@@ -56,9 +56,9 @@ class  MasterdataAbstractWindow(Gtk.Box):
         response = confirm_dialog.run()
         if response==Gtk.ResponseType.OK:
             self.listmask.delete_object()
-            print("OK")
+            self.show_info_dialog("Delete successful")
         elif response==Gtk.ResponseType.CANCEL:
-            print("Cancel was clicked")
+            self.show_info_dialog("Delete canceled")
         confirm_dialog.destroy()
     
     
@@ -82,6 +82,18 @@ class  MasterdataAbstractWindow(Gtk.Box):
         self.listmask.populate_object_view_table()
         self.working_area.pack_start(self.listmask, False, False, 0)
         self.working_area.show_all()   
+        
+    def show_info_dialog(self, message):
+        info_dialog = Gtk.MessageDialog(self.main_window, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, message)
+        info_dialog.run()
+        info_dialog.destroy()
+        
+
+    def show_error_dialog(self, message):
+        error_dialog = Gtk.MessageDialog(self.main_window, 0, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK, message)
+        error_dialog.run()
+        error_dialog.destroy()
+        
     
     
 class DeleteConfirmationDialog(Gtk.Dialog):
