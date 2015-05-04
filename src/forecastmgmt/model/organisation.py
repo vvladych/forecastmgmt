@@ -46,6 +46,7 @@ class Organisation:
         cur.close()
         get_db_connection().commit()
         
+        
     def delete(self):
         cur = get_db_connection().cursor()
         data=(self.sid,)
