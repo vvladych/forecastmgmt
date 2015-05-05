@@ -3,63 +3,28 @@ Created on 04.05.2015
 
 @author: vvladych
 '''
-from forecastmgmt.dao.db_connection import get_db_connection
-import psycopg2.extras
 
+from MDO import MDO
 
-class Publisher:
+class Publisher(MDO):
     
-    sql_dict={"get_all_publishers":"SELECT sid, publisher_common_name, publisher_uuid FROM fc_publisher",
-              "delete_publisher":"DELETE FROM fc_publisher WHERE sid=%s",
-              "insert_publisher":"INSERT INTO fc_publisher(publisher_common_name) VALUES(%s) RETURNING sid"}
+    sql_dict={"get_all":"SELECT sid, publisher_common_name, publisher_uuid FROM fc_publisher",
+              "delete":"DELETE FROM fc_publisher WHERE sid=%s",
+              "insert":"INSERT INTO fc_publisher(publisher_common_name) VALUES(%s) RETURNING sid",
+              "load":"SELECT publisher_common_name, publisher_uuid FROM fc_publisher WHERE sid=%s"}
     
-    def __init__(self, sid=None, common_name=None, publisher_uuid=None):
-        self.sid=sid
+    def __init__(self, sid=None, common_name=None, uuid=None):
+        super(Publisher, self).__init__(Publisher.sql_dict,sid,uuid)
         self.common_name=common_name
-        self.publisher_uuid=publisher_uuid
         
-    def __eq__(self, other):
-        if isinstance(other, self.__class__):
-            return self.__dict__==other.__dict__
-        else:
-            return False
-        
-    def __ne__(self, other):
-        return not self==other
 
-
-    def load(self):
-        cur=get_db_connection().cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
-        data=(self.sid,)
-        cur.execute(Publisher.sql_dict["load_publisher"],data)
-        for p in cur.fetchall():
-            self.common_name=p.common_name
-            self.publisher_uuid=p.publisher_uuid
-        cur.close()
+    def load_object_from_db(self,rec):
+        self.common_name=rec.common_name
+        self.uuid=rec.uuid
         
-        
-    def insert(self):
-        cur = get_db_connection().cursor()
-        data=(self.common_name,)
-        cur.execute(Publisher.sql_dict["insert_publisher"],data)
-        self.sid=cur.fetchone()[0]
-        cur.close()
-        get_db_connection().commit()
-        
-    def delete(self):
-        cur = get_db_connection().cursor()
-        data=(self.sid,)
-        cur.execute(Publisher.sql_dict["delete_publisher"],data)
-        cur.close()
-        get_db_connection().commit()
-
-
+    def get_insert_data(self):
+        return (self.common_name,)
     
-def get_all_publishers():
-    publisherlist=[]
-    cur = get_db_connection().cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
-    cur.execute(Publisher.sql_dict["get_all_publishers"])
-    for publisher in cur.fetchall():
-        publisherlist.append(Publisher(publisher.sid, publisher.publisher_common_name, publisher.publisher_uuid))
-    cur.close()
-    return publisherlist
+    def fabric_method(self,rec):
+        return Publisher(rec.sid, rec.publisher_common_name, rec.publisher_uuid)
+        
