@@ -57,7 +57,7 @@ class OrganisationAddMask(AbstractAddMask):
         if organisation_to_load!=None:
             organisation_to_load.load()
             self.loaded_organisation=organisation_to_load
-            self.organisation_uuid_text_entry.set_text(organisation_to_load.organisation_uuid)
+            self.organisation_uuid_text_entry.set_text(organisation_to_load.uuid)
             self.common_name_text_entry.set_text(organisation_to_load.common_name)
         else:
             self.loaded_organisation=None

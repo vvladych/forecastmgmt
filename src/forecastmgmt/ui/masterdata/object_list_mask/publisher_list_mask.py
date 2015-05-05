@@ -5,7 +5,7 @@ Created on 04.05.2015
 '''
 from gi.repository import Gtk
 from masterdata_abstract_list_mask import AbstractListMask
-from forecastmgmt.model.publisher import Publisher, get_all_publishers
+from forecastmgmt.model.publisher import Publisher
 
 class PublisherListMask(AbstractListMask):
 
@@ -17,9 +17,9 @@ class PublisherListMask(AbstractListMask):
 
     def populate_object_view_table(self):
         self.store.clear()        
-        publishers = get_all_publishers()
+        publishers = Publisher().get_all()
         for publisher in publishers:
-            self.store.append(["%s" % publisher.common_name, "%s" % publisher.publisher_uuid, "%s" % publisher.sid, "", ""])
+            self.store.append(["%s" % publisher.common_name, "%s" % publisher.uuid, "%s" % publisher.sid, "", ""])
         
 
     def delete_object(self):

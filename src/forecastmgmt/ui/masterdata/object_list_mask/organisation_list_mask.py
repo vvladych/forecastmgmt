@@ -5,7 +5,7 @@ Created on 02.05.2015
 '''
 from gi.repository import Gtk
 from masterdata_abstract_list_mask import AbstractListMask
-from forecastmgmt.model.organisation import Organisation, get_all_organisations
+from forecastmgmt.model.organisation import Organisation
 
 class OrganisationListMask(AbstractListMask):
 
@@ -17,9 +17,9 @@ class OrganisationListMask(AbstractListMask):
 
     def populate_object_view_table(self):
         self.store.clear()        
-        organisations = get_all_organisations()
+        organisations = Organisation().get_all()
         for organisation in organisations:
-            self.store.append(["%s" % organisation.common_name, "%s" % organisation.organisation_uuid, "%s" % organisation.sid, "", ""])
+            self.store.append(["%s" % organisation.common_name, "%s" % organisation.uuid, "%s" % organisation.sid, "", ""])
         
 
     def delete_object(self):
