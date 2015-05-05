@@ -37,7 +37,7 @@ class MDO(object):
     def get_insert_data(self):
         raise NotImplementedError("get_insert_data still not implemented!")
         
-    def delete(self,sqlstmt,data):
+    def delete(self):
         cur = get_db_connection().cursor()
         cur.execute(self.sql_dict["delete"],self.get_delete_data())
         cur.close()
@@ -57,5 +57,17 @@ class MDO(object):
 
     def load_object_from_db(self, rec):
         raise NotImplementedError("load_object_from_db still not implemented!")
+    
+    def get_all(self):
+        objectlist=[]
+        cur = get_db_connection().cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
+        cur.execute(self.sql_dict["get_all"])
+        for r in cur.fetchall():
+            objectlist.append(self.fabric_method(r))
+        cur.close()
+        return objectlist
+    
+    def fabric_method(self, rec):
+        raise NotImplementedError("fabric_method still not implemented!")
 
         
