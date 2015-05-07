@@ -58,10 +58,20 @@ class MDO(object):
     def load_object_from_db(self, rec):
         raise NotImplementedError("load_object_from_db still not implemented!")
     
+    
     def get_all(self):
         objectlist=[]
         cur = get_db_connection().cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
         cur.execute(self.sql_dict["get_all"])
+        for r in cur.fetchall():
+            objectlist.append(self.fabric_method(r))
+        cur.close()
+        return objectlist
+    
+    def get_all_for_foreign_key(self,foreign_key):
+        objectlist=[]
+        cur = get_db_connection().cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
+        cur.execute(self.sql_dict["get_all_foreign_key"],(foreign_key,))
         for r in cur.fetchall():
             objectlist.append(self.fabric_method(r))
         cur.close()
