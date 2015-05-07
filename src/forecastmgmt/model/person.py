@@ -15,9 +15,7 @@ class Person:
                "insert_person":"INSERT INTO fc_person(common_name, birth_date, birth_place) VALUES(%s,%s,%s) RETURNING sid",
                "delete_person":"DELETE FROM fc_person WHERE sid=%s",
                "load_person":"SELECT sid, common_name, birth_date, birth_place, person_uuid FROM fc_person WHERE sid=%s",
-               "update_person":"UPDATE fc_person SET common_name=%s, birth_date=%s, birth_place=%s WHERE sid=%s",
-               "get_person_name_role":"SELECT sid, name_role FROM fc_person_name WHERE fc_person_sid=%s",
-               "get_nameparts_for_name_sid":"SELECT sid, name_part_role, name_part_value, person_name_sid FROM fc_person_name_part WHERE person_name_sid=%s"
+               "update_person":"UPDATE fc_person SET common_name=%s, birth_date=%s, birth_place=%s WHERE sid=%s"
                }
         
     def __init__(self, sid=None, common_name=None, birth_date=None, birth_place=None, person_uuid=None):
@@ -72,27 +70,10 @@ class Person:
             self.birth_date=p.birth_date
             self.birth_place=p.birth_place
             self.person_uuid=p.person_uuid
-            self._load_person_names()
+            self.names=PersonName().get_all_for_foreign_key(self.sid)
         cur.close()
            
         
-    def _load_person_names(self):
-        self.names=[]
-        cur = get_db_connection().cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
-        cur.execute(self.sql_dict["get_person_name_role"] % self.sid)
-        for personname in cur.fetchall():
-            self.names.append(PersonName(personname.sid, personname.name_role, self.sid, self._load_person_name_parts(personname.sid)))
-        cur.close()
-                
-    def _load_person_name_parts(self, personname_sid):
-        namepart_list=[]
-        cur = get_db_connection().cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
-        data=(personname_sid,)
-        cur.execute(self.sql_dict["get_nameparts_for_name_sid"], data)
-        for namepart in cur.fetchall():
-            namepart_list.append(Namepart(namepart.sid, namepart.name_part_role, namepart.name_part_value, namepart.person_name_sid))
-        cur.close()
-        return namepart_list        
         
     def update(self, other):
         cur=get_db_connection().cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
