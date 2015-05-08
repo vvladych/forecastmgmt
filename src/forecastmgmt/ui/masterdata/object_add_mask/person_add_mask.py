@@ -152,7 +152,7 @@ class PersonAddMask(AbstractAddMask):
         if masterdata_object!=None:
             masterdata_object.load()
             self.loaded_person=masterdata_object
-            self.person_uuid_text_entry.set_text(masterdata_object.person_uuid)
+            self.person_uuid_text_entry.set_text(masterdata_object.uuid)
             self.common_name_text_entry.set_text(masterdata_object.common_name)
             self.birth_place_text_entry.set_text(masterdata_object.birth_place)
             self.birth_date_year_text_entry.set_text("%s" % masterdata_object.birth_date.year)

@@ -5,7 +5,7 @@ Created on 02.05.2015
 '''
 from gi.repository import Gtk
 from masterdata_abstract_list_mask import AbstractListMask
-from forecastmgmt.model.person import Person, get_all_persons
+from forecastmgmt.model.person import Person
 
 class PersonListMask(AbstractListMask):
 
@@ -18,9 +18,9 @@ class PersonListMask(AbstractListMask):
 
     def populate_object_view_table(self):
         self.store.clear()
-        persons = get_all_persons()
+        persons = Person().get_all()
         for person in persons:
-            self.store.append(["%s" % person.common_name, "%s" % person.birth_date, "%s" % person.birth_place, "%s" % person.person_uuid, "%s" % person.sid])
+            self.store.append(["%s" % person.common_name, "%s" % person.birth_date, "%s" % person.birth_place, "%s" % person.uuid, "%s" % person.sid])
         
 
     def delete_object(self):

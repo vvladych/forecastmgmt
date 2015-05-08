@@ -6,43 +6,44 @@ __date__ ="$09.10.2014 23:01:15$"
 from forecastmgmt.dao.db_connection import get_db_connection
 import psycopg2.extras
 
-from person_name import PersonName
-from person_namepart import Namepart
+from MDO import MDO
 
-class Person:
+from person_name import PersonName
+
+class Person(MDO):
     
-    sql_dict={"get_all_persons":"SELECT sid, common_name, birth_date, birth_place, person_uuid FROM fc_person", 
-               "insert_person":"INSERT INTO fc_person(common_name, birth_date, birth_place) VALUES(%s,%s,%s) RETURNING sid",
-               "delete_person":"DELETE FROM fc_person WHERE sid=%s",
-               "load_person":"SELECT sid, common_name, birth_date, birth_place, person_uuid FROM fc_person WHERE sid=%s",
+    sql_dict={"get_all":"SELECT sid, common_name, birth_date, birth_place, person_uuid FROM fc_person", 
+               "insert":"INSERT INTO fc_person(common_name, birth_date, birth_place) VALUES(%s,%s,%s) RETURNING sid",
+               "delete":"DELETE FROM fc_person WHERE sid=%s",
+               "load":"SELECT sid, common_name, birth_date, birth_place, person_uuid FROM fc_person WHERE sid=%s",
                "update_person":"UPDATE fc_person SET common_name=%s, birth_date=%s, birth_place=%s WHERE sid=%s"
                }
         
     def __init__(self, sid=None, common_name=None, birth_date=None, birth_place=None, person_uuid=None):
-        self.sid=sid
+        super(Person, self).__init__(Person.sql_dict,sid,person_uuid)
         self.common_name=common_name
         self.birth_date=birth_date
         self.birth_place=birth_place
-        self.person_uuid=person_uuid
-        self.names=[]
-
-            
-    def __eq__(self, other):
-        if isinstance(other, self.__class__):
-            return self.__dict__==other.__dict__
+        if sid!=None:
+            self.names=PersonName().get_all_for_foreign_key(self.sid)
         else:
-            return False
-        
-    def __ne__(self, other):
-        return not self==other
+            self.names=[]
 
        
+    def load_object_from_db(self,rec):
+        self.common_name=rec.common_name
+        self.birth_date=rec.birth_date
+        self.birth_place=rec.birth_place
+        self.uuid=rec.person_uuid
+        self.names=PersonName().get_all_for_foreign_key(self.sid)
+
+       
+    def get_insert_data(self):
+        return (self.common_name,self.birth_date,self.birth_place)
+       
+       
     def insert(self):
-        cur = get_db_connection().cursor()
-        data=(self.common_name,self.birth_date,self.birth_place)
-        cur.execute(Person.sql_dict["insert_person"],data)
-        self.sid=cur.fetchone()[0]
-        cur.close()
+        super(Person, self).insert()
         for name in self.names:
             name.person_sid=self.sid
             name.insert()
@@ -53,26 +54,8 @@ class Person:
         self.names.append(PersonName(person_name_sid, person_name_role, person_sid, namepart_list))
         
         
-    def delete(self):
-        cur = get_db_connection().cursor()
-        data=(self.sid,)
-        cur.execute(Person.sql_dict["delete_person"],data)
-        cur.close()
-        get_db_connection().commit()
-        
-        
-    def load(self):
-        cur=get_db_connection().cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
-        data=(self.sid,)
-        cur.execute(Person.sql_dict["load_person"],data)
-        for p in cur.fetchall():
-            self.common_name=p.common_name
-            self.birth_date=p.birth_date
-            self.birth_place=p.birth_place
-            self.person_uuid=p.person_uuid
-            self.names=PersonName().get_all_for_foreign_key(self.sid)
-        cur.close()
-           
+    def fabric_method(self,rec):
+        return Person(rec.sid, rec.common_name, rec.birth_date, rec.birth_place, rec.person_uuid)           
         
         
     def update(self, other):
@@ -94,13 +77,4 @@ class Person:
         get_db_connection().commit()
         
 
-
-def get_all_persons():
-    personlist=[]
-    cur = get_db_connection().cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
-    cur.execute(Person.sql_dict["get_all_persons"])
-    for person in cur.fetchall():
-        personlist.append(Person(person.sid, person.common_name, person.birth_date, person.birth_place, person.person_uuid))
-    cur.close()
-    return personlist
 
