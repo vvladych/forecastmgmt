@@ -140,7 +140,7 @@ class PersonAddMask(AbstractAddMask):
         row+=1
         # Row 5
         save_button = Gtk.Button("Save", Gtk.STOCK_SAVE)
-        save_button.connect("clicked", self.save_person)
+        save_button.connect("clicked", self.save_current_object)
         self.attach(save_button,1,row,1,1)
 
         back_button = Gtk.Button("Back", Gtk.STOCK_GO_BACK)
@@ -191,23 +191,6 @@ class PersonAddMask(AbstractAddMask):
             name=self.name_role_combobox.get_child()
         return name
 
-
-
-    # save person
-    #
-    def save_person(self, widget):
-        person=self.create_object_from_mask()
-        if self.loaded_person==None:
-            person.insert()
-            self.show_info_dialog("Person inserted")
-            self.parent_callback_func(widget,self.reset_callback)
-        else:                
-            if self.loaded_person!=None and self.loaded_person!=person:
-                self.loaded_person.update(person)
-                self.loaded_person=person
-                self.show_info_dialog("Person updated")
-            else:
-                self.show_info_dialog("Nothing has changed, nothing to update!")
                 
             
     def create_object_from_mask(self):
@@ -248,8 +231,8 @@ class PersonAddMask(AbstractAddMask):
             person.add_name(person_name_sid, person_name_role, loaded_person_sid, namepart_list)
             name_iter=self.namepart_treestore.iter_next(name_iter)
             
-            
         return person
+
 
     def get_active_name_treestore(self):
         model,tree_iter=self.nameparts_treeview.get_selection().get_selected()

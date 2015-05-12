@@ -12,7 +12,6 @@ from forecastmgmt.ui.masterdata.object_add_mask.masterdata_abstract_add_mask imp
 class PublisherAddMask(AbstractAddMask):
     def __init__(self, main_window, reset_callback):
         super(PublisherAddMask, self).__init__(main_window, reset_callback)
-        self.loaded_publisher=None
 
 
     def create_layout(self):
@@ -44,7 +43,7 @@ class PublisherAddMask(AbstractAddMask):
         
         # last row
         save_button = Gtk.Button("Save", Gtk.STOCK_SAVE)
-        save_button.connect("clicked", self.save_publisher)
+        save_button.connect("clicked", self.save_current_object)
         self.attach(save_button,1,row,1,1)
 
         back_button = Gtk.Button("Back", Gtk.STOCK_GO_BACK)
@@ -53,32 +52,14 @@ class PublisherAddMask(AbstractAddMask):
         
         
         
-    def load_object(self, publisher_to_load=None):
-        if publisher_to_load!=None:
-            publisher_to_load.load()
-            self.loaded_publisher=publisher_to_load
-            self.publisher_uuid_text_entry.set_text(publisher_to_load.publisher_uuid)
-            self.common_name_text_entry.set_text(publisher_to_load.common_name)
+    def fill_mask_from_current_object(self):
+        if self.current_object!=None:
+            self.publisher_uuid_text_entry.set_text(self.current_object.uuid)
+            self.common_name_text_entry.set_text(self.current_object.common_name)
         else:
-            self.publisher_to_load=None
             self.publisher_uuid_text_entry.set_text("")
             self.common_name_text_entry.set_text("")
         
-            
-    def save_publisher(self, widget):
-        publisher=self.create_object_from_mask()
-        if self.loaded_publisher==None:
-            publisher.insert()
-            self.show_info_dialog("Publisher successful inserted")
-            self.loaded_publisher=publisher
-            self.reset_callback()
-        else:                
-            if self.loaded_publisher!=None and self.loaded_publisher!=publisher:
-                self.loaded_publisher.update(publisher)
-                self.loaded_publisher=publisher
-                self.show_info_dialog("Publisher updated")
-            else:
-                self.show_info_dialog("Nothing has changed, nothing to update!")
             
         
     def create_object_from_mask(self):

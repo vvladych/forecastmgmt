@@ -19,8 +19,8 @@ class Publisher(MDO):
         
 
     def load_object_from_db(self,rec):
-        self.common_name=rec.common_name
-        self.uuid=rec.uuid
+        self.common_name=rec.publisher_common_name
+        self.uuid=rec.publisher_uuid
         
     def get_insert_data(self):
         return (self.common_name,)

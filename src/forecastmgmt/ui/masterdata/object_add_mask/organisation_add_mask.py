@@ -44,41 +44,22 @@ class OrganisationAddMask(AbstractAddMask):
         
         # last row
         save_button = Gtk.Button("Save", Gtk.STOCK_SAVE)
-        save_button.connect("clicked", self.save_organisation)
+        save_button.connect("clicked", self.save_current_object)
         self.attach(save_button,1,row,1,1)
 
         back_button = Gtk.Button("Back", Gtk.STOCK_GO_BACK)
         back_button.connect("clicked", self.parent_callback_func, self.reset_callback)
         self.attach(back_button,2,row,1,1)
+                    
         
-        
-        
-    def load_object(self, organisation_to_load=None):
-        if organisation_to_load!=None:
-            organisation_to_load.load()
-            self.loaded_organisation=organisation_to_load
-            self.organisation_uuid_text_entry.set_text(organisation_to_load.uuid)
-            self.common_name_text_entry.set_text(organisation_to_load.common_name)
+    def fill_mask_from_current_object(self):
+        if self.current_object!=None:
+            self.organisation_uuid_text_entry.set_text(self.current_object.uuid)
+            self.common_name_text_entry.set_text(self.current_object.common_name)
         else:
-            self.loaded_organisation=None
             self.organisation_uuid_text_entry.set_text("")
             self.common_name_text_entry.set_text("")
-        
             
-    def save_organisation(self, widget):
-        organisation=self.create_object_from_mask()
-        if self.loaded_organisation==None:
-            organisation.insert()
-            self.show_info_dialog("Organisation successful inserted")
-            self.loaded_organisation=organisation
-            self.reset_callback()
-        else:                
-            if self.loaded_organisation!=None and self.loaded_organisation!=organisation:
-                self.loaded_organisation.update(organisation)
-                self.loaded_organisation=organisation
-                self.show_info_dialog("Organisation updated")
-            else:
-                self.show_info_dialog("Nothing has changed, nothing to update!")
             
         
     def create_object_from_mask(self):
