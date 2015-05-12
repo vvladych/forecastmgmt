@@ -79,7 +79,7 @@ class ForecastOverviewWindow(Gtk.Grid):
         
     def load_forecast(self):
         if self.forecast!=None:
-            self.forecast_uuid_text_entry.set_text(self.forecast.forecast_uuid)
+            self.forecast_uuid_text_entry.set_text(self.forecast.uuid)
             
     def __add_forecast_publications_treeview(self):
         self.publications_treestore = Gtk.TreeStore(str,str,str)

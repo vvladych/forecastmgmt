@@ -10,7 +10,7 @@ from forecastmgmt.ui.forecast.forecast_overview_window import ForecastOverviewWi
 
 
 from ui_tools import add_column_to_treeview
-from forecastmgmt.model.fc_project import FcProject, get_project_list
+from forecastmgmt.model.fc_project import FcProject
 
 class ForecastMask(Gtk.Grid):
     
@@ -52,7 +52,7 @@ class ForecastMask(Gtk.Grid):
         
         
     def __populate_forecast_treestore(self):
-        for project in get_project_list():
+        for project in FcProject().get_all():
             self.forecasts_treestore.append(None,[project.sid,project.common_name])
             
     def __clear_main_middle_pane(self):
