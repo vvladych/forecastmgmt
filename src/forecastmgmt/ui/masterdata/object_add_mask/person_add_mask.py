@@ -22,7 +22,6 @@ class PersonAddMask(AbstractAddMask):
 
     def __init__(self, main_window, reset_callback=None):
         super(PersonAddMask, self).__init__(main_window, reset_callback)
-        self.loaded_person=None
         
         
     def create_layout(self):
@@ -148,23 +147,21 @@ class PersonAddMask(AbstractAddMask):
         self.attach(back_button,2,row,1,1)
         
         
-    def load_object(self, masterdata_object=None):
-        if masterdata_object!=None:
-            masterdata_object.load()
-            self.loaded_person=masterdata_object
-            self.person_uuid_text_entry.set_text(masterdata_object.uuid)
-            self.common_name_text_entry.set_text(masterdata_object.common_name)
-            self.birth_place_text_entry.set_text(masterdata_object.birth_place)
-            self.birth_date_year_text_entry.set_text("%s" % masterdata_object.birth_date.year)
-            self.birth_date_month_text_entry.set_text("%s" % masterdata_object.birth_date.month)
-            self.birth_date_day_text_entry.set_text("%s" % masterdata_object.birth_date.day)
+        
+    def fill_mask_from_current_object(self):
+        if self.current_object!=None:
+            self.person_uuid_text_entry.set_text(self.current_object.uuid)
+            self.common_name_text_entry.set_text(self.current_object.common_name)
+            self.birth_place_text_entry.set_text(self.current_object.birth_place)
+            self.birth_date_year_text_entry.set_text("%s" % self.current_object.birth_date.year)
+            self.birth_date_month_text_entry.set_text("%s" % self.current_object.birth_date.month)
+            self.birth_date_day_text_entry.set_text("%s" % self.current_object.birth_date.day)
             self.namepart_treestore.clear()
-            for name in masterdata_object.names:
+            for name in self.current_object.names:
                 tree_iter=self.namepart_treestore.append(None,[name.sid, name.name_role, None])
                 for namepart in name.nameparts:
                     self.namepart_treestore.append(tree_iter,[namepart.sid, namepart.namepart_role, namepart.namepart_value])
         else:
-            self.loaded_person=None
             self.person_uuid_text_entry.set_text("")
             self.common_name_text_entry.set_text("")
             self.birth_place_text_entry.set_text("")
@@ -172,8 +169,8 @@ class PersonAddMask(AbstractAddMask):
             self.birth_date_month_text_entry.set_text("")
             self.birth_date_year_text_entry.set_text("")
             self.namepart_treestore.clear()
-            
-            
+
+        
 
         
 
@@ -198,12 +195,8 @@ class PersonAddMask(AbstractAddMask):
         if not common_name:
             self.show_error_dialog("Error: common name cannot be empty!")
             return
-        
-        loaded_person_sid=None
-        if self.loaded_person!=None:
-            loaded_person_sid=self.loaded_person.sid
-        
-        person=Person(loaded_person_sid, 
+                
+        person=Person(self.current_object.sid, 
                       self.common_name_text_entry.get_text(), 
                       datetime.date(int(self.birth_date_year_text_entry.get_text()), 
                                     int(self.birth_date_month_text_entry.get_text()), 
@@ -228,7 +221,7 @@ class PersonAddMask(AbstractAddMask):
                     namepart_list.append(namepart)
                     child_iter=self.namepart_treestore.iter_next(child_iter)
             
-            person.add_name(person_name_sid, person_name_role, loaded_person_sid, namepart_list)
+            person.add_name(person_name_sid, person_name_role, self.current_object.sid, namepart_list)
             name_iter=self.namepart_treestore.iter_next(name_iter)
             
         return person
