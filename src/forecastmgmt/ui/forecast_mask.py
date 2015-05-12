@@ -6,13 +6,13 @@ Created on 14.03.2015
 
 from gi.repository import Gtk
 
-from project_overview_window import ProjectOverviewWindow
+from forecastmgmt.ui.forecast.forecast_overview_window import ForecastOverviewWindow
 
 
 from ui_tools import add_column_to_treeview
 from forecastmgmt.model.fc_project import FcProject, get_project_list
 
-class ProjectMask(Gtk.Grid):
+class ForecastMask(Gtk.Grid):
     
     def __init__(self, main_window, person=None):
         Gtk.Grid.__init__(self)
@@ -65,6 +65,6 @@ class ProjectMask(Gtk.Grid):
         project=FcProject(project_sid)
         project.load()
         self.__clear_main_middle_pane()
-        self.main_middle_pane.pack_start(ProjectOverviewWindow(self,project), False, False, 0)
+        self.main_middle_pane.pack_start(ForecastOverviewWindow(self,project), False, False, 0)
         self.main_middle_pane.show_all()
         
