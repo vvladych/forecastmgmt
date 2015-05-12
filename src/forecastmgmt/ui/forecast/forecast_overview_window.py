@@ -10,7 +10,7 @@ from gi.repository import Gtk
 from ui_tools import add_column_to_treeview
 
 
-class ProjectOverviewWindow(Gtk.Grid):
+class ForecastOverviewWindow(Gtk.Grid):
     
     def __init__(self, main_window, forecast=None):
         Gtk.Grid.__init__(self)
