@@ -9,15 +9,19 @@ from gi.repository import Gtk
 
 from forecastmgmt.ui.ui_tools import add_column_to_treeview
 
+from forecast_originator_person_add_area import OriginatorPersonAddArea
+
+
+
 
 class ForecastOverviewWindow(Gtk.Grid):
     
     def __init__(self, main_window, forecast=None):
         Gtk.Grid.__init__(self)
+        self.originatorPersonAddArea=OriginatorPersonAddArea(self, "Person", forecast)
         self.main_window=main_window
-        self.create_layout()
         self.forecast=forecast
-        self.load_forecast()
+        self.create_layout()
         
         
     def create_layout(self):
@@ -38,22 +42,15 @@ class ForecastOverviewWindow(Gtk.Grid):
         self.attach(self.forecast_uuid_text_entry,1,row,1,1)
 
         row += 1
-        # project originators
+        # forecast originators
         originators_label = Gtk.Label("Originators")
         originators_label.set_justify(Gtk.Justification.LEFT)
         self.attach(originators_label,0,row,2,1)
         
-        row += 1
-        self.__add_forecast_originators_treeview()
-        self.attach(self.originators_treeview,0,row,2,1)
+        row+=1
         
-        row += 1
-        self.add_originator_button=Gtk.Button("Add", Gtk.STOCK_ADD)
-        self.attach(self.add_originator_button,0,row,1,1)
-        self.remove_originator_button=Gtk.Button("Delete", Gtk.STOCK_DELETE)
-        self.attach(self.remove_originator_button,1,row,1,1)
+        row=self.originatorPersonAddArea.create_layout(row)
 
-        
         row += 1
         # project publications
         publications_label = Gtk.Label("Publications")
@@ -76,6 +73,8 @@ class ForecastOverviewWindow(Gtk.Grid):
         model_label.set_justify(Gtk.Justification.LEFT)
         self.attach(model_label,0,row,2,1)
         
+        self.load_forecast()
+        
         
     def load_forecast(self):
         if self.forecast!=None:
@@ -91,12 +90,5 @@ class ForecastOverviewWindow(Gtk.Grid):
         #self.publications_treeview.connect("row-activated", self.on_row_selection)
         
 
-    def __add_forecast_originators_treeview(self):
-        self.originators_treestore = Gtk.TreeStore(str,str,str)
-        self.originators_treeview = Gtk.TreeView(self.originators_treestore)
-        self.originators_treeview.append_column(add_column_to_treeview("id", 0, True))
-        self.originators_treeview.append_column(add_column_to_treeview("Role", 1, False))
-        self.originators_treeview.append_column(add_column_to_treeview("Value", 2, False))
-        self.originators_treeview.set_size_request(200,100)
-
         
+
