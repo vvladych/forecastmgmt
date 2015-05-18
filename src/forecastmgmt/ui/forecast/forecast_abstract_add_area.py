@@ -21,6 +21,8 @@ class AbstractAddArea(object):
         self.originator_label.set_justify(Gtk.Justification.LEFT)
         self.maingrid.attach(self.originator_label,0,row,1,1)
         
+        row+=1
+        
         self.combobox_model=self.populate_combobox_model()
         self.combobox=Gtk.ComboBox.new_with_model_and_entry(self.combobox_model)
         self.combobox.set_entry_text_column(1)
@@ -46,7 +48,7 @@ class AbstractAddArea(object):
 
         row += 1
         self.list_treeview=self.create_list_treeview()
-        self.maingrid.attach(self.list_treeview,0,row,2,1)
+        self.maingrid.attach(self.list_treeview,0,row,4,1)
         
         return row
 
