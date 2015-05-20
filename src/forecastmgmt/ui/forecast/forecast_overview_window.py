@@ -6,20 +6,16 @@ Created on 14.03.2015
 
 from gi.repository import Gtk
 
-
-from forecastmgmt.ui.ui_tools import add_column_to_treeview
-
-from forecast_originator_person_add_area import OriginatorPersonAddArea
 from forecast_publication_add_area import PublicationAddArea
-
-
+from originator_add_dialog import OriginatorAddDialog
+from originator_process_component import OriginatorOverviewComponent
 
 
 class ForecastOverviewWindow(Gtk.Grid):
     
     def __init__(self, main_window, forecast=None):
         Gtk.Grid.__init__(self)
-        self.originatorPersonAddArea=OriginatorPersonAddArea(self, "Person", forecast)
+        self.originator_overview_component=OriginatorOverviewComponent(forecast)
         self.publicationAddArea=PublicationAddArea(self,"Publications", forecast)
         self.main_window=main_window
         self.forecast=forecast
@@ -49,11 +45,21 @@ class ForecastOverviewWindow(Gtk.Grid):
         originators_label.set_justify(Gtk.Justification.LEFT)
         self.attach(originators_label,0,row,2,1)
         
-        row+=1
+        row+=2
         
-        row=self.originatorPersonAddArea.create_layout(row)
+        
+        #row=self.originatorPersonAddArea.create_layout(row)
+        self.originator_overview_component.clean_and_populate_model()
+        row = self.originator_overview_component.create_layout(self, row)
 
         row += 1
+        button_add_originator_dialog=Gtk.Button("Edit originator(s)")
+        button_add_originator_dialog.connect("clicked", self.show_add_originator_dialog)
+        self.attach(button_add_originator_dialog,0,row,1,1)
+        
+        row+=2
+
+        
         # project publications
         
         row=self.publicationAddArea.create_layout(row)
@@ -71,4 +77,8 @@ class ForecastOverviewWindow(Gtk.Grid):
         if self.forecast!=None:
             self.forecast_uuid_text_entry.set_text(self.forecast.uuid)
             
-        
+    def show_add_originator_dialog(self, widget):
+        dialog=OriginatorAddDialog(self, self.forecast)
+        dialog.run()
+        dialog.destroy()
+        self.originator_overview_component.clean_and_populate_model()
