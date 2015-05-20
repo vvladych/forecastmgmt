@@ -40,6 +40,10 @@ class ForecastOverviewWindow(Gtk.Grid):
         self.forecast_uuid_text_entry=Gtk.Entry()
         self.forecast_uuid_text_entry.set_editable(False)
         self.attach(self.forecast_uuid_text_entry,1,row,1,1)
+        
+        if self.forecast!=None:
+            self.forecast_uuid_text_entry.set_text(self.forecast.uuid)
+
 
         row += 1
         # forecast originators
@@ -61,6 +65,12 @@ class ForecastOverviewWindow(Gtk.Grid):
         
         row+=2
 
+
+        publications_label = Gtk.Label("Publications")
+        publications_label.set_justify(Gtk.Justification.LEFT)
+        self.attach(publications_label,0,row,2,1)
+
+        row+=1
         
         # project publications
         self.publication_overview_component.clean_and_populate_model()
@@ -78,18 +88,14 @@ class ForecastOverviewWindow(Gtk.Grid):
         model_label.set_justify(Gtk.Justification.LEFT)
         self.attach(model_label,0,row,2,1)
         
-        self.load_forecast()
-        
-        
-    def load_forecast(self):
-        if self.forecast!=None:
-            self.forecast_uuid_text_entry.set_text(self.forecast.uuid)
+            
             
     def show_add_originator_dialog(self, widget):
         dialog=OriginatorAddDialog(self, self.forecast)
         dialog.run()
         dialog.destroy()
         self.originator_overview_component.clean_and_populate_model()
+        
 
     def show_add_publication_dialog(self, widget):
         dialog=PublicationAddDialog(self, self.forecast)

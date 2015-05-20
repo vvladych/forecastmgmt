@@ -50,18 +50,35 @@ class PublicationManipulationComponent(AbstractDataManipulationComponent):
         publication_date_label = Gtk.Label("Publication Date")
         publication_date_label.set_justify(Gtk.Justification.LEFT)
         parent_layout_grid.attach(publication_date_label,0,row,1,1)
+        
+        
+        self.publication_date_textentry=Gtk.Entry()
+        parent_layout_grid.attach(self.publication_date_textentry,1,row,1,1)
+        
+        publication_date_choose_button=Gtk.Button("Choose date")
+        parent_layout_grid.attach(publication_date_choose_button,2,row,1,1)
+        publication_date_choose_button.connect("clicked", self.show_calendar)
+        
 
         row+=1
 
         publication_title_label = Gtk.Label("Publication Title")
         publication_title_label.set_justify(Gtk.Justification.LEFT)
         parent_layout_grid.attach(publication_title_label,0,row,1,1)
+        
+        self.publication_title_textentry=Gtk.Entry()
+        parent_layout_grid.attach(self.publication_title_textentry,1,row,2,1)
+
 
         row+=1
 
         publication_file_label = Gtk.Label("Publication file")
         publication_file_label.set_justify(Gtk.Justification.LEFT)
         parent_layout_grid.attach(publication_file_label,0,row,1,1)
+
+        self.publication_file_textentry=Gtk.Entry()
+        parent_layout_grid.attach(self.publication_file_textentry,1,row,2,1)
+
 
         row+=1
         
@@ -95,6 +112,25 @@ class PublicationManipulationComponent(AbstractDataManipulationComponent):
     
     def delete_action(self, widget):
         pass
+    
+    def show_calendar(self, widget):
+        self.calendar_window=Gtk.Dialog()
+        self.calendar_window.action_area.hide()
+        self.calendar_window.set_decorated(False)
+        self.calendar_window.set_property('skip-taskbar-hint', True)
+        self.calendar_window.set_size_request(200,200)
+                
+        self.calendar=Gtk.Calendar()
+        self.calendar.connect('day-selected-double-click', self.day_selected, None)
+        self.calendar_window.vbox.pack_start(self.calendar, True, True, 0)
+        self.calendar.show()
+        self.calendar_window.run()
+        
+        
+    def day_selected(self, calendar, event):
+        (year,month,day)=self.calendar.get_date()
+        self.publication_date_textentry.set_text("%s.%s.%s" % (day,month,year))
+        self.calendar_window.destroy()
 
 
 class PublicationOverviewComponent(AbstractDataOverviewComponent):
