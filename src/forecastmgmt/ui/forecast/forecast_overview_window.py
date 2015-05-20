@@ -6,7 +6,9 @@ Created on 14.03.2015
 
 from gi.repository import Gtk
 
-from forecast_publication_add_area import PublicationAddArea
+#from forecast_publication_add_area import PublicationAddArea
+from publication_add_dialog import PublicationAddDialog
+from publication_process_component import PublicationOverviewComponent
 from originator_add_dialog import OriginatorAddDialog
 from originator_process_component import OriginatorOverviewComponent
 
@@ -16,7 +18,7 @@ class ForecastOverviewWindow(Gtk.Grid):
     def __init__(self, main_window, forecast=None):
         Gtk.Grid.__init__(self)
         self.originator_overview_component=OriginatorOverviewComponent(forecast)
-        self.publicationAddArea=PublicationAddArea(self,"Publications", forecast)
+        self.publication_overview_component=PublicationOverviewComponent(forecast)
         self.main_window=main_window
         self.forecast=forecast
         self.create_layout()
@@ -61,8 +63,14 @@ class ForecastOverviewWindow(Gtk.Grid):
 
         
         # project publications
+        self.publication_overview_component.clean_and_populate_model()
+        row = self.publication_overview_component.create_layout(self, row)
         
-        row=self.publicationAddArea.create_layout(row)
+        row +=1 
+        button_add_publication_dialog=Gtk.Button("Edit publication(s)")
+        button_add_publication_dialog.connect("clicked", self.show_add_publication_dialog)
+        self.attach(button_add_publication_dialog,0,row,1,1)
+        
         
         row += 1
         # project model
@@ -82,3 +90,10 @@ class ForecastOverviewWindow(Gtk.Grid):
         dialog.run()
         dialog.destroy()
         self.originator_overview_component.clean_and_populate_model()
+
+    def show_add_publication_dialog(self, widget):
+        dialog=PublicationAddDialog(self, self.forecast)
+        dialog.run()
+        dialog.destroy()
+        self.publication_overview_component.clean_and_populate_model()
+
