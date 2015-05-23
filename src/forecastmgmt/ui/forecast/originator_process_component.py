@@ -104,7 +104,7 @@ class OriginatorManipulationComponent(AbstractDataManipulationComponent):
 
     
     def add_person_action(self, widget):
-        # read person sid
+        # get person sid
         (current_person_sid,current_person_common_name)=self.get_active_person()
         # insert originator
         originator=Originator(common_name=current_person_common_name)

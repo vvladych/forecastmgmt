@@ -9,11 +9,16 @@ from forecastmgmt.ui.forecast.abstract_data_process_component import AbstractDat
 
 from forecastmgmt.ui.ui_tools import TreeviewColumn, show_info_dialog
 
-from forecastmgmt.model.publisher import Publisher
-
-
 from forecastmgmt.dao.db_connection import get_db_connection
 import psycopg2.extras
+
+
+import datetime
+
+from forecastmgmt.model.publisher import Publisher
+from forecastmgmt.model.publication import Publication
+from forecastmgmt.model.forecast_publication import ForecastPublication
+
 
 
 class PublicationProcessComponent(AbstractDataProcessComponent):
@@ -52,11 +57,15 @@ class PublicationManipulationComponent(AbstractDataManipulationComponent):
         parent_layout_grid.attach(publication_date_label,0,row,1,1)
         
         
-        self.publication_date_textentry=Gtk.Entry()
-        parent_layout_grid.attach(self.publication_date_textentry,1,row,1,1)
+        self.publication_date_day_textentry=Gtk.Entry()
+        parent_layout_grid.attach(self.publication_date_day_textentry,1,row,1,1)
+        self.publication_date_month_textentry=Gtk.Entry()
+        parent_layout_grid.attach(self.publication_date_month_textentry,2,row,1,1)
+        self.publication_date_year_textentry=Gtk.Entry()
+        parent_layout_grid.attach(self.publication_date_year_textentry,3,row,1,1)
         
-        publication_date_choose_button=Gtk.Button("Choose date")
-        parent_layout_grid.attach(publication_date_choose_button,2,row,1,1)
+        publication_date_choose_button=Gtk.Button("Pick date")
+        parent_layout_grid.attach(publication_date_choose_button,4,row,1,1)
         publication_date_choose_button.connect("clicked", self.show_calendar)
         
 
@@ -107,11 +116,41 @@ class PublicationManipulationComponent(AbstractDataManipulationComponent):
             combobox_model.append(["%s" % p.sid, p.common_name])
         return combobox_model
     
+    
     def add_publication_action(self, widget):
-        pass
+        # get publisher sid
+        publisher_sid=self.get_active_publisher()
+        publication_title=self.publication_title_textentry.get_text()
+                
+        # insert publication
+        publication=Publication(None, None, publisher_sid, datetime.date(
+                                                                         int(self.publication_date_year_textentry.get_text()),
+                                                                         int(self.publication_date_month_textentry.get_text()),
+                                                                         int(self.publication_date_day_textentry.get_text())), publication_title)
+        publication.insert()
+        
+        # insert forecast_originator
+        forecast_publication = ForecastPublication(forecast_sid=self.forecast.sid, publication_sid=publication.sid)
+        forecast_publication.insert()
+        
+        show_info_dialog("Add successful")
+        self.overview_component.clean_and_populate_model()
+        
+
+    def get_active_publisher(self):
+        tree_iter = self.publisher_combobox.get_active_iter()
+        if tree_iter!=None:
+            model = self.publisher_combobox.get_model()
+            publisher_sid = model[tree_iter][:2]
+            return publisher_sid[0]
+        else:
+            print("please choose a publisher!")
+
+    
     
     def delete_action(self, widget):
         pass
+    
     
     def show_calendar(self, widget):
         self.calendar_window=Gtk.Dialog()
@@ -129,13 +168,17 @@ class PublicationManipulationComponent(AbstractDataManipulationComponent):
         
     def day_selected(self, calendar, event):
         (year,month,day)=self.calendar.get_date()
-        self.publication_date_textentry.set_text("%s.%s.%s" % (day,month,year))
+        self.publication_date_day_textentry.set_text("%s" % day)
+        self.publication_date_month_textentry.set_text("%s" % month)
+        self.publication_date_year_textentry.set_text("%s" % year)
         self.calendar_window.destroy()
 
 
 class PublicationOverviewComponent(AbstractDataOverviewComponent):
     
-    treecolumns=[TreeviewColumn("publication_sid", 0, True)]
+    treecolumns=[TreeviewColumn("publication_sid", 0, True), TreeviewColumn("publisher_sid", 1, True), 
+                 TreeviewColumn("Publisher", 2, False), TreeviewColumn("Title", 3, False),
+                 TreeviewColumn("Date", 4, False)]
     
     def __init__(self, forecast):
         self.forecast=forecast
@@ -151,4 +194,18 @@ class PublicationOverviewComponent(AbstractDataOverviewComponent):
 
     def populate_model(self):
         self.treemodel.clear()
-        pass
+        cur=get_db_connection().cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
+        data=(self.forecast.sid,)
+        cur.execute("""SELECT 
+                        fc_publication.sid as publication_sid, fc_publisher.sid as publisher_sid, 
+                        fc_publisher.publisher_common_name, fc_publication.title, fc_publication.publishing_date  
+                        FROM 
+                        fc_forecast_publication, fc_publication, fc_publisher 
+                        WHERE
+                        fc_forecast_publication.forecast_sid=%s AND
+                        fc_forecast_publication.publication_sid=fc_publication.sid AND  
+                        fc_publication.publisher_sid=fc_publisher.sid 
+                        """,data)
+        for p in cur.fetchall():
+            self.treemodel.append([ "%s" % p.publication_sid, "%s" % p.publisher_sid, p.publisher_common_name, p.title, p.publishing_date.strftime('%d.%m.%Y')])
+        cur.close()
