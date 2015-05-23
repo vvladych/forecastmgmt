@@ -149,7 +149,12 @@ class PublicationManipulationComponent(AbstractDataManipulationComponent):
     
     
     def delete_action(self, widget):
-        pass
+        model,tree_iter = self.overview_component.treeview.get_selection().get_selected()
+        (publication_sid)=model.get(tree_iter, 0)
+        Publication(publication_sid).delete()
+        model.remove(tree_iter)   
+        show_info_dialog("Delete successful")   
+        
     
     
     def show_calendar(self, widget):
