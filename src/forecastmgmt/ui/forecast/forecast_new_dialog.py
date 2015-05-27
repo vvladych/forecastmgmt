@@ -21,7 +21,7 @@ class ForecastNewDialog(Gtk.Dialog):
         self.show_all()
         
     def perform_insert(self):
-        project=FcProject(common_name=self.project_name_text_entry.get_text())
+        project=FcProject(common_name=self.project_name_text_entry.get_text(), short_description=self.desc_textview.get_text())
         project.insert()
         
     
