@@ -50,4 +50,4 @@ class AbstractDataOverviewComponent(object):
         
         
     def populate_model(self):
-        raise NotImplementedError("create_and_populate_model still not implemented!")
+        raise NotImplementedError("populate_model still not implemented!")
