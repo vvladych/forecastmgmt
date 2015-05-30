@@ -35,3 +35,5 @@ class PublicationAddDialog(Gtk.Dialog):
         
         row+=1
         row=self.process_component.create_layout(self.layout_grid, row)
+        
+        return row
