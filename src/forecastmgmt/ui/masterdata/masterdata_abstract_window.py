@@ -6,6 +6,7 @@ Created on 27.04.2015
 
 from gi.repository import Gtk
 
+from forecastmgmt.ui.ui_tools import add_column_to_treeview
 
 class  MasterdataAbstractWindow(Gtk.Box):
     
@@ -106,6 +107,96 @@ class DeleteConfirmationDialog(Gtk.Dialog):
         box.add(label)
         self.show_all()
 
+
+class AbstractAddMask(Gtk.Grid):
+    def __init__(self, main_window, reset_callback=None):
+        Gtk.Grid.__init__(self)
+        self.main_window=main_window
+        self.reset_callback=reset_callback
+        self.create_layout()
+        self.current_object=None        
+        
+        
+    def set_masterdata_object(self, masterdata_object=None):
+        self.masterdata_object=masterdata_object
+        self.load_object(masterdata_object)
+                
+    
+    def create_layout(self):
+        raise NotImplementedError("create_layout not implemented!")
+    
+    def create_object_from_mask(self):    
+        raise NotImplementedError("create_object_from_mask not implemented!")
+        
+        
+    def show_info_dialog(self, message):
+        info_dialog = Gtk.MessageDialog(self.main_window, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, message)
+        info_dialog.run()
+        info_dialog.destroy()
+        
+
+    def show_error_dialog(self, message):
+        error_dialog = Gtk.MessageDialog(self.main_window, 0, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK, message)
+        error_dialog.run()
+        error_dialog.destroy()
+        
+        
+    def parent_callback_func(self, widget, cb_func=None):
+        self.reset_callback()
+        
+    def save_current_object(self, widget):
+        new_object=self.create_object_from_mask()
+        if self.current_object==None:
+            new_object.insert()
+            self.show_info_dialog("Insert successful")
+            self.current_object=new_object
+            self.reset_callback()
+        else:
+            if self.current_object!=new_object:
+                self.current_object.update(new_object)
+                self.loaded_organisation=new_object
+                self.show_info_dialog("Update successful")
+            else:
+                self.show_info_dialog("Nothing has changed, nothing to update!")
+                
+        
+    def load_object(self, object_to_load=None):
+        self.current_object=object_to_load
+        if object_to_load!=None:
+            object_to_load.load()
+        self.fill_mask_from_current_object()
+            
+
+class AbstractListMask(Gtk.Box):
+
+    def __init__(self, columnlist):
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+        self.store = Gtk.ListStore(str,str,str,str,str)        
+        self.tree = Gtk.TreeView(self.store)          
+        
+        column_counter=0
+        for column in columnlist:
+            self.tree.append_column(add_column_to_treeview(column["column"], column_counter, column["hide"]))
+            column_counter+=1
+                    
+        self.tree.get_column(0).set_sort_order(Gtk.SortType.ASCENDING)
+        self.tree.get_column(0).set_sort_column_id(0)
+        
+        self.tree.set_size_request(200,300)
+        self.pack_start(self.tree, False, False, 0)        
+
+        self.populate_object_view_table()
+        
+        
+
+    def populate_object_view_table(self):
+        raise "populate_object_view_table still unimplemented!"
     
 
+    def delete_object(self):
+        raise "delete_object still unimplemented!"
+    
+    def get_current_object(self):
+        raise "get_current_object still unimplemented!"
 
+        
