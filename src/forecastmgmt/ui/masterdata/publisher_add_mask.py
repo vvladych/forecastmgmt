@@ -6,7 +6,7 @@ Created on 04.05.2015
 from gi.repository import Gtk
 
 from forecastmgmt.model.publisher import Publisher
-from forecastmgmt.ui.masterdata.object_add_mask.masterdata_abstract_add_mask import AbstractAddMask
+from masterdata_abstract_window import AbstractAddMask
 
 
 class PublisherAddMask(AbstractAddMask):

@@ -7,8 +7,8 @@ from gi.repository import Gtk
 
 from masterdata_abstract_window import MasterdataAbstractWindow
 
-from forecastmgmt.ui.masterdata.object_add_mask.publisher_add_mask import PublisherAddMask
-from forecastmgmt.ui.masterdata.object_list_mask.publisher_list_mask import PublisherListMask
+from publisher_add_mask import PublisherAddMask
+from publisher_list_mask import PublisherListMask
 
 class PublisherWindow(MasterdataAbstractWindow):
 
