@@ -6,7 +6,6 @@ Created on 14.03.2015
 
 from gi.repository import Gtk
 
-#from forecast_publication_add_area import PublicationAddArea
 from publication_add_dialog import PublicationAddDialog
 from publication_process_component import PublicationOverviewComponent
 from originator_add_dialog import OriginatorAddDialog
@@ -37,7 +36,7 @@ class ForecastOverviewWindow(Gtk.Grid):
         row = 0
         # Row 0: project uuid
         uuid_label = Gtk.Label("forecast UUID")
-        uuid_label.set_justify(Gtk.Justification.LEFT)
+        uuid_label.set_justify(Gtk.Justification.RIGHT)
         self.attach(uuid_label,0,row,1,1)
         self.forecast_uuid_text_entry=Gtk.Entry()
         self.forecast_uuid_text_entry.set_editable(False)
@@ -48,6 +47,10 @@ class ForecastOverviewWindow(Gtk.Grid):
 
         row += 1
         
+        description_label=Gtk.Label("Description")
+        description_label.set_justify(Gtk.Justification.RIGHT)
+        self.attach(description_label,0,row,1,1)
+
         scrolledwindow= Gtk.ScrolledWindow()
         scrolledwindow.set_hexpand(True)
         scrolledwindow.set_vexpand(True)
@@ -58,7 +61,7 @@ class ForecastOverviewWindow(Gtk.Grid):
             if self.forecast.short_description!=None:
                 self.desc_textview.get_buffer().set_text(self.forecast.short_description)
             
-        self.attach(scrolledwindow,0,row,1,1)
+        self.attach(scrolledwindow,1,row,1,1)
         
         row += 3
         # forecast originators
