@@ -5,9 +5,9 @@ Created on 14.03.2015
 '''
 from gi.repository import Gtk
 
-from masterdata.object_window.person_window import PersonWindow
-from masterdata.object_window.organisation_window import OrganisationWindow 
-from masterdata.object_window.publisher_window import PublisherWindow 
+from masterdata.person_window import PersonWindow
+from masterdata.organisation_window import OrganisationWindow 
+from masterdata.publisher_window import PublisherWindow 
 
 
 class MasterdataMask(Gtk.Grid):
