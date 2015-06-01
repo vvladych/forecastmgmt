@@ -24,21 +24,12 @@ class PublisherAddMask(AbstractAddMask):
 
         row = 0
         # Row 0: publisher uuid
-        uuid_label = Gtk.Label("publisher UUID")
-        uuid_label.set_justify(Gtk.Justification.LEFT)
-        self.attach(uuid_label,0,row,1,1)
-        self.publisher_uuid_text_entry=Gtk.Entry()
-        self.publisher_uuid_text_entry.set_editable(False)
-        self.attach(self.publisher_uuid_text_entry,1,row,1,1)
-        
+        self.add_uuid_row("Publisher UUID", row)
+
         row+=1
         # Row 1: common name
-        common_name_label = Gtk.Label("Common Name")
-        common_name_label.set_justify(Gtk.Justification.LEFT)
-        self.attach(common_name_label,0,row,1,1)
-        self.common_name_text_entry=Gtk.Entry()
-        self.attach(self.common_name_text_entry,1,row,1,1)
-
+        self.add_common_name_row("Common name", row)
+        
         row+=1
         
         # last row
@@ -54,10 +45,10 @@ class PublisherAddMask(AbstractAddMask):
         
     def fill_mask_from_current_object(self):
         if self.current_object!=None:
-            self.publisher_uuid_text_entry.set_text(self.current_object.uuid)
+            self.uuid_text_entry.set_text(self.current_object.uuid)
             self.common_name_text_entry.set_text(self.current_object.common_name)
         else:
-            self.publisher_uuid_text_entry.set_text("")
+            self.uuid_text_entry.set_text("")
             self.common_name_text_entry.set_text("")
         
             

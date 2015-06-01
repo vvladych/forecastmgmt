@@ -141,7 +141,7 @@ class PersonAddMask(AbstractAddMask):
         
     def fill_mask_from_current_object(self):
         if self.current_object!=None:
-            self.person_uuid_text_entry.set_text(self.current_object.uuid)
+            self.uuid_text_entry.set_text(self.current_object.uuid)
             self.common_name_text_entry.set_text(self.current_object.common_name)
             self.birth_place_text_entry.set_text(self.current_object.birth_place)
             self.birth_date_year_text_entry.set_text("%s" % self.current_object.birth_date.year)
@@ -153,7 +153,7 @@ class PersonAddMask(AbstractAddMask):
                 for namepart in name.nameparts:
                     self.namepart_treestore.append(tree_iter,[namepart.sid, namepart.namepart_role, namepart.namepart_value])
         else:
-            self.person_uuid_text_entry.set_text("")
+            self.uuid_text_entry.set_text("")
             self.common_name_text_entry.set_text("")
             self.birth_place_text_entry.set_text("")
             self.birth_date_day_text_entry.set_text("")
