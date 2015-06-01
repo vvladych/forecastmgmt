@@ -106,9 +106,9 @@ class PersonAddMask(AbstractAddMask):
         namepart_add_button.connect("clicked", self.add_name_part) 
         self.attach(namepart_add_button,2,row,1,1)
 
-        namepart_add_button = Gtk.Button("Delete", Gtk.STOCK_DELETE)
-        namepart_add_button.connect("clicked", self.delete_name_part) 
-        self.attach(namepart_add_button,3,row,1,1)
+        namepart_delete_button = Gtk.Button("Delete", Gtk.STOCK_DELETE)
+        namepart_delete_button.connect("clicked", self.delete_name_part) 
+        self.attach(namepart_delete_button,3,row,1,1)
 
         self.namepart_roles_model = self.populate_namepart_roles_model()
         self.namepart_role_combobox=Gtk.ComboBox.new_with_model_and_entry(self.namepart_roles_model)

@@ -28,7 +28,27 @@ class FCObjectAddMask(AbstractAddMask):
         row+=1
         self.add_common_name_row("Common name", row)
 
+        row+=3
+        # Object property
+        object_property_label = Gtk.Label("Object properties")
+        self.attach(object_property_label,0,row,1,1)
+
+        object_property_add_button = Gtk.Button("Add", Gtk.STOCK_ADD)
+        object_property_add_button.connect("clicked", self.add_object_property) 
+        self.attach(object_property_add_button,2,row,1,1)
+
+        object_property_delete_button = Gtk.Button("Delete", Gtk.STOCK_DELETE)
+        object_property_delete_button.connect("clicked", self.delete_object_property) 
+        self.attach(object_property_delete_button,3,row,1,1)
+
+        self.object_property_value_entry = Gtk.Entry()
+        self.attach(self.object_property_value_entry,1,row,1,1)
+
         row+=1
+        self.create_object_property_treeview()
+        self.attach(self.object_property_treeview,0,row,1,1)
+
+        row+=3
         
         # last row
         save_button = Gtk.Button("Save", Gtk.STOCK_SAVE)
@@ -39,7 +59,17 @@ class FCObjectAddMask(AbstractAddMask):
         back_button.connect("clicked", self.parent_callback_func, self.reset_callback)
         self.attach(back_button,2,row,1,1)
         
-        
+    def add_object_property(self, widget):
+        print("not implemented")
+
+
+    def delete_object_property(self, widget):
+        print("not implemented")
+
+    def create_object_property_treeview(self):
+        self.object_property_treeview=Gtk.TreeView()
+        print("not implemented")
+
         
     def fill_mask_from_current_object(self):
         if self.current_object!=None:
