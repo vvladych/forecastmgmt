@@ -8,6 +8,7 @@ from gi.repository import Gtk
 from masterdata.person_window import PersonWindow
 from masterdata.organisation_window import OrganisationWindow 
 from masterdata.publisher_window import PublisherWindow 
+from masterdata.fc_object_window import FCObjectWindow 
 
 
 class MasterdataMask(Gtk.Grid):
@@ -42,7 +43,8 @@ class MasterdataMask(Gtk.Grid):
             self.set_main_area("organisation")
         elif mask_combo.get_active()==2:
             self.set_main_area("publisher")
-
+        elif mask_combo.get_active()==3:
+            self.set_main_area("fcobject")
         else:
             print("unimplemented")
         
@@ -64,9 +66,8 @@ class MasterdataMask(Gtk.Grid):
             self.main_middle_pane.pack_start(OrganisationWindow(self.main_window), False, False, 0)
         elif main_area_type=="publisher":
             self.main_middle_pane.pack_start(PublisherWindow(self.main_window), False, False, 0)
-
-        #elif main_area_type=="organization":
-        #    self.main_middle_pane.pack_start(OrganisationMask(), False, False, 0)
+        elif main_area_type=="fcobject":
+            self.main_middle_pane.pack_start(FCObjectWindow(self.main_window), False, False, 0)
         else:
             print("unimplemented")
         self.main_working_pane.show_all()
@@ -82,6 +83,7 @@ class MasterdataMask(Gtk.Grid):
         mask_store.append([1, "Person"])
         mask_store.append([2, "Organisation"])
         mask_store.append([3, "Publisher"])
+        mask_store.append([4, "Object catalog"])
         
         mask_combo = Gtk.ComboBox.new_with_model_and_entry(mask_store)
         mask_combo.set_entry_text_column(1)
