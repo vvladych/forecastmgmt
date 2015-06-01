@@ -31,6 +31,6 @@ class OrganisationListMask(AbstractListMask):
 
     def get_current_object(self):
         model,tree_iter = self.tree.get_selection().get_selected()
-        (organisation_sid)=self.store.get(tree_iter, 2)
+        (organisation_sid)=model.get(tree_iter, 2)
         return Organisation(organisation_sid)
 
