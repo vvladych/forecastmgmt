@@ -34,21 +34,12 @@ class PersonAddMask(AbstractAddMask):
 
         row = 0
         # Row 0: person uuid
-        uuid_label = Gtk.Label("person UUID")
-        uuid_label.set_justify(Gtk.Justification.LEFT)
-        self.attach(uuid_label,0,row,1,1)
-        self.person_uuid_text_entry=Gtk.Entry()
-        self.person_uuid_text_entry.set_editable(False)
-        self.attach(self.person_uuid_text_entry,1,row,1,1)
+        self.add_uuid_row("Person UUID", row)
         
         row+=1
         # Row 1: common name
-        common_name_label = Gtk.Label("Common Name")
-        common_name_label.set_justify(Gtk.Justification.LEFT)
-        self.attach(common_name_label,0,row,1,1)
-        self.common_name_text_entry=Gtk.Entry()
-        self.attach(self.common_name_text_entry,1,row,1,1)
-
+        self.add_common_name_row("Common Name", row)
+        
         row+=1
         # Row: birth date
         birth_date_label = Gtk.Label("Birth Date")

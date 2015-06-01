@@ -130,7 +130,6 @@ class AbstractAddMask(Gtk.Grid):
         common_name_label.set_justify(Gtk.Justification.LEFT)
         self.attach(common_name_label,0,row,1,1)
         self.common_name_text_entry=Gtk.Entry()
-        self.common_name_text_entry.set_editable(False)
         self.attach(self.common_name_text_entry,1,row,1,1)
         
     def set_masterdata_object(self, masterdata_object=None):

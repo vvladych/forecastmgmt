@@ -45,10 +45,10 @@ class OrganisationAddMask(AbstractAddMask):
         
     def fill_mask_from_current_object(self):
         if self.current_object!=None:
-            self.organisation_uuid_text_entry.set_text(self.current_object.uuid)
+            self.uuid_text_entry.set_text(self.current_object.uuid)
             self.common_name_text_entry.set_text(self.current_object.common_name)
         else:
-            self.organisation_uuid_text_entry.set_text("")
+            self.uuid_text_entry.set_text("")
             self.common_name_text_entry.set_text("")
             
             
