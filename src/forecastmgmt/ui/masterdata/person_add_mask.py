@@ -161,9 +161,6 @@ class PersonAddMask(AbstractAddMask):
             self.birth_date_year_text_entry.set_text("")
             self.namepart_treestore.clear()
 
-        
-
-        
 
     def add_name(self,widget):
         name_role_id,name_role_value = self.get_active_name_role()
@@ -193,7 +190,7 @@ class PersonAddMask(AbstractAddMask):
                                     int(self.birth_date_month_text_entry.get_text()), 
                                     int(self.birth_date_day_text_entry.get_text())), 
                       self.birth_place_text_entry.get_text(),
-                      self.person_uuid_text_entry.get_text())
+                      self.uuid_text_entry.get_text())
         
 
         # insert person names
