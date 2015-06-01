@@ -25,21 +25,12 @@ class OrganisationAddMask(AbstractAddMask):
 
         row = 0
         # Row 0: organisation uuid
-        uuid_label = Gtk.Label("organisation UUID")
-        uuid_label.set_justify(Gtk.Justification.LEFT)
-        self.attach(uuid_label,0,row,1,1)
-        self.organisation_uuid_text_entry=Gtk.Entry()
-        self.organisation_uuid_text_entry.set_editable(False)
-        self.attach(self.organisation_uuid_text_entry,1,row,1,1)
+        self.add_uuid_row("Organisation UUID", row)
         
         row+=1
         # Row 1: common name
-        common_name_label = Gtk.Label("Common Name")
-        common_name_label.set_justify(Gtk.Justification.LEFT)
-        self.attach(common_name_label,0,row,1,1)
-        self.common_name_text_entry=Gtk.Entry()
-        self.attach(self.common_name_text_entry,1,row,1,1)
-
+        self.add_common_name_row("Common Name", row)
+        
         row+=1
         
         # last row

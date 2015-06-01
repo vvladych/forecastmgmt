@@ -116,6 +116,22 @@ class AbstractAddMask(Gtk.Grid):
         self.create_layout()
         self.current_object=None        
         
+    def add_uuid_row(self, label, row):
+        uuid_label = Gtk.Label(label)
+        uuid_label.set_justify(Gtk.Justification.LEFT)
+        self.attach(uuid_label,0,row,1,1)
+        self.uuid_text_entry=Gtk.Entry()
+        self.uuid_text_entry.set_editable(False)
+        self.attach(self.uuid_text_entry,1,row,1,1)
+        
+
+    def add_common_name_row(self, label, row):
+        common_name_label = Gtk.Label(label)
+        common_name_label.set_justify(Gtk.Justification.LEFT)
+        self.attach(common_name_label,0,row,1,1)
+        self.common_name_text_entry=Gtk.Entry()
+        self.common_name_text_entry.set_editable(False)
+        self.attach(self.common_name_text_entry,1,row,1,1)
         
     def set_masterdata_object(self, masterdata_object=None):
         self.masterdata_object=masterdata_object
