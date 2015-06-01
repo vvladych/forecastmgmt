@@ -15,6 +15,7 @@ class  MasterdataAbstractWindow(Gtk.Box):
         self.main_window=main_window
         self.listmask=listmask
         self.addmask=addmask
+        self.specific_name="unspecified"
         
         self.action_area = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         self.pack_start(self.action_area, False, False, 0)
@@ -53,7 +54,7 @@ class  MasterdataAbstractWindow(Gtk.Box):
         self.action_area.show_all()
         
     def delete_action(self,widget,callback):
-        confirm_dialog=DeleteConfirmationDialog(self.main_window)
+        confirm_dialog=DeleteConfirmationDialog(self.main_window, self.specific_name)
         response = confirm_dialog.run()
         if response==Gtk.ResponseType.OK:
             self.listmask.delete_object()
