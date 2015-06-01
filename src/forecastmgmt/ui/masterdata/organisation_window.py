@@ -6,8 +6,8 @@ Created on 26.04.2015
 from gi.repository import Gtk
 
 from masterdata_abstract_window import MasterdataAbstractWindow
-from forecastmgmt.ui.masterdata.object_list_mask.organisation_list_mask import OrganisationListMask
-from forecastmgmt.ui.masterdata.object_add_mask.organisation_add_mask import OrganisationAddMask
+from organisation_list_mask import OrganisationListMask
+from organisation_add_mask import OrganisationAddMask
 
 
 class OrganisationWindow(MasterdataAbstractWindow):

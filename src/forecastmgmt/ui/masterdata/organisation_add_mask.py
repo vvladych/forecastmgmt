@@ -7,8 +7,8 @@ Created on 03.05.2015
 from gi.repository import Gtk
 
 from forecastmgmt.model.organisation import Organisation
-from forecastmgmt.ui.masterdata.object_add_mask.masterdata_abstract_add_mask import AbstractAddMask
 
+from masterdata_abstract_window import AbstractAddMask
 
 class OrganisationAddMask(AbstractAddMask):
     def __init__(self, main_window, reset_callback):
