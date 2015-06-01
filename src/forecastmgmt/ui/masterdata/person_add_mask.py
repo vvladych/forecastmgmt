@@ -16,7 +16,7 @@ from forecastmgmt.dao.dao_utils import enum_retrieve_valid_values
 from forecastmgmt.ui.ui_tools import add_column_to_treeview
 import datetime
 
-from masterdata_abstract_add_mask import AbstractAddMask
+from masterdata_abstract_window import AbstractAddMask
 
 class PersonAddMask(AbstractAddMask):
 

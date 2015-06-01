@@ -2,8 +2,8 @@ from gi.repository import Gtk
 
 from masterdata_abstract_window import MasterdataAbstractWindow
 
-from forecastmgmt.ui.masterdata.object_add_mask.person_add_mask import PersonAddMask
-from forecastmgmt.ui.masterdata.object_list_mask.person_list_mask import PersonListMask
+from person_add_mask import PersonAddMask
+from person_list_mask import PersonListMask
 
 class PersonWindow(MasterdataAbstractWindow):
 
