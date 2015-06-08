@@ -106,7 +106,7 @@ class FCObjectAddMask(AbstractAddMask):
         if common_name is None:
             self.show_error_dialog("common name cannot be null")
             return
-        fc_object=FCObject(None,common_name)
+        fc_object=FCObject(self.current_object.sid,common_name)
         
         # insert object properties
         object_property_iter=self.object_property_treestore.get_iter_first()
