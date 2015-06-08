@@ -11,7 +11,7 @@ class FCObject(MDO):
     sql_dict={"get_all":"SELECT sid, common_name, uuid FROM fc_object",
               "delete":"DELETE FROM fc_object WHERE sid=%s",
               "insert":"INSERT INTO fc_object(common_name) VALUES(%s) RETURNING sid",
-              "load":"SELECT common_name, uuid FROM fc_object WHERE sid=%s",
+              "load":"SELECT sid, common_name, uuid FROM fc_object WHERE sid=%s",
               "update":"UPDATE fc_object SET common_name=%s WHERE sid=%s"
               }
     
@@ -25,6 +25,7 @@ class FCObject(MDO):
         
 
     def load_object_from_db(self,rec):
+        self.sid=rec.sid
         self.common_name=rec.common_name
         self.uuid=rec.uuid
         self.object_properties=FCObjectProperty().get_all_for_foreign_key(self.sid)
@@ -42,8 +43,8 @@ class FCObject(MDO):
             object_property.insert()
         get_db_connection().commit()
         
-    def add_object_property(self, object_property_sid, object_property_common_name, object_sid):
-        self.object_properties.append(FCObjectProperty(object_property_sid, None, object_property_common_name, object_sid))
+    def add_object_property(self, object_property_sid, object_property_common_name):
+        self.object_properties.append(FCObjectProperty(object_property_sid, None, object_property_common_name, self.sid))
         
         
     def update(self, other):
