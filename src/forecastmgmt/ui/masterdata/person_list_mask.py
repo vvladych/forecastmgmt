@@ -25,11 +25,11 @@ class PersonListMask(AbstractListMask):
 
     def delete_object(self):
         model,tree_iter = self.tree.get_selection().get_selected()
-        (person_sid)=self.store.get(tree_iter, 4)
+        (person_sid)=model.get(tree_iter, 4)
         Person(person_sid).delete()
-        self.store.remove(tree_iter)
+        model.remove(tree_iter)
             
     def get_current_object(self):
         model,tree_iter = self.tree.get_selection().get_selected()
-        (person_sid)=self.store.get(tree_iter, 4)
+        (person_sid)=model.get(tree_iter, 4)
         return Person(person_sid)
