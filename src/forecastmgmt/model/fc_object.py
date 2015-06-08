@@ -43,8 +43,6 @@ class FCObject(MDO):
         get_db_connection().commit()
         
     def add_object_property(self, object_property_sid, object_property_common_name, object_sid):
-        print("common_name: %s" % object_property_common_name)
-        print("object_sid: %s" % object_sid)
         self.object_properties.append(FCObjectProperty(object_property_sid, None, object_property_common_name, object_sid))
         
         
