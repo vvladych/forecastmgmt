@@ -5,12 +5,12 @@ Created on 27.05.2015
 '''
 from gi.repository import Gtk
 
-from model_process_component import ModelProcessComponent
+from textmodel_process_component import TextModelProcessComponent
 
-class ModelAddDialog(Gtk.Dialog):
+class TextModelAddDialog(Gtk.Dialog):
     
     def __init__(self, parent, forecast):
-        Gtk.Dialog.__init__(self, "Model Dialog", None, 0,
+        Gtk.Dialog.__init__(self, "Text model Dialog", None, 0,
             (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
              Gtk.STOCK_OK, Gtk.ResponseType.OK))
         
@@ -19,7 +19,7 @@ class ModelAddDialog(Gtk.Dialog):
         
         self.forecast=forecast
         
-        self.process_component=ModelProcessComponent(forecast)
+        self.process_component=TextModelProcessComponent(forecast)
         
         self.create_layout()
         self.show_all()

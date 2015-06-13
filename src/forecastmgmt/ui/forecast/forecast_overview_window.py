@@ -10,7 +10,9 @@ from publication_add_dialog import PublicationAddDialog
 from publication_process_component import PublicationOverviewComponent
 from originator_add_dialog import OriginatorAddDialog
 from originator_process_component import OriginatorOverviewComponent
+from textmodel_add_dialog import TextModelAddDialog
 from model_add_dialog import ModelAddDialog
+        
 from forecastmgmt.ui.forecast import publication_add_dialog
 
 
@@ -108,9 +110,14 @@ class ForecastOverviewWindow(Gtk.Grid):
         
         row += 1
 
+        button_edit_textmodel_dialog=Gtk.Button("Edit text model(s)")
+        button_edit_textmodel_dialog.connect("clicked", self.show_textmodel_dialog)
+        self.attach(button_edit_textmodel_dialog,0,row,1,1)
+
         button_edit_model_dialog=Gtk.Button("Edit Model(s)")
         button_edit_model_dialog.connect("clicked", self.show_model_dialog)
-        self.attach(button_edit_model_dialog,0,row,1,1)
+        self.attach(button_edit_model_dialog,1,row,1,1)
+
         
     
     def show_originator_dialog(self, widget):
@@ -127,10 +134,14 @@ class ForecastOverviewWindow(Gtk.Grid):
         self.publication_overview_component.clean_and_populate_model()
     
         
+    def show_textmodel_dialog(self, widget):
+        dialog=TextModelAddDialog(self, self.forecast)
+        dialog.run()
+        dialog.destroy()
+
     def show_model_dialog(self, widget):
         dialog=ModelAddDialog(self, self.forecast)
         dialog.run()
         dialog.destroy()
-        self.publication_overview_component.clean_and_populate_model()
     
-
+    
