@@ -12,8 +12,12 @@ from forecastmgmt.ui.ui_tools import TreeviewColumn, show_info_dialog
 from forecastmgmt.dao.db_connection import get_db_connection
 import psycopg2.extras
 
+import datetime
+
+
 from forecastmgmt.model.fc_object import FCObject
 from forecastmgmt.model.fc_object_property import FCObjectProperty
+from forecastmgmt.model.fc_object_property_state import FCObjectPropertyState
 
 class ModelProcessComponent(AbstractDataProcessComponent):
     
@@ -88,12 +92,11 @@ class ModelManipulationComponent(AbstractDataManipulationComponent):
         self.delete_button.connect("clicked", self.delete_action)        
         parent_layout_grid.attach(self.delete_button,1,row,1,1)
 
+        row+=3
         
-        # add / remove buttons
+        row=self.overview_component.create_layout(parent_layout_grid, row)
         
-        # Add model text view
-                
-        row+=1
+        row += 1
 
         return row
     
@@ -125,7 +128,18 @@ class ModelManipulationComponent(AbstractDataManipulationComponent):
             return model[tree_iter][0]
         else:
             print("please choose an object!")
+            
 
+    def get_active_object_property(self):
+        tree_iter = self.object_property_combobox.get_active_iter()
+        if tree_iter!=None:
+            model = self.object_property_combobox.get_model()
+            object_property_sid = model[tree_iter][:2]
+            return object_property_sid
+        else:
+            print("please choose a person!")
+        
+    
     
     def on_object_combobox_changed(self, widget):
         self.populate_object_property_combobox_model(self.get_active_object())
@@ -144,8 +158,24 @@ class ModelManipulationComponent(AbstractDataManipulationComponent):
             combobox_model.append(["%s" % o.sid, o.common_name])
         return combobox_model
     
+    
+    def get_point_in_time(self):
+        return datetime.date(int(self.state_date_year_textentry.get_text()), 
+                                    int(self.state_date_month_textentry.get_text()), 
+                                    int(self.state_date_day_textentry.get_text()))
+        
+    def get_object_property_state_value(self):
+        return self.object_property_value_textentry.get_text()
+    
     def add_state_action(self, widget):
-        print("add state")
+        # get object property
+        (object_property_sid,object_property_common_name)=self.get_active_object_property()
+        # insert new state
+        FCObjectPropertyState(None,object_property_sid,self.get_point_in_time(),self.get_object_property_state_value()).insert()
+        # 
+        show_info_dialog("Add successful")
+        self.overview_component.clean_and_populate_model()
+        
         
     def delete_action(self, widget):
         print("delete chosen state")
@@ -153,13 +183,34 @@ class ModelManipulationComponent(AbstractDataManipulationComponent):
     
 class ModelOverviewComponent(AbstractDataOverviewComponent):
     
-    treecolumns=[TreeviewColumn("model_text_sid", 0, True), TreeviewColumn("model text", 1, False)]
+    treecolumns=[TreeviewColumn("state_sid", 0, False), TreeviewColumn("object_property_sid", 1, True), 
+                TreeviewColumn("fc_project_sid", 2, True), TreeviewColumn("Object property", 3, False),
+                TreeviewColumn("State PIT", 4, False), TreeviewColumn("Property Value", 5, False)]
 
     
     def __init__(self, forecast):
         self.forecast=forecast
         super(ModelOverviewComponent, self).__init__(ModelOverviewComponent.treecolumns)
         
+
+    def create_layout(self, parent_layout_grid, row):
+        row += 1
+        
+        parent_layout_grid.attach(self.treeview,0,row,4,1)
+                
+        return row
+
+        
     def populate_model(self):
-        print("hier")
+        self.treemodel.clear()
+        cur=get_db_connection().cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
+        data=(self.forecast.sid,)
+        cur.execute("""SELECT 
+                        1,1,1,'test','12.02.2012','value'
+                        """,data)
+#        for p in cur.fetchall():
+#            self.treemodel.append([])
+        self.treemodel.append(['1','1','1','test','12.02.2012','value'])
+        cur.close()
+
         

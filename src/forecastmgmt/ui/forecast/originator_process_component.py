@@ -119,6 +119,7 @@ class OriginatorManipulationComponent(AbstractDataManipulationComponent):
         show_info_dialog("Add successful")
         self.overview_component.clean_and_populate_model()
         
+        
     def delete_action(self, widget):
         model,tree_iter = self.overview_component.treeview.get_selection().get_selected()
         (originator_sid)=model.get(tree_iter, 0)
