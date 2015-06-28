@@ -169,7 +169,7 @@ class ModelStateManipulationComponent(AbstractDataManipulationComponent):
         # get object property
         (object_property_sid,object_property_common_name)=self.get_active_object_property()
         # insert new state
-        FCObjectPropertyState(None,object_property_sid,self.get_point_in_time(),self.get_object_property_state_value()).insert()
+        FCObjectPropertyState(None,object_property_sid,self.get_point_in_time(),self.get_object_property_state_value(),self.fcmodel).insert()
         # 
         show_info_dialog("Add successful")
         self.overview_component.clean_and_populate_model()
@@ -181,9 +181,10 @@ class ModelStateManipulationComponent(AbstractDataManipulationComponent):
     
 class ModelStateOverviewComponent(AbstractDataOverviewComponent):
     
-    treecolumns=[TreeviewColumn("state_sid", 0, False), TreeviewColumn("object_property_sid", 1, True), 
-                TreeviewColumn("fc_project_sid", 2, True), TreeviewColumn("Object property", 3, False),
-                TreeviewColumn("State PIT", 4, False), TreeviewColumn("Property Value", 5, False)]
+    treecolumns=[TreeviewColumn("state_sid", 0, True), TreeviewColumn("object_property_sid", 1, True), 
+                TreeviewColumn("fc_project_sid", 2, True), TreeviewColumn("Common Name", 3, False),
+                TreeviewColumn("Object property", 4, False),
+                TreeviewColumn("State PIT", 5, False), TreeviewColumn("Property Value", 6, False)]
 
     
     def __init__(self, fcmodel):
@@ -202,14 +203,26 @@ class ModelStateOverviewComponent(AbstractDataOverviewComponent):
     def populate_model(self):
         self.treemodel.clear()
         cur=get_db_connection().cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
-        #data=(self.fcmodel.sid,)
-        #cur.execute("""SELECT 
-        #                1,1,1,'test','12.02.2012','value'
-        #                """,data)
+        data=(self.fcmodel)
+        cur.execute("""SELECT 
+                        fc_object_property_state.sid as state_sid,
+                        fc_object_property_state.object_property_sid as object_property_sid,
+                        fc_object_property_state.model_sid as model_sid,
+                        fc_object_property.common_name as object_property,
+                        fc_object_property_state.point_in_time,
+                        fc_object_property_state.object_property_state_value as state_value,
+                        fc_object.common_name as object_common_name
+                        FROM
+                        fc_object_property, fc_object_property_state, fc_object
+                        WHERE
+                        fc_object_property.sid=fc_object_property_state.object_property_sid AND
+                        fc_object_property.object_sid=fc_object.sid AND 
+                        fc_object_property_state.model_sid=%s
+                        """,data)
 
-#        for p in cur.fetchall():
-#            self.treemodel.append([])
-        self.treemodel.append(['1','1','1','test','12.02.2012','value'])
+        for p in cur.fetchall():
+            self.treemodel.append(["%s" % p.state_sid, "%s" % p.object_property_sid, "%s" % self.fcmodel, p.object_common_name, p.object_property, "%s" % p.point_in_time, p.state_value])
+        #self.treemodel.append(['1','1','1','test','12.02.2012','value'])
         cur.close()
 
         

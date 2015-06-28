@@ -32,9 +32,12 @@ class AbstractDataManipulationComponent(object):
 class AbstractDataOverviewComponent(object):
     
     def __init__(self, columns):
-        if len(columns)>5:
+        if len(columns)==7:
+            self.treemodel=Gtk.ListStore(str,str,str,str,str,str,str)
+
+        if len(columns)==6:
             self.treemodel=Gtk.ListStore(str,str,str,str,str,str)
-        else:
+        if len(columns)==5:
             self.treemodel=Gtk.ListStore(str,str,str,str,str)
         self.clean_and_populate_model()
         self.treeview=Gtk.TreeView(self.treemodel)

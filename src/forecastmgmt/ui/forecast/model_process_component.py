@@ -117,6 +117,6 @@ class ModelOverviewComponent(AbstractDataOverviewComponent):
         
     def get_active_model(self):
         model,tree_iter=self.treeview.get_selection().get_selected()
-        (model_sid)=model.get(tree_iter, 1)
+        model_sid=model.get(tree_iter, 1)
         return model_sid
     
