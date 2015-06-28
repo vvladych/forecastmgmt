@@ -32,14 +32,15 @@ class AbstractDataManipulationComponent(object):
 class AbstractDataOverviewComponent(object):
     
     def __init__(self, columns):
-        if len(columns)==5:
-            self.treemodel=Gtk.ListStore(str,str,str,str,str)
-        elif len(columns)==6:
+        if len(columns)>5:
             self.treemodel=Gtk.ListStore(str,str,str,str,str,str)
+        else:
+            self.treemodel=Gtk.ListStore(str,str,str,str,str)
         self.clean_and_populate_model()
         self.treeview=Gtk.TreeView(self.treemodel)
         for column in columns:
             self.treeview.append_column(add_column_to_treeview(column.column_name, column.ordernum, column.hidden))
+        self.treeview.connect("row-activated", self.on_row_select)
         self.treeview.set_size_request(200,100)
         
             
@@ -54,3 +55,6 @@ class AbstractDataOverviewComponent(object):
         
     def populate_model(self):
         raise NotImplementedError("populate_model still not implemented!")
+    
+    def on_row_select(self,widget,path,data):
+        raise NotImplementedError("on_row_select still not implemented!")
