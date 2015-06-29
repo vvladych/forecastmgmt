@@ -21,10 +21,16 @@ class ForecastNewDialog(Gtk.Dialog):
         self.show_all()
         
     def perform_insert(self):
-        project=FcProject(common_name=self.project_name_text_entry.get_text(), short_description=self.desc_textview.get_text())
+        
+        project=FcProject(common_name=self.project_name_text_entry.get_text(), short_description=self.__get_desc_text())
         project.insert()
         
     
+    def __get_desc_text(self):
+        textbuffer=self.desc_textview.get_buffer()
+        short_desc=textbuffer.get_text(textbuffer.get_start_iter(),textbuffer.get_end_iter(),True)
+        return short_desc
+        
     def __create_ui(self):
         box = self.get_content_area()
         

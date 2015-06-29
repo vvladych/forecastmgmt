@@ -32,7 +32,7 @@ class FcProject(MDO):
             
 
     def get_insert_data(self):
-        return (self.common_name,)        
+        return (self.common_name,self.short_description,)        
         
         
     def load_object_from_db(self,rec):
