@@ -176,7 +176,12 @@ class ModelStateManipulationComponent(AbstractDataManipulationComponent):
         
         
     def delete_action(self, widget):
-        print("delete chosen state")
+        model,tree_iter = self.overview_component.treeview.get_selection().get_selected()
+        (object_property_state_sid)=model.get(tree_iter, 0)
+        FCObjectPropertyState(object_property_state_sid).delete()
+        model.remove(tree_iter)   
+        show_info_dialog("Delete successful")   
+
 
     
 class ModelStateOverviewComponent(AbstractDataOverviewComponent):
