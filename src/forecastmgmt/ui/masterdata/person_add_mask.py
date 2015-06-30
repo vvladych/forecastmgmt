@@ -144,9 +144,10 @@ class PersonAddMask(AbstractAddMask):
             self.uuid_text_entry.set_text(self.current_object.uuid)
             self.common_name_text_entry.set_text(self.current_object.common_name)
             self.birth_place_text_entry.set_text(self.current_object.birth_place)
-            self.birth_date_year_text_entry.set_text("%s" % self.current_object.birth_date.year)
-            self.birth_date_month_text_entry.set_text("%s" % self.current_object.birth_date.month)
-            self.birth_date_day_text_entry.set_text("%s" % self.current_object.birth_date.day)
+            if self.current_object.birth_date!=None:
+                self.birth_date_year_text_entry.set_text("%s" % self.current_object.birth_date.year)
+                self.birth_date_month_text_entry.set_text("%s" % self.current_object.birth_date.month)
+                self.birth_date_day_text_entry.set_text("%s" % self.current_object.birth_date.day)
             self.namepart_treestore.clear()
             for name in self.current_object.names:
                 tree_iter=self.namepart_treestore.append(None,[name.sid, name.name_role, None])
@@ -176,7 +177,14 @@ class PersonAddMask(AbstractAddMask):
             name=self.name_role_combobox.get_child()
         return name
 
-                
+     
+    def __get_birth_date_from_mask(self):
+        if (self.birth_date_day_text_entry.get_text()!='' and self.birth_date_month_text_entry.get_text()!='' and self.birth_date_year_text_entry.get_text()!=''):
+            return datetime.date(int(self.birth_date_year_text_entry.get_text()), 
+                                int(self.birth_date_month_text_entry.get_text()), 
+                                int(self.birth_date_day_text_entry.get_text()))
+        return None 
+                   
             
     def create_object_from_mask(self):
         common_name=self.common_name_text_entry.get_text()
@@ -190,9 +198,7 @@ class PersonAddMask(AbstractAddMask):
         
         person=Person(person_sid, 
                       self.common_name_text_entry.get_text(), 
-                      datetime.date(int(self.birth_date_year_text_entry.get_text()), 
-                                    int(self.birth_date_month_text_entry.get_text()), 
-                                    int(self.birth_date_day_text_entry.get_text())), 
+                      self.__get_birth_date_from_mask(),
                       self.birth_place_text_entry.get_text(),
                       self.uuid_text_entry.get_text())
                 
