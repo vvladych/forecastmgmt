@@ -197,6 +197,8 @@ class AbstractListMask(Gtk.Box):
                     
         self.tree.get_column(0).set_sort_order(Gtk.SortType.ASCENDING)
         self.tree.get_column(0).set_sort_column_id(0)
+
+        self.tree.connect("row-activated", self.on_row_select)
         
         self.tree.set_size_request(200,300)
         self.pack_start(self.tree, False, False, 0)        
@@ -214,5 +216,8 @@ class AbstractListMask(Gtk.Box):
     
     def get_current_object(self):
         raise "get_current_object still unimplemented!"
+    
 
+    def on_row_select(self,widget,path,data):
+        raise NotImplementedError("on_row_select still not implemented!")
         
