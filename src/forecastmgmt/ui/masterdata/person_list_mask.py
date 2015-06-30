@@ -9,7 +9,8 @@ from forecastmgmt.model.person import Person
 
 class PersonListMask(AbstractListMask):
 
-    treeview_columns=[{"column":"common name","hide":False},{"column":"birth date","hide":False},{"column":"birth place","hide":False},{"column":"person uuid","hide":False},{"column":"person_sid","hide":True}]
+    treeview_columns=[{"column":"common name","hide":False},{"column":"birth date","hide":False},{"column":"birth place","hide":False},
+                      {"column":"person uuid","hide":False},{"column":"person_sid","hide":True}]
 
 
     def __init__(self):

@@ -125,7 +125,7 @@ class PersonAddMask(AbstractAddMask):
         row+=1
         # Row 4: treeview 
         self.create_namepart_treeview()
-        self.attach(self.nameparts_treeview,0,row,1,1)
+        self.attach(self.nameparts_treeview,0,row,4,1)
 
         row+=1
         # Row 5
@@ -183,15 +183,19 @@ class PersonAddMask(AbstractAddMask):
         if not common_name:
             self.show_error_dialog("Error: common name cannot be empty!")
             return
-                
-        person=Person(self.current_object.sid, 
+        
+        person_sid=None
+        if self.current_object!=None:
+            person_sid=self.current_object.sid
+        
+        person=Person(person_sid, 
                       self.common_name_text_entry.get_text(), 
                       datetime.date(int(self.birth_date_year_text_entry.get_text()), 
                                     int(self.birth_date_month_text_entry.get_text()), 
                                     int(self.birth_date_day_text_entry.get_text())), 
                       self.birth_place_text_entry.get_text(),
                       self.uuid_text_entry.get_text())
-        
+                
 
         # insert person names
         # iterate over names treestore
