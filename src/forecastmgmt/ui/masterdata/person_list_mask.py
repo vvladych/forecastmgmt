@@ -34,3 +34,6 @@ class PersonListMask(AbstractListMask):
         model,tree_iter = self.tree.get_selection().get_selected()
         (person_sid)=model.get(tree_iter, 4)
         return Person(person_sid)
+
+    def on_row_select(self,widget,path,data):
+        print("on_row_select")
