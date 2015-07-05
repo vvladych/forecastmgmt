@@ -29,7 +29,7 @@ class MainWindow(Gtk.Window):
         self.set_working_area("forecast")
 
         self.create_status_bar()
-        self.grid.add(self.statusbar)
+        #self.grid.add(self.statusbar)
         
     
     def create_status_bar(self):
@@ -75,28 +75,8 @@ class MainWindow(Gtk.Window):
         
         file_menu_entry.set_submenu(menu)
         
-        forecast_menu_entry = Gtk.MenuItem("Forecast")
-        forecast_menu = Gtk.Menu()
-        mitem_forecast_new=Gtk.MenuItem("New")
-        mitem_forecast_new.connect("activate", self.on_new_forecast)
-        forecast_menu.insert(mitem_forecast_new,0)
-        
-        forecast_menu_entry.set_submenu(forecast_menu)
-
-
-        masterdata_menu_entry = Gtk.MenuItem("Master data")
-        masterdata_menu = Gtk.Menu()
-        mitem_masterdata_person=Gtk.MenuItem("Person")
-        masterdata_menu.insert(mitem_masterdata_person,0)
-        
-        masterdata_menu_entry.set_submenu(masterdata_menu)
-
-        
-        #filemenu.append(file_menu_entry)
         
         menubar.append(file_menu_entry)
-        menubar.append(forecast_menu_entry)
-        menubar.append(masterdata_menu_entry)
         
         return menubar
        
