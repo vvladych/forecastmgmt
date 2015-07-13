@@ -187,7 +187,7 @@ class AbstractListMask(Gtk.Box):
 
     def __init__(self, columnlist):
         Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
-        self.store = Gtk.ListStore(str,str,str,str,str)        
+        self.store=Gtk.ListStore(*([str]*len(columnlist)))        
         self.tree = Gtk.TreeView(self.store)          
         
         column_counter=0

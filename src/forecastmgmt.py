@@ -11,11 +11,12 @@ class MainWindow(Gtk.Window):
 
     def __init__(self):
         Gtk.Window.__init__(self, title="Forecaster")
-        self.set_default_size(800,600)
+        self.set_size_request(800,600)
         
         # The main area, grid 
         self.grid = Gtk.Grid()
         self.grid.set_orientation(Gtk.Orientation.VERTICAL)
+        
         self.add(self.grid)
 
         menubar=self.create_menubar()

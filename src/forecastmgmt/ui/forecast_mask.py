@@ -23,6 +23,7 @@ class ForecastMask(Gtk.Grid):
 
         # Main working pane: contains left pane with actions and working area pane 
         self.main_working_pane=Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        self.main_working_pane.set_size_request(200,600)
         self.add(self.main_working_pane)
 
         # the left pane: actions

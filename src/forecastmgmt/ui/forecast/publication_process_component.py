@@ -182,7 +182,7 @@ class PublicationManipulationComponent(AbstractDataManipulationComponent):
 class PublicationOverviewComponent(AbstractDataOverviewComponent):
     
     treecolumns=[TreeviewColumn("publication_sid", 0, True), TreeviewColumn("publisher_sid", 1, True), 
-                 TreeviewColumn("Publisher", 2, False), TreeviewColumn("Title", 3, False),
+                 TreeviewColumn("Publisher", 2, False), TreeviewColumn("Title", 3, False, True),
                  TreeviewColumn("Date", 4, False)]
     
     def __init__(self, forecast):
@@ -192,8 +192,11 @@ class PublicationOverviewComponent(AbstractDataOverviewComponent):
 
     def create_layout(self, parent_layout_grid, row):
         row += 1
-        
-        parent_layout_grid.attach(self.treeview,0,row,4,1)
+        scrolled_window = Gtk.ScrolledWindow()
+        scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC,Gtk.PolicyType.AUTOMATIC)
+        scrolled_window.add(self.treeview)
+
+        parent_layout_grid.attach(scrolled_window,0,row,4,1)
                 
         return row
 

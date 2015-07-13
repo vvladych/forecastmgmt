@@ -19,7 +19,7 @@ class OrganisationListMask(AbstractListMask):
         self.store.clear()        
         organisations = Organisation().get_all()
         for organisation in organisations:
-            self.store.append(["%s" % organisation.common_name, "%s" % organisation.uuid, "%s" % organisation.sid, "", ""])
+            self.store.append(["%s" % organisation.common_name, "%s" % organisation.uuid, "%s" % organisation.sid])
         
 
     def delete_object(self):

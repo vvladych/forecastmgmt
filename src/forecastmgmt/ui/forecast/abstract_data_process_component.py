@@ -36,9 +36,9 @@ class AbstractDataOverviewComponent(object):
         self.clean_and_populate_model()
         self.treeview=Gtk.TreeView(self.treemodel)
         for column in columns:
-            self.treeview.append_column(add_column_to_treeview(column.column_name, column.ordernum, column.hidden))
+            self.treeview.append_column(add_column_to_treeview(column.column_name, column.ordernum, column.hidden, column.fixed_size))
         self.treeview.connect("row-activated", self.on_row_select)
-        self.treeview.set_size_request(200,100)
+        #self.treeview.set_size_request(200,150)
         
             
     def create_layout(self, parent_layout_grid, row):

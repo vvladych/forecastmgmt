@@ -27,10 +27,19 @@ class PublisherAddMask(AbstractAddMask):
         self.add_uuid_row("Publisher UUID", row)
 
         row+=1
-        # Row 1: common name
+
         self.add_common_name_row("Common name", row)
         
         row+=1
+
+        url_label = Gtk.Label("URL")
+        url_label.set_justify(Gtk.Justification.LEFT)
+        self.attach(url_label,0,row,1,1)
+        self.url_text_entry=Gtk.Entry()
+        self.attach(self.url_text_entry,1,row,1,1)
+        
+        row+=1
+        
         
         # last row
         save_button = Gtk.Button("Save", Gtk.STOCK_SAVE)
@@ -58,6 +67,7 @@ class PublisherAddMask(AbstractAddMask):
         if common_name is None:
             self.show_error_dialog("common name cannot be null")
             return
-        publisher=Publisher(None,common_name)
+        publisher_url = self.url_text_entry.get_text()
+        publisher=Publisher(None,None,common_name,publisher_url)
         return publisher
     
