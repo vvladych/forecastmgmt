@@ -179,12 +179,7 @@ class OriginatorOverviewComponent(AbstractDataOverviewComponent):
         super(OriginatorOverviewComponent, self).__init__(OriginatorOverviewComponent.treecolumns)
         
 
-    def create_layout(self, parent_layout_grid, row):
-        row += 1
-        
-        parent_layout_grid.attach(self.treeview,0,row,4,1)
-                
-        return row
+
     
     
     def populate_model(self):

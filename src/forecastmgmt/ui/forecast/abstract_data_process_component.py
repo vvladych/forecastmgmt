@@ -40,10 +40,19 @@ class AbstractDataOverviewComponent(object):
         self.treeview.connect("row-activated", self.on_row_select)
         #self.treeview.set_size_request(200,150)
         
-            
+                        
+        
     def create_layout(self, parent_layout_grid, row):
-        raise NotImplementedError("create_layout still not implemented!")
-            
+        row += 1
+        scrolled_window = Gtk.ScrolledWindow()
+        scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC,Gtk.PolicyType.AUTOMATIC)
+        scrolled_window.add(self.treeview)
+        scrolled_window.set_size_request(600,200)
+        
+        parent_layout_grid.attach(scrolled_window,0,row,4,1)
+        
+                
+        return row
         
     def clean_and_populate_model(self):
         self.treemodel.clear()

@@ -190,16 +190,6 @@ class PublicationOverviewComponent(AbstractDataOverviewComponent):
         super(PublicationOverviewComponent, self).__init__(PublicationOverviewComponent.treecolumns)
         
 
-    def create_layout(self, parent_layout_grid, row):
-        row += 1
-        scrolled_window = Gtk.ScrolledWindow()
-        scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC,Gtk.PolicyType.AUTOMATIC)
-        scrolled_window.add(self.treeview)
-
-        parent_layout_grid.attach(scrolled_window,0,row,4,1)
-                
-        return row
-
     def populate_model(self):
         self.treemodel.clear()
         cur=get_db_connection().cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
