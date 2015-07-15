@@ -56,9 +56,14 @@ class PublisherAddMask(AbstractAddMask):
         if self.current_object!=None:
             self.uuid_text_entry.set_text(self.current_object.uuid)
             self.common_name_text_entry.set_text(self.current_object.common_name)
+            if self.current_object.url!=None:
+                self.url_text_entry.set_text(self.current_object.url)
+            else:
+                self.url_text_entry.set_text("")
         else:
             self.uuid_text_entry.set_text("")
             self.common_name_text_entry.set_text("")
+            self.url_text_entry.set_text("")
         
             
         
@@ -68,6 +73,10 @@ class PublisherAddMask(AbstractAddMask):
             self.show_error_dialog("common name cannot be null")
             return
         publisher_url = self.url_text_entry.get_text()
-        publisher=Publisher(None,None,common_name,publisher_url)
+        publisher_sid=None
+        if self.current_object!=None:
+            publisher_sid=self.current_object.sid
+            
+        publisher=Publisher(publisher_sid,None,common_name,publisher_url)
         return publisher
     
