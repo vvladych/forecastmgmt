@@ -15,7 +15,7 @@ class FCObject(MDO):
               "update":"UPDATE fc_object SET common_name=%s WHERE sid=%s"
               }
     
-    def __init__(self, sid=None, common_name=None, uuid=None):
+    def __init__(self, sid=None, uuid=None, common_name=None):
         super(FCObject, self).__init__(FCObject.sql_dict,sid,uuid)
         self.common_name=common_name
         if self.sid!=None:
@@ -34,7 +34,7 @@ class FCObject(MDO):
         return (self.common_name,)
     
     def fabric_method(self,rec):
-        return FCObject(rec.sid, rec.common_name, rec.uuid)
+        return FCObject(rec.sid, rec.uuid, rec.common_name)
     
     def insert(self):
         super(FCObject, self).insert()
@@ -43,8 +43,11 @@ class FCObject(MDO):
             object_property.insert()
         get_db_connection().commit()
         
-    def add_object_property(self, object_property_sid, object_property_common_name):
-        self.object_properties.append(FCObjectProperty(object_property_sid, None, object_property_common_name, self.sid))
+        
+    def add_object_property(self, object_property_sid, object_property_uuid, object_property_common_name):
+        self.object_properties.append(FCObjectProperty(object_property_sid, object_property_uuid, object_property_common_name, self.sid))
+        
+
         
         
     def update(self, other):

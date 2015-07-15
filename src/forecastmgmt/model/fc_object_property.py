@@ -15,6 +15,16 @@ class FCObjectProperty(MDO):
         super(FCObjectProperty, self).__init__(FCObjectProperty.sql_dict,sid,uuid)
         self.common_name=common_name
         self.object_sid=object_sid
+        
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.common_name==other.common_name and self.object_sid==other.object_sid and self.sid==other.sid and self.uuid==other.uuid
+        else:
+            return False
+        
+    def __ne__(self, other):
+        return not self==other
+
 
 
     def get_insert_data(self):

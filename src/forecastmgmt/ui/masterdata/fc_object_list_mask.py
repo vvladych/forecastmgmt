@@ -19,7 +19,7 @@ class FCObjectListMask(AbstractListMask):
         self.store.clear()        
         fc_objects = FCObject().get_all()
         for fc_object in fc_objects:
-            self.store.append(["%s" % fc_object.common_name, "%s" % fc_object.uuid, "%s" % fc_object.sid, "", ""])
+            self.store.append(["%s" % fc_object.common_name, "%s" % fc_object.uuid, "%s" % fc_object.sid])
         
 
     def delete_object(self):

@@ -43,13 +43,13 @@ class ModelStateManipulationComponent(AbstractDataManipulationComponent):
         self.object_combobox=Gtk.ComboBox.new_with_model_and_entry(self.object_combobox_model)
         self.object_combobox.set_entry_text_column(1)
         self.object_combobox.connect("changed", self.on_object_combobox_changed)
-        parent_layout_grid.attach(self.object_combobox,1,row,1,1)
+        parent_layout_grid.attach(self.object_combobox,1,row,2,1)
 
         self.object_property_combobox_model=Gtk.ListStore(str,str)
         self.object_property_combobox_model.append(["1", "test"])
         self.object_property_combobox=Gtk.ComboBox.new_with_model_and_entry(self.object_property_combobox_model)
         self.object_property_combobox.set_entry_text_column(1)
-        parent_layout_grid.attach(self.object_property_combobox,2,row,1,1)
+        parent_layout_grid.attach(self.object_property_combobox,2,row,2,1)
         
         
         # set point-in-time
@@ -78,7 +78,7 @@ class ModelStateManipulationComponent(AbstractDataManipulationComponent):
         parent_layout_grid.attach(object_property_value_label,0,row,1,1)
         
         self.object_property_value_textentry=Gtk.Entry()
-        parent_layout_grid.attach(self.object_property_value_textentry,1,row,2,1)
+        parent_layout_grid.attach(self.object_property_value_textentry,1,row,3,1)
         
         row+=2
         
