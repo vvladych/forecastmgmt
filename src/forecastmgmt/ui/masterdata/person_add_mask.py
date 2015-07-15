@@ -13,7 +13,7 @@ from forecastmgmt.dao.dao_utils import enum_retrieve_valid_values
 
 
 
-from forecastmgmt.ui.ui_tools import add_column_to_treeview, add_date_grid
+from forecastmgmt.ui.ui_tools import add_column_to_treeview, DateWidget
 import datetime
 
 from masterdata_abstract_window import AbstractAddMask
@@ -49,10 +49,9 @@ class PersonAddMask(AbstractAddMask):
         self.birth_date_day_text_entry=Gtk.Entry()
         self.birth_date_month_text_entry=Gtk.Entry()
         self.birth_date_year_text_entry=Gtk.Entry()
-        self.attach(add_date_grid(self.birth_date_day_text_entry,self.birth_date_month_text_entry,self.birth_date_year_text_entry),1,row,1,1)
-
-
+        self.attach(DateWidget(self.birth_date_day_text_entry,self.birth_date_month_text_entry,self.birth_date_year_text_entry),1,row,1,1)
         row+=1
+        
         
         # Row: birth place
         birth_place_label = Gtk.Label("Birth Place")

@@ -26,26 +26,61 @@ def show_info_dialog(message):
     info_dialog.run()
     info_dialog.destroy()
     
-
-def add_date_grid(day_text_entry, month_text_entry, year_text_entry):
-    birthdate_grid=Gtk.Grid()
-    birthdate_grid.set_column_spacing(5)
-    day_text_entry.set_max_length(2)
-    day_text_entry.set_width_chars(2)
     
-    birthdate_grid.attach(day_text_entry,0,0,1,1)
+class DateWidget(Gtk.Grid):
+    
+    def __init__(self, day_text_entry, month_text_entry, year_text_entry):
+        Gtk.Grid.__init__(self)
+        self.day_text_entry=day_text_entry
+        self.month_text_entry=month_text_entry
+        self.year_text_entry=year_text_entry
+        self.create_date_grid(True)
         
-    month_text_entry.set_max_length(2)
-    month_text_entry.set_width_chars(2)
-    birthdate_grid.attach_next_to(month_text_entry, day_text_entry, Gtk.PositionType.RIGHT, 1, 1)
+
+    def create_date_grid(self, show_calendar=False):
+        self.set_column_spacing(5)
+        self.day_text_entry.set_max_length(2)
+        self.day_text_entry.set_width_chars(2)
+        
+        self.attach(self.day_text_entry,0,0,1,1)
+            
+        self.month_text_entry.set_max_length(2)
+        self.month_text_entry.set_width_chars(2)
+        self.attach_next_to(self.month_text_entry, self.day_text_entry, Gtk.PositionType.RIGHT, 1, 1)
+        
+        self.year_text_entry.set_max_length(4)
+        self.year_text_entry.set_width_chars(4)
+        self.attach_next_to(self.year_text_entry, self.month_text_entry, Gtk.PositionType.RIGHT, 1, 1)
+        
+        self.attach(Gtk.Label("DD"),0,1,1,1)
+        self.attach(Gtk.Label("MM"),1,1,1,1)
+        self.attach(Gtk.Label("YYYY"),2,1,1,1)
+        
+        self.set_hexpand(False)
+        
+        if show_calendar==True:
+            pick_date_button=Gtk.Button("Pick date")
+            self.attach(pick_date_button,3,0,1,1)
+            pick_date_button.connect("clicked", self.show_calendar)
+        
     
-    year_text_entry.set_max_length(4)
-    year_text_entry.set_width_chars(4)
-    birthdate_grid.attach_next_to(year_text_entry, month_text_entry, Gtk.PositionType.RIGHT, 1, 1)
-    
-    birthdate_grid.attach(Gtk.Label("DD"),0,1,1,1)
-    birthdate_grid.attach(Gtk.Label("MM"),1,1,1,1)
-    birthdate_grid.attach(Gtk.Label("YYYY"),2,1,1,1)
-    
-    birthdate_grid.set_hexpand(False)
-    return birthdate_grid
+    def show_calendar(self, widget ):
+        self.calendar_window=Gtk.Dialog()
+        self.calendar_window.action_area.hide()
+        self.calendar_window.set_decorated(False)
+        self.calendar_window.set_property('skip-taskbar-hint', True)
+        self.calendar_window.set_size_request(200,200)
+                
+        calendar=Gtk.Calendar()
+        calendar.connect('day-selected-double-click', self.day_selected, None)
+        self.calendar_window.vbox.pack_start(calendar, True, True, 0)
+        calendar.show()
+        self.calendar_window.run()
+        
+        
+    def day_selected(self, calendar, event):
+        (year,month,day)=calendar.get_date()
+        self.day_text_entry.set_text("%s" % day)
+        self.month_text_entry.set_text("%s" % month)
+        self.year_text_entry.set_text("%s" % year)
+        self.calendar_window.destroy()    

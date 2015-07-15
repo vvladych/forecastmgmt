@@ -7,7 +7,7 @@ from gi.repository import Gtk
 
 from forecastmgmt.ui.forecast.abstract_data_process_component import AbstractDataOverviewComponent, AbstractDataManipulationComponent, AbstractDataProcessComponent 
 
-from forecastmgmt.ui.ui_tools import TreeviewColumn, show_info_dialog
+from forecastmgmt.ui.ui_tools import TreeviewColumn, show_info_dialog, DateWidget
 
 from forecastmgmt.dao.db_connection import get_db_connection
 import psycopg2.extras
@@ -43,13 +43,13 @@ class ModelStateManipulationComponent(AbstractDataManipulationComponent):
         self.object_combobox=Gtk.ComboBox.new_with_model_and_entry(self.object_combobox_model)
         self.object_combobox.set_entry_text_column(1)
         self.object_combobox.connect("changed", self.on_object_combobox_changed)
-        parent_layout_grid.attach(self.object_combobox,1,row,2,1)
+        parent_layout_grid.attach(self.object_combobox,1,row,1,1)
 
         self.object_property_combobox_model=Gtk.ListStore(str,str)
         self.object_property_combobox_model.append(["1", "test"])
         self.object_property_combobox=Gtk.ComboBox.new_with_model_and_entry(self.object_property_combobox_model)
         self.object_property_combobox.set_entry_text_column(1)
-        parent_layout_grid.attach(self.object_property_combobox,2,row,2,1)
+        parent_layout_grid.attach(self.object_property_combobox,2,row,1,1)
         
         
         # set point-in-time
@@ -58,17 +58,30 @@ class ModelStateManipulationComponent(AbstractDataManipulationComponent):
         pit_label=Gtk.Label("Choose point-in-time")
         pit_label.set_justify(Gtk.Justification.LEFT)
         parent_layout_grid.attach(pit_label,0,row,1,1)
+
+        begin_pit_label=Gtk.Label("Begin")
+        begin_pit_label.set_justify(Gtk.Justification.LEFT)
+        parent_layout_grid.attach(begin_pit_label,1,row,1,1)
+
         
-        self.state_date_day_textentry=Gtk.Entry()
-        parent_layout_grid.attach(self.state_date_day_textentry,1,row,1,1)
-        self.state_date_month_textentry=Gtk.Entry()
-        parent_layout_grid.attach(self.state_date_month_textentry,2,row,1,1)
-        self.state_date_year_textentry=Gtk.Entry()
-        parent_layout_grid.attach(self.state_date_year_textentry,3,row,1,1)
+        self.state_begin_date_day_textentry=Gtk.Entry()
+        self.state_begin_date_month_textentry=Gtk.Entry()
+        self.state_begin_date_year_textentry=Gtk.Entry()
         
-        pit_choose_button=Gtk.Button("Pick date")
-        parent_layout_grid.attach(pit_choose_button,4,row,1,1)
-        pit_choose_button.connect("clicked", self.show_calendar)
+        self.parent_layout_grid.attach(DateWidget(self.state_begin_date_day_textentry, self.state_begin_date_month_textentry, self.state_begin_date_year_textentry),2,row,1,1)
+
+        row+=1
+        
+        end_pit_label=Gtk.Label("End")
+        end_pit_label.set_justify(Gtk.Justification.LEFT)
+        parent_layout_grid.attach(end_pit_label,1,row,1,1)
+
+        
+        self.state_end_date_day_textentry=Gtk.Entry()
+        self.state_end_date_month_textentry=Gtk.Entry()
+        self.state_end_date_year_textentry=Gtk.Entry()
+        
+        self.parent_layout_grid.attach(DateWidget(self.state_end_date_day_textentry, self.state_end_date_month_textentry, self.state_end_date_year_textentry),2,row,1,1)
 
         
         # set value
@@ -98,26 +111,7 @@ class ModelStateManipulationComponent(AbstractDataManipulationComponent):
 
         return row
     
-    def show_calendar(self, widget):
-        self.calendar_window=Gtk.Dialog()
-        self.calendar_window.action_area.hide()
-        self.calendar_window.set_decorated(False)
-        self.calendar_window.set_property('skip-taskbar-hint', True)
-        self.calendar_window.set_size_request(200,200)
-                
-        self.calendar=Gtk.Calendar()
-        self.calendar.connect('day-selected-double-click', self.day_selected, None)
-        self.calendar_window.vbox.pack_start(self.calendar, True, True, 0)
-        self.calendar.show()
-        self.calendar_window.run()
-        
-        
-    def day_selected(self, calendar, event):
-        (year,month,day)=self.calendar.get_date()
-        self.state_date_day_textentry.set_text("%s" % day)
-        self.state_date_month_textentry.set_text("%s" % month)
-        self.state_date_year_textentry.set_text("%s" % year)
-        self.calendar_window.destroy()
+
     
     def get_active_object(self):
         tree_iter = self.object_combobox.get_active_iter()
