@@ -13,7 +13,7 @@ from forecastmgmt.dao.dao_utils import enum_retrieve_valid_values
 
 
 
-from forecastmgmt.ui.ui_tools import add_column_to_treeview
+from forecastmgmt.ui.ui_tools import add_column_to_treeview, add_date_grid
 import datetime
 
 from masterdata_abstract_window import AbstractAddMask
@@ -46,7 +46,10 @@ class PersonAddMask(AbstractAddMask):
         self.attach(birth_date_label,0,row,1,1)
         
         
-        self.attach(self.add_birth_date_grid(),1,row,1,1)
+        self.birth_date_day_text_entry=Gtk.Entry()
+        self.birth_date_month_text_entry=Gtk.Entry()
+        self.birth_date_year_text_entry=Gtk.Entry()
+        self.attach(add_date_grid(self.birth_date_day_text_entry,self.birth_date_month_text_entry,self.birth_date_year_text_entry),1,row,1,1)
 
 
         row+=1
@@ -115,32 +118,7 @@ class PersonAddMask(AbstractAddMask):
         self.attach(back_button,2,row,1,1)
         
         
-    def add_birth_date_grid(self):
-        birthdate_grid=Gtk.Grid()
-        birthdate_grid.set_column_spacing(5)
-        self.birth_date_day_text_entry=Gtk.Entry()
-        self.birth_date_day_text_entry.set_max_length(2)
-        self.birth_date_day_text_entry.set_width_chars(2)
-        
-        birthdate_grid.attach(self.birth_date_day_text_entry,0,0,1,1)
-        
-        
-        self.birth_date_month_text_entry=Gtk.Entry()
-        self.birth_date_month_text_entry.set_max_length(2)
-        self.birth_date_month_text_entry.set_width_chars(2)
-        birthdate_grid.attach_next_to(self.birth_date_month_text_entry, self.birth_date_day_text_entry, Gtk.PositionType.RIGHT, 1, 1)
-        
-        self.birth_date_year_text_entry=Gtk.Entry()
-        self.birth_date_year_text_entry.set_max_length(4)
-        self.birth_date_year_text_entry.set_width_chars(4)
-        birthdate_grid.attach_next_to(self.birth_date_year_text_entry, self.birth_date_month_text_entry, Gtk.PositionType.RIGHT, 1, 1)
-        
-        birthdate_grid.attach(Gtk.Label("DD"),0,1,1,1)
-        birthdate_grid.attach(Gtk.Label("MM"),1,1,1,1)
-        birthdate_grid.attach(Gtk.Label("YYYY"),2,1,1,1)
-        
-        birthdate_grid.set_hexpand(False)
-        return birthdate_grid
+
 
         
         
