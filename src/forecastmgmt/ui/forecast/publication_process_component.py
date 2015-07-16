@@ -7,7 +7,7 @@ from gi.repository import Gtk
 
 from forecastmgmt.ui.forecast.abstract_data_process_component import AbstractDataOverviewComponent, AbstractDataManipulationComponent, AbstractDataProcessComponent 
 
-from forecastmgmt.ui.ui_tools import TreeviewColumn, show_info_dialog
+from forecastmgmt.ui.ui_tools import TreeviewColumn, show_info_dialog, DateWidget
 
 from forecastmgmt.dao.db_connection import get_db_connection
 import psycopg2.extras
@@ -56,18 +56,13 @@ class PublicationManipulationComponent(AbstractDataManipulationComponent):
         publication_date_label.set_justify(Gtk.Justification.LEFT)
         parent_layout_grid.attach(publication_date_label,0,row,1,1)
         
-        
         self.publication_date_day_textentry=Gtk.Entry()
-        parent_layout_grid.attach(self.publication_date_day_textentry,1,row,1,1)
         self.publication_date_month_textentry=Gtk.Entry()
-        parent_layout_grid.attach(self.publication_date_month_textentry,2,row,1,1)
         self.publication_date_year_textentry=Gtk.Entry()
-        parent_layout_grid.attach(self.publication_date_year_textentry,3,row,1,1)
         
-        publication_date_choose_button=Gtk.Button("Pick date")
-        parent_layout_grid.attach(publication_date_choose_button,4,row,1,1)
-        publication_date_choose_button.connect("clicked", self.show_calendar)
+        publication_date_widget=DateWidget(self.publication_date_day_textentry, self.publication_date_month_textentry, self.publication_date_year_textentry)
         
+        parent_layout_grid.attach(publication_date_widget, 1,row,1,1)
 
         row+=1
 
