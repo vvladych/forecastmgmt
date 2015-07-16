@@ -151,10 +151,17 @@ class ModelStateManipulationComponent(AbstractDataManipulationComponent):
         return combobox_model
     
     
-    def get_point_in_time(self):
-        return datetime.date(int(self.state_date_year_textentry.get_text()), 
-                                    int(self.state_date_month_textentry.get_text()), 
-                                    int(self.state_date_day_textentry.get_text()))
+    def get_point_in_time_begin(self):
+        return datetime.date(int(self.state_begin_date_year_textentry.get_text()), 
+                                    int(self.state_begin_date_month_textentry.get_text()), 
+                                    int(self.state_begin_date_day_textentry.get_text()))
+
+    def get_point_in_time_end(self):
+        return datetime.date(int(self.state_end_date_year_textentry.get_text()), 
+                                    int(self.state_end_date_month_textentry.get_text()), 
+                                    int(self.state_end_date_day_textentry.get_text()))
+
+        
         
     def get_object_property_state_value(self):
         return self.object_property_value_textentry.get_text()
@@ -163,7 +170,8 @@ class ModelStateManipulationComponent(AbstractDataManipulationComponent):
         # get object property
         (object_property_sid,object_property_common_name)=self.get_active_object_property()
         # insert new state
-        FCObjectPropertyState(None,object_property_sid,self.get_point_in_time(),self.get_object_property_state_value(),self.fcmodel).insert()
+        print(self.get_point_in_time_begin())
+        FCObjectPropertyState(None,object_property_sid,self.get_point_in_time_begin(),self.get_point_in_time_end(), self.get_object_property_state_value(),self.fcmodel).insert()
         # 
         show_info_dialog("Add successful")
         self.overview_component.clean_and_populate_model()
