@@ -191,7 +191,8 @@ class ModelStateOverviewComponent(AbstractDataOverviewComponent):
     treecolumns=[TreeviewColumn("state_sid", 0, True), TreeviewColumn("object_property_sid", 1, True), 
                 TreeviewColumn("fc_project_sid", 2, True), TreeviewColumn("Common Name", 3, False),
                 TreeviewColumn("Object property", 4, False),
-                TreeviewColumn("State PIT", 5, False), TreeviewColumn("Property Value", 6, False)]
+                TreeviewColumn("State PIT begin", 5, False),  TreeviewColumn("State PIT end", 6, False),
+                TreeviewColumn("Property Value", 7, False)]
 
     
     def __init__(self, fcmodel):
@@ -228,7 +229,7 @@ class ModelStateOverviewComponent(AbstractDataOverviewComponent):
                         """,data)
 
         for p in cur.fetchall():
-            self.treemodel.append(["%s" % p.state_sid, "%s" % p.object_property_sid, "%s" % self.fcmodel, p.object_common_name, p.object_property, "%s" % p.point_in_time, p.state_value])
+            self.treemodel.append(["%s" % p.state_sid, "%s" % p.object_property_sid, "%s" % self.fcmodel, p.object_common_name, p.object_property, "%s" % p.point_in_time.lower, "%s" % p.point_in_time.upper, p.state_value])
         #self.treemodel.append(['1','1','1','test','12.02.2012','value'])
         cur.close()
 
