@@ -12,6 +12,7 @@ from originator_add_dialog import OriginatorAddDialog
 from originator_process_component import OriginatorOverviewComponent
 from rawtext_add_dialog import RawTextAddDialog
 from model_add_dialog import ModelAddDialog
+from textmodel_add_dialog import TextModelAddDialog
 
 
 class ForecastOverviewWindow(Gtk.Grid):
@@ -152,4 +153,7 @@ class ForecastOverviewWindow(Gtk.Grid):
         dialog.destroy()
     
     def show_textmodel_dialog(self, widget):
-        print("in textmodel")
+        dialog=TextModelAddDialog(self, self.forecast)
+        dialog.run()
+        dialog.destroy()
+        
