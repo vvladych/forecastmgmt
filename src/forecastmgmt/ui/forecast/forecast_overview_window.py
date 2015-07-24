@@ -10,7 +10,7 @@ from publication_add_dialog import PublicationAddDialog
 from publication_process_component import PublicationOverviewComponent
 from originator_add_dialog import OriginatorAddDialog
 from originator_process_component import OriginatorOverviewComponent
-from textmodel_add_dialog import TextModelAddDialog
+from rawtext_add_dialog import RawTextAddDialog
 from model_add_dialog import ModelAddDialog
 
 
@@ -104,17 +104,26 @@ class ForecastOverviewWindow(Gtk.Grid):
         # project model
         model_label = Gtk.Label("Model")
         model_label.set_justify(Gtk.Justification.LEFT)
-        self.attach(model_label,0,row,2,1)
+        self.attach(model_label,0,row,3,1)
         
         row += 1
 
-        button_edit_textmodel_dialog=Gtk.Button("Edit text model(s)")
-        button_edit_textmodel_dialog.connect("clicked", self.show_textmodel_dialog)
-        self.attach(button_edit_textmodel_dialog,0,row,1,1)
+        buttonGrid=Gtk.Grid()
+        
+        button_rawtext_dialog=Gtk.Button("Raw text")
+        button_rawtext_dialog.connect("clicked", self.show_rawtext_dialog)
+        buttonGrid.attach(button_rawtext_dialog,0,row,1,1)
 
-        button_edit_model_dialog=Gtk.Button("Edit Model(s)")
+        button_edit_textmodel_dialog=Gtk.Button("Text model(s)")
+        button_edit_textmodel_dialog.connect("clicked", self.show_textmodel_dialog)
+        buttonGrid.attach(button_edit_textmodel_dialog,1,row,1,1)
+
+
+        button_edit_model_dialog=Gtk.Button("Formal model(s)")
         button_edit_model_dialog.connect("clicked", self.show_model_dialog)
-        self.attach(button_edit_model_dialog,1,row,1,1)
+        buttonGrid.attach(button_edit_model_dialog,2,row,1,1)
+        
+        self.attach(buttonGrid,0,row,2,1)
 
         
     
@@ -132,8 +141,8 @@ class ForecastOverviewWindow(Gtk.Grid):
         self.publication_overview_component.clean_and_populate_model()
     
         
-    def show_textmodel_dialog(self, widget):
-        dialog=TextModelAddDialog(self, self.forecast)
+    def show_rawtext_dialog(self, widget):
+        dialog=RawTextAddDialog(self, self.forecast)
         dialog.run()
         dialog.destroy()
 
@@ -142,4 +151,5 @@ class ForecastOverviewWindow(Gtk.Grid):
         dialog.run()
         dialog.destroy()
     
-    
+    def show_textmodel_dialog(self, widget):
+        print("in textmodel")

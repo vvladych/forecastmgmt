@@ -14,16 +14,16 @@ from forecastmgmt.model.model_text import ModelText
 from forecastmgmt.dao.db_connection import get_db_connection
 import psycopg2.extras
 
-class TextModelProcessComponent(AbstractDataProcessComponent):
+class RawTextProcessComponent(AbstractDataProcessComponent):
     
     def __init__(self, forecast):
-        super(TextModelProcessComponent, self).__init__(TextModelManipulationComponent(forecast, TextModelOverviewComponent(forecast)))
+        super(RawTextProcessComponent, self).__init__(RawTextManipulationComponent(forecast, RawTextOverviewComponent(forecast)))
         
 
-class TextModelManipulationComponent(AbstractDataManipulationComponent):
+class RawTextManipulationComponent(AbstractDataManipulationComponent):
     
     def __init__(self, forecast, overview_component):
-        super(TextModelManipulationComponent, self).__init__(overview_component)
+        super(RawTextManipulationComponent, self).__init__(overview_component)
         self.forecast=forecast
         
     def create_layout(self, parent_layout_grid, row):
@@ -62,14 +62,14 @@ class TextModelManipulationComponent(AbstractDataManipulationComponent):
                 show_info_dialog("nothing to update")
 
     
-class TextModelOverviewComponent(AbstractDataOverviewComponent):
+class RawTextOverviewComponent(AbstractDataOverviewComponent):
     
     treecolumns=[TreeviewColumn("model_text_sid", 0, True), TreeviewColumn("model text", 1, False)]
 
     
     def __init__(self, forecast):
         self.forecast=forecast
-        super(TextModelOverviewComponent, self).__init__(TextModelOverviewComponent.treecolumns)
+        super(RawTextOverviewComponent, self).__init__(RawTextOverviewComponent.treecolumns)
         
 
     def populate_model(self):

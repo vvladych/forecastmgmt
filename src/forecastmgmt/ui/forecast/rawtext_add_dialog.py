@@ -5,9 +5,9 @@ Created on 27.05.2015
 '''
 from gi.repository import Gtk
 
-from textmodel_process_component import TextModelProcessComponent
+from rawtext_process_component import RawTextProcessComponent
 
-class TextModelAddDialog(Gtk.Dialog):
+class RawTextAddDialog(Gtk.Dialog):
     
     def __init__(self, parent, forecast):
         Gtk.Dialog.__init__(self, "Text model Dialog", None, 0,
@@ -19,7 +19,7 @@ class TextModelAddDialog(Gtk.Dialog):
         
         self.forecast=forecast
         
-        self.process_component=TextModelProcessComponent(forecast)
+        self.process_component=RawTextProcessComponent(forecast)
         
         self.create_layout()
         self.show_all()
