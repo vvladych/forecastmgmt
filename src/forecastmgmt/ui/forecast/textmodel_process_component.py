@@ -33,7 +33,8 @@ class TextModelManipulationComponent(AbstractDataManipulationComponent):
         scrolledwindow.set_hexpand(True)
         scrolledwindow.set_vexpand(True)
         self.forecast_model_textview=Gtk.TextView()
-        self.forecast_model_textview.get_buffer().set_text(self.forecast.model_text.model_text)
+        if self.forecast.model_text!=None:
+            self.forecast_model_textview.get_buffer().set_text(self.forecast.model_text.model_text)
         scrolledwindow.add(self.forecast_model_textview)
         parent_layout_grid.attach(scrolledwindow,0,row,1,1)
                 
@@ -83,5 +84,5 @@ class TextModelOverviewComponent(AbstractDataOverviewComponent):
                         forecast_sid=%s
                         """,data)
         for p in cur.fetchall():
-            self.treemodel.append([ "%s" % p.sid, "%s" % p.model_text, "", "", ""])
+            self.treemodel.append([ "%s" % p.sid, "%s" % p.model_text])
         cur.close()

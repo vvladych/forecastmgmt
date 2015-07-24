@@ -12,8 +12,6 @@ from originator_add_dialog import OriginatorAddDialog
 from originator_process_component import OriginatorOverviewComponent
 from textmodel_add_dialog import TextModelAddDialog
 from model_add_dialog import ModelAddDialog
-        
-from forecastmgmt.ui.forecast import publication_add_dialog
 
 
 class ForecastOverviewWindow(Gtk.Grid):
