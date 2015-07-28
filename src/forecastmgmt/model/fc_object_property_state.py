@@ -7,7 +7,10 @@ from psycopg2.extras import DateRange
 
 class FCObjectPropertyState(MDO):
     sql_dict={
-              "insert":"INSERT INTO fc_object_property_state(object_property_sid,point_in_time,object_property_state_value,model_sid) VALUES(%s, daterange(%s,%s), %s, %s) RETURNING sid",
+              "insert":"""INSERT INTO 
+                          fc_object_property_state(object_property_sid,point_in_time,object_property_state_value,model_sid) 
+                          VALUES(%s, daterange(%s,%s), %s, %s) 
+                          RETURNING sid""",
               "delete":"DELETE FROM fc_object_property_state WHERE sid=%s",
               "get_all_foreign_key":"SELECT sid, object_property_sid,point_in_time,object_property_state_value,model_sid FROM fc_object_property_state WHERE model_sid=%s",
               }    

@@ -11,6 +11,8 @@ from forecastmgmt.ui.ui_tools import TreeviewColumn, show_info_dialog
 
 from forecastmgmt.model.fc_textmodel import FCTextModel
 
+from textmodel_statement_add_dialog import TextmodelStatementAddDialog
+
 
 class TextModelProcessComponent(AbstractDataProcessComponent):
     
@@ -109,11 +111,13 @@ class TextModelOverviewComponent(AbstractDataOverviewComponent):
             
 
     def on_row_select(self,widget,path,data):
-        print("edit model")
+        dialog=TextmodelStatementAddDialog(self, self.get_active_textmodel())
+        dialog.run()
+        dialog.destroy()        
         
         
-    def get_active_model(self):
+    def get_active_textmodel(self):
         model,tree_iter=self.treeview.get_selection().get_selected()
-        model_sid=model.get(tree_iter, 1)
-        return model_sid
+        textmodel_sid=model.get(tree_iter, 1)
+        return textmodel_sid
     
