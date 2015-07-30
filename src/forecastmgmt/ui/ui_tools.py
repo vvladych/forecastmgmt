@@ -80,6 +80,7 @@ class DateWidget(Gtk.Grid):
         
     def day_selected(self, calendar, event):
         (year,month,day)=calendar.get_date()
+        month=month+1
         self.day_text_entry.set_text("%s" % day)
         self.month_text_entry.set_text("%s" % month)
         self.year_text_entry.set_text("%s" % year)
