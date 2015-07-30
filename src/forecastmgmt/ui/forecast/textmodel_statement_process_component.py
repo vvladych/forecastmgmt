@@ -112,8 +112,11 @@ class TextmodelStatementManipulationComponent(AbstractDataManipulationComponent)
         
         
     def delete_action(self, widget):
-        print("in delete statement")
-        
+        model,tree_iter = self.overview_component.treeview.get_selection().get_selected()
+        (textmodel_statement_sid)=model.get(tree_iter, 0)
+        FCTextmodelStatement(textmodel_statement_sid).delete()
+        model.remove(tree_iter)   
+        show_info_dialog("Delete successful")         
         
 class TextmodelStatementOverviewComponent(AbstractDataOverviewComponent):
     
