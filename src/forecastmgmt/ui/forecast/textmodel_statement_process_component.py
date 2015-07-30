@@ -37,7 +37,7 @@ class TextmodelStatementManipulationComponent(AbstractDataManipulationComponent)
         scrolledwindow.set_vexpand(True)
         self.forecast_model_textview=Gtk.TextView()
         scrolledwindow.add(self.forecast_model_textview)
-        parent_layout_grid.attach(scrolledwindow,1,row,1,1)
+        parent_layout_grid.attach(scrolledwindow,1,row,2,1)
         
         
         row+=2
