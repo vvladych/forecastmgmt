@@ -91,8 +91,8 @@ class PublicationManipulationComponent(AbstractDataManipulationComponent):
         parent_layout_grid.attach(publication_text_label,0,row,1,1)
         
         self.textview=Gtk.TextView()
-        textview_widget=TextViewWidget(self.textview)
-        parent_layout_grid.attach(textview_widget,1,row,2,1)
+        self.textview_widget=TextViewWidget(self.textview)
+        parent_layout_grid.attach(self.textview_widget,1,row,2,1)
 
 
         #self.publication_text_button=Gtk.Button("Edit text...")
@@ -131,12 +131,15 @@ class PublicationManipulationComponent(AbstractDataManipulationComponent):
         # get publisher sid
         publisher_sid=self.get_active_publisher()
         publication_title=self.publication_title_textentry.get_text()
+        publication_text=self.textview_widget.get_textview_text()
                 
         # insert publication
         publication=Publication(None, None, publisher_sid, datetime.date(
                                                                          int(self.publication_date_year_textentry.get_text()),
                                                                          int(self.publication_date_month_textentry.get_text()),
-                                                                         int(self.publication_date_day_textentry.get_text())), publication_title)
+                                                                         int(self.publication_date_day_textentry.get_text())), 
+                                publication_title,
+                                publication_text)
         publication.insert()
         
         # insert forecast_originator
@@ -176,7 +179,7 @@ class PublicationOverviewComponent(AbstractDataOverviewComponent):
     
     treecolumns=[TreeviewColumn("publication_sid", 0, True), TreeviewColumn("publisher_sid", 1, True), 
                  TreeviewColumn("Publisher", 2, False), TreeviewColumn("Title", 3, False, True),
-                 TreeviewColumn("Date", 4, False), TreeviewColumn("Publication text", 5, False, True)]
+                 TreeviewColumn("Date", 4, False), TreeviewColumn("Publication text", 5, True)]
     
     def __init__(self, forecast):
         self.forecast=forecast
@@ -189,7 +192,8 @@ class PublicationOverviewComponent(AbstractDataOverviewComponent):
         data=(self.forecast.sid,)
         cur.execute("""SELECT 
                         fc_publication.sid as publication_sid, fc_publisher.sid as publisher_sid, 
-                        fc_publisher.publisher_common_name, fc_publication.title, fc_publication.publishing_date  
+                        fc_publisher.publisher_common_name, fc_publication.title, fc_publication.publishing_date,
+                        fc_publication.publication_text   
                         FROM 
                         fc_forecast_publication, fc_publication, fc_publisher 
                         WHERE
@@ -198,7 +202,7 @@ class PublicationOverviewComponent(AbstractDataOverviewComponent):
                         fc_publication.publisher_sid=fc_publisher.sid 
                         """,data)
         for p in cur.fetchall():
-            self.treemodel.append([ "%s" % p.publication_sid, "%s" % p.publisher_sid, p.publisher_common_name, p.title, p.publishing_date.strftime('%d.%m.%Y'),""])
+            self.treemodel.append([ "%s" % p.publication_sid, "%s" % p.publisher_sid, p.publisher_common_name, p.title, p.publishing_date.strftime('%d.%m.%Y'),p.publication_text])
         cur.close()
         
         
