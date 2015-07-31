@@ -7,7 +7,7 @@ from gi.repository import Gtk
 
 from forecastmgmt.ui.forecast.abstract_data_process_component import AbstractDataOverviewComponent, AbstractDataManipulationComponent, AbstractDataProcessComponent 
 
-from forecastmgmt.ui.ui_tools import TreeviewColumn, show_info_dialog, DateWidget
+from forecastmgmt.ui.ui_tools import TreeviewColumn, show_info_dialog, DateWidget, TextViewWidget
 
 from forecastmgmt.dao.db_connection import get_db_connection
 import psycopg2.extras
@@ -86,6 +86,21 @@ class PublicationManipulationComponent(AbstractDataManipulationComponent):
 
         row+=1
         
+        publication_text_label = Gtk.Label("Publication text")
+        publication_text_label.set_justify(Gtk.Justification.LEFT)
+        parent_layout_grid.attach(publication_text_label,0,row,1,1)
+        
+        self.textview=Gtk.TextView()
+        textview_widget=TextViewWidget(self.textview)
+        parent_layout_grid.attach(textview_widget,1,row,2,1)
+
+
+        #self.publication_text_button=Gtk.Button("Edit text...")
+        #parent_layout_grid.attach(self.publication_text_button,1,row,2,1)
+        #self.publication_text_button.connect("clicked", self.edit_publication_text)
+        
+        row+=1
+        
         self.add_publication_button=Gtk.Button("Add", Gtk.STOCK_ADD)
         parent_layout_grid.attach(self.add_publication_button,2,row,1,1)
         self.add_publication_button.connect("clicked", self.add_publication_action)
@@ -151,34 +166,17 @@ class PublicationManipulationComponent(AbstractDataManipulationComponent):
         show_info_dialog("Delete successful")   
         
     
-    
-    def show_calendar(self, widget):
-        self.calendar_window=Gtk.Dialog()
-        self.calendar_window.action_area.hide()
-        self.calendar_window.set_decorated(False)
-        self.calendar_window.set_property('skip-taskbar-hint', True)
-        self.calendar_window.set_size_request(200,200)
-                
-        self.calendar=Gtk.Calendar()
-        self.calendar.connect('day-selected-double-click', self.day_selected, None)
-        self.calendar_window.vbox.pack_start(self.calendar, True, True, 0)
-        self.calendar.show()
-        self.calendar_window.run()
+    def edit_publication_text(self, widget):
+        dialog=PublicationTextDialog(None)
+        dialog.run()
+        dialog.destroy()    
         
-        
-    def day_selected(self, calendar, event):
-        (year,month,day)=self.calendar.get_date()
-        self.publication_date_day_textentry.set_text("%s" % day)
-        self.publication_date_month_textentry.set_text("%s" % month)
-        self.publication_date_year_textentry.set_text("%s" % year)
-        self.calendar_window.destroy()
-
 
 class PublicationOverviewComponent(AbstractDataOverviewComponent):
     
     treecolumns=[TreeviewColumn("publication_sid", 0, True), TreeviewColumn("publisher_sid", 1, True), 
                  TreeviewColumn("Publisher", 2, False), TreeviewColumn("Title", 3, False, True),
-                 TreeviewColumn("Date", 4, False)]
+                 TreeviewColumn("Date", 4, False), TreeviewColumn("Publication text", 5, False, True)]
     
     def __init__(self, forecast):
         self.forecast=forecast
@@ -200,5 +198,36 @@ class PublicationOverviewComponent(AbstractDataOverviewComponent):
                         fc_publication.publisher_sid=fc_publisher.sid 
                         """,data)
         for p in cur.fetchall():
-            self.treemodel.append([ "%s" % p.publication_sid, "%s" % p.publisher_sid, p.publisher_common_name, p.title, p.publishing_date.strftime('%d.%m.%Y')])
+            self.treemodel.append([ "%s" % p.publication_sid, "%s" % p.publisher_sid, p.publisher_common_name, p.title, p.publishing_date.strftime('%d.%m.%Y'),""])
         cur.close()
+        
+        
+
+class PublicationTextDialog(Gtk.Dialog):
+    
+    def __init__(self, parent):
+        Gtk.Dialog.__init__(self, "Publication text dialog", None, 0,
+            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+             Gtk.STOCK_OK, Gtk.ResponseType.OK))
+        
+        self.set_default_size(150, 400)
+        self.layout_grid=Gtk.Grid()
+                
+        self.create_layout()
+        self.show_all()   
+         
+    def create_layout(self):
+        box = self.get_content_area()
+        
+        box.add(self.layout_grid)
+        
+        row = 0
+        label = Gtk.Label("Publication text")
+        self.layout_grid.attach(label,0,row,1,1)
+        
+        self.textview=Gtk.TextView()
+        textview_widget=TextViewWidget(self.textview)
+        self.layout_grid.attach(textview_widget,1,row,1,1)
+        
+        
+        
