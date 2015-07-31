@@ -85,6 +85,15 @@ class PublicationManipulationComponent(AbstractDataManipulationComponent):
 
 
         row+=1
+
+        publication_url_label = Gtk.Label("Publication URL")
+        publication_url_label.set_justify(Gtk.Justification.LEFT)
+        parent_layout_grid.attach(publication_url_label,0,row,1,1)
+
+        self.publication_url_textentry=Gtk.Entry()
+        parent_layout_grid.attach(self.publication_url_textentry,1,row,2,1)
+
+        row+=1
         
         publication_text_label = Gtk.Label("Publication text")
         publication_text_label.set_justify(Gtk.Justification.LEFT)
@@ -132,6 +141,7 @@ class PublicationManipulationComponent(AbstractDataManipulationComponent):
         publisher_sid=self.get_active_publisher()
         publication_title=self.publication_title_textentry.get_text()
         publication_text=self.textview_widget.get_textview_text()
+        publication_url=self.publication_url_textentry.get_text()
                 
         # insert publication
         publication=Publication(None, None, publisher_sid, datetime.date(
@@ -139,6 +149,7 @@ class PublicationManipulationComponent(AbstractDataManipulationComponent):
                                                                          int(self.publication_date_month_textentry.get_text()),
                                                                          int(self.publication_date_day_textentry.get_text())), 
                                 publication_title,
+                                publication_url,
                                 publication_text)
         publication.insert()
         
@@ -179,7 +190,8 @@ class PublicationOverviewComponent(AbstractDataOverviewComponent):
     
     treecolumns=[TreeviewColumn("publication_sid", 0, True), TreeviewColumn("publisher_sid", 1, True), 
                  TreeviewColumn("Publisher", 2, False), TreeviewColumn("Title", 3, False, True),
-                 TreeviewColumn("Date", 4, False), TreeviewColumn("Publication text", 5, True)]
+                 TreeviewColumn("Date", 4, False), TreeviewColumn("URL", 5, False),
+                 TreeviewColumn("Publication text", 6, True)]
     
     def __init__(self, forecast):
         self.forecast=forecast
@@ -193,7 +205,7 @@ class PublicationOverviewComponent(AbstractDataOverviewComponent):
         cur.execute("""SELECT 
                         fc_publication.sid as publication_sid, fc_publisher.sid as publisher_sid, 
                         fc_publisher.publisher_common_name, fc_publication.title, fc_publication.publishing_date,
-                        fc_publication.publication_text   
+                        fc_publication.publication_text, fc_publication.publication_url  
                         FROM 
                         fc_forecast_publication, fc_publication, fc_publisher 
                         WHERE
@@ -202,7 +214,7 @@ class PublicationOverviewComponent(AbstractDataOverviewComponent):
                         fc_publication.publisher_sid=fc_publisher.sid 
                         """,data)
         for p in cur.fetchall():
-            self.treemodel.append([ "%s" % p.publication_sid, "%s" % p.publisher_sid, p.publisher_common_name, p.title, p.publishing_date.strftime('%d.%m.%Y'),p.publication_text])
+            self.treemodel.append([ "%s" % p.publication_sid, "%s" % p.publisher_sid, p.publisher_common_name, p.title, p.publishing_date.strftime('%d.%m.%Y'),p.publication_url,p.publication_text])
         cur.close()
         
         
