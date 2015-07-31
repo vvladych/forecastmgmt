@@ -84,4 +84,22 @@ class DateWidget(Gtk.Grid):
         self.day_text_entry.set_text("%s" % day)
         self.month_text_entry.set_text("%s" % month)
         self.year_text_entry.set_text("%s" % year)
-        self.calendar_window.destroy()    
+        self.calendar_window.destroy() 
+        
+class TextViewWidget(Gtk.Grid):
+    
+    def __init__(self, textview, model_text=None):
+        Gtk.Grid.__init__(self)
+        self.textview=textview
+        self.model_text=model_text
+        self.create_textview_widget()
+        
+    def create_textview_widget(self):
+        scrolledwindow= Gtk.ScrolledWindow()
+        scrolledwindow.set_hexpand(True)
+        scrolledwindow.set_vexpand(True)
+        if self.model_text!=None:
+            self.textview.get_buffer().set_text(self.model_text.model_text)
+        scrolledwindow.add(self.textview)
+        self.attach(scrolledwindow,0,1,1,1)
+        
