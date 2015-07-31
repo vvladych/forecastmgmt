@@ -103,3 +103,7 @@ class TextViewWidget(Gtk.Grid):
         scrolledwindow.add(self.textview)
         self.attach(scrolledwindow,0,1,1,1)
         
+    def get_textview_text(self):
+        textbuffer=self.textview.get_buffer()
+        return textbuffer.get_text(textbuffer.get_start_iter(),textbuffer.get_end_iter(),True)        
+        
