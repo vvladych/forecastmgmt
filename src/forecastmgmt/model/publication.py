@@ -10,7 +10,7 @@ class Publication(MDO):
 
     sql_dict={"get_all":"SELECT sid, publisher_sid, uuid, publishing_date, title FROM fc_publication",
               "delete":"DELETE FROM fc_publication WHERE sid=%s",
-              "insert":"INSERT INTO fc_publication(publisher_sid,publishing_date,title,publication_text,publication_url) VALUES(%s,%s,%s,%s,%s) RETURNING sid",
+              "insert":"INSERT INTO fc_publication(publisher_sid,publishing_date,title,publication_url,publication_text) VALUES(%s,%s,%s,%s,%s) RETURNING sid",
               "load":"SELECT title, uuid FROM fc_publication WHERE sid=%s"}
     
     def __init__(self, sid=None, uuid=None, publisher_sid=None, publishing_date=None, title=None, publication_url=None, publication_text=None):
@@ -34,5 +34,5 @@ class Publication(MDO):
         return (self.publisher_sid,self.publishing_date,self.title,self.publication_url,self.publication_text,)
     
     def fabric_method(self,rec):
-        return Publication(rec.sid, rec.uuid, rec.publisher_sid, rec.publisher_date, rec.title, rec.publication_url, rec.publication_text)
+        return Publication(rec.sid, rec.uuid, rec.publisher_sid, rec.publishing_date, rec.title, rec.publication_url, rec.publication_text)
     
