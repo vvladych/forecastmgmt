@@ -15,7 +15,7 @@ from forecastmgmt.model.fc_project import FcProject
 
 class ForecastMask(Gtk.Grid):
     
-    def __init__(self, main_window, person=None):
+    def __init__(self, main_window):
         Gtk.Grid.__init__(self)
 
         self.main_window=main_window
