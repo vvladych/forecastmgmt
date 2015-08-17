@@ -44,11 +44,17 @@ class ForecastMask(Gtk.Grid):
         
         
     def __create_forecast_list_treeview(self):
-        self.forecasts_treestore = Gtk.TreeStore(int,str)
+        self.forecasts_treestore = Gtk.TreeStore(int,str,str,str)
         self.__populate_forecast_treestore()
         self.forecasts_treeview = Gtk.TreeView(self.forecasts_treestore)
         self.forecasts_treeview.append_column(add_column_to_treeview("id", 0, True))
-        self.forecasts_treeview.append_column(add_column_to_treeview("Forecast", 1, False))
+        self.forecasts_treeview.append_column(add_column_to_treeview("Publisher", 1, False))
+        self.forecasts_treeview.append_column(add_column_to_treeview("Date", 2, False))
+        self.forecasts_treeview.append_column(add_column_to_treeview("Forecast", 3, False))
+        self.__add_context_menu_forecast_treeview()
+        self.forecasts_treeview.set_size_request(200,300)
+        
+    def __add_context_menu_forecast_treeview(self):
         menu=Gtk.Menu()
         menu_item_create_new_forecast=Gtk.MenuItem("Add new forecast...")
         menu_item_create_new_forecast.connect("activate", self.on_menu_item_create_new_forecast_click) 
@@ -59,7 +65,8 @@ class ForecastMask(Gtk.Grid):
         menu.append(menu_item_delete_forecast)
         menu_item_delete_forecast.show()
         self.forecasts_treeview.connect("button_press_event", self.on_treeview_button_press_event,menu)
-        self.forecasts_treeview.set_size_request(200,300)
+        
+        
         
     def on_menu_item_create_new_forecast_click(self,widget):
         new_forecast_dialog=ForecastNewDialog(None)
@@ -80,7 +87,7 @@ class ForecastMask(Gtk.Grid):
     def __populate_forecast_treestore(self):
         self.forecasts_treestore.clear()
         for project in FcProject().get_all():
-            self.forecasts_treestore.append(None,[project.sid,project.common_name])
+            self.forecasts_treestore.append(None,[project.sid,"","%s" % project.created_date,project.common_name])
             
     def __clear_main_middle_pane(self):
         for child in self.main_middle_pane.get_children():
