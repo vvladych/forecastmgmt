@@ -41,5 +41,9 @@ class AbstractMask(Gtk.Grid):
         for child in self.main_middle_pane.get_children():
             self.main_middle_pane.remove(child)        
 
-        
+    def create_overview_treeview(self):
+        raise NotImplementedError("create_overview_treeview still not implemented")
+    
+    def add_context_menu_overview_treeview(self):
+        raise NotImplementedError("add_context_menu_overview_treeview still not implemented")
         
