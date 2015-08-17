@@ -91,6 +91,7 @@ class TextViewWidget(Gtk.Grid):
     def __init__(self, textview, model_text=None):
         Gtk.Grid.__init__(self)
         self.textview=textview
+        self.textview.set_wrap_mode(Gtk.WrapMode.WORD)
         self.model_text=model_text
         self.create_textview_widget()
         
@@ -99,7 +100,7 @@ class TextViewWidget(Gtk.Grid):
         scrolledwindow.set_hexpand(True)
         scrolledwindow.set_vexpand(True)
         if self.model_text!=None:
-            self.textview.get_buffer().set_text(self.model_text.model_text)
+            self.textview.get_buffer().set_text(self.model_text)
         scrolledwindow.add(self.textview)
         self.attach(scrolledwindow,0,1,1,1)
         
