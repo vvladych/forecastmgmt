@@ -3,6 +3,7 @@ from gi.repository import Gtk
 
 from forecastmgmt.ui.masterdata_mask import MasterdataMask
 from forecastmgmt.ui.forecast_mask import ForecastMask
+from forecastmgmt.ui.publication_mask import PublicationMask
 
 from forecastmgmt.ui.forecast.forecast_new_dialog import ForecastNewDialog
 
@@ -47,11 +48,19 @@ class MainWindow(Gtk.Window):
         toolbar.add(toolbutton_forecast)
 
 
+        toolbutton_publications=Gtk.ToolButton(Gtk.STOCK_EDIT)
+        toolbutton_publications.set_tooltip_text("publications")
+        toolbutton_publications.connect("clicked", self.on_toolbutton_publication)
+        toolbar.add(toolbutton_publications)
+
+
         toolbutton_master_data=Gtk.ToolButton(Gtk.STOCK_EXECUTE)
         toolbutton_master_data.set_tooltip_text("master data")
         toolbutton_master_data.connect("clicked", self.on_toolbutton_masterdata)
         toolbar.add(toolbutton_master_data)
         
+
+
         
         toolbutton_quit=Gtk.ToolButton(Gtk.STOCK_QUIT)
         toolbutton_quit.set_tooltip_text("quit")
@@ -67,15 +76,12 @@ class MainWindow(Gtk.Window):
         file_menu_entry = Gtk.MenuItem("File")
         
         menu = Gtk.Menu()
-        mitem_file_new=Gtk.MenuItem("New forecast...")
         
         mitem_quit = Gtk.MenuItem("Quit")
         mitem_quit.connect("activate", self.on_menu_file_quit)
-        menu.insert(mitem_file_new, 0)
-        menu.insert(mitem_quit, 1)
+        menu.insert(mitem_quit, 0)
         
         file_menu_entry.set_submenu(menu)
-        
         
         menubar.append(file_menu_entry)
         
@@ -92,6 +98,8 @@ class MainWindow(Gtk.Window):
             self.working_area.pack_start(MasterdataMask(self), False, False, 0)
         elif action=="forecast":
             self.working_area.pack_start(ForecastMask(self), False, False, 0)
+        elif action=="publication":
+            self.working_area.pack_start(PublicationMask(self), False, False, 0)
         else:
             print("unimplemented")
 
@@ -108,23 +116,11 @@ class MainWindow(Gtk.Window):
         
     def on_toolbutton_forecast(self, widget):
         self.set_working_area("forecast")
-        
-    def on_new_forecast(self, widget):
-        new_forecast_dialog=ForecastNewDialog(self)
-        response = new_forecast_dialog.run()
-        
-        if response==Gtk.ResponseType.OK:
-            new_forecast_dialog.perform_insert()
-            self.clean_working_area()
-            self.set_working_area("forecast")
-                
-        elif response==Gtk.ResponseType.CANCEL:
-            print("insert nothing")
-        else:
-            print("unknown action")
-        
-        new_forecast_dialog.destroy()
 
+    def on_toolbutton_publication(self, widget):
+        self.set_working_area("publication")
+
+        
             
 
 win = MainWindow()
