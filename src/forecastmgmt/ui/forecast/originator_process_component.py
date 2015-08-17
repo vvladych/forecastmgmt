@@ -183,25 +183,20 @@ class OriginatorOverviewComponent(AbstractDataOverviewComponent):
     
     
     def populate_model(self):
-        self.treemodel.clear()
+        self.treemodel.clear()                        
         cur=get_db_connection().cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
-        data=(self.forecast.sid,)
+        data=(self.forecast.sid,self.forecast.sid,)
         cur.execute("""SELECT 
-                        fc_person.sid, fc_person.common_name, fc_originator_person.originator_sid 
+                        fc_person.sid as sid, fc_person.common_name, fc_originator_person.originator_sid,'person' as origin_type 
                         FROM 
                         fc_forecast_originator, fc_originator_person, fc_person 
                         WHERE
                         fc_forecast_originator.forecast_sid=%s AND 
                         fc_forecast_originator.originator_sid=fc_originator_person.originator_sid AND
                         fc_originator_person.person_sid=fc_person.sid
-                        """,data)
-        for p in cur.fetchall():
-            self.treemodel.append([ "%s" % p.originator_sid, "%s" % p.sid, None, "Person", p.common_name])
-        cur.close()
-        cur=get_db_connection().cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
-        data=(self.forecast.sid,)
-        cur.execute("""SELECT 
-                        fc_organization.sid, fc_organization.common_name, fc_originator_organisation.originator_sid 
+                        UNION
+                        SELECT 
+                        fc_organization.sid as sid, fc_organization.common_name, fc_originator_organisation.originator_sid,'organisation'  as origin_type  
                         FROM 
                         fc_forecast_originator, fc_originator_organisation, fc_organization
                         WHERE
@@ -210,7 +205,12 @@ class OriginatorOverviewComponent(AbstractDataOverviewComponent):
                         fc_originator_organisation.organisation_sid=fc_organization.sid
                         """,data)
         for p in cur.fetchall():
-            self.treemodel.append([ "%s" % p.originator_sid, None, "%s" % p.sid, "Organisation", p.common_name])
+            if p.origin_type=='person':
+                self.treemodel.append([ "%s" % p.originator_sid, "%s" % p.sid, None, p.origin_type, p.common_name])
+            elif p.origin_type=='organisation':
+                self.treemodel.append([ "%s" % p.originator_sid, None,"%s" % p.sid, p.origin_type, p.common_name])
+            else:
+                raise Exception("unknown type: %s, expected person or organisation" % p.origin_type)
         cur.close()
         
   
