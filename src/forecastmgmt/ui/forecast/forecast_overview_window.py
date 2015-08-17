@@ -13,6 +13,7 @@ from originator_process_component import OriginatorOverviewComponent
 from rawtext_add_dialog import RawTextAddDialog
 from model_add_dialog import ModelAddDialog
 from textmodel_add_dialog import TextModelAddDialog
+from forecastmgmt.ui.ui_tools import TextViewWidget
 
 
 class ForecastOverviewWindow(Gtk.Grid):
@@ -51,18 +52,15 @@ class ForecastOverviewWindow(Gtk.Grid):
         description_label=Gtk.Label("Description")
         description_label.set_justify(Gtk.Justification.RIGHT)
         self.attach(description_label,0,row,1,1)
-
-        scrolledwindow= Gtk.ScrolledWindow()
-        scrolledwindow.set_hexpand(True)
-        scrolledwindow.set_vexpand(True)
-        self.desc_textview=Gtk.TextView()
-        scrolledwindow.add(self.desc_textview)
         
+        short_desc_text=None
         if self.forecast!=None:
-            if self.forecast.short_description!=None:
-                self.desc_textview.get_buffer().set_text(self.forecast.short_description)
-            
-        self.attach(scrolledwindow,1,row,1,1)
+            short_desc_text=self.forecast.short_description                
+        
+        self.desc_textview=Gtk.TextView()
+        desc_textview_widget=TextViewWidget(self.desc_textview, short_desc_text)
+        
+        self.attach(desc_textview_widget,1,row,1,1)
         
         row += 3
         # forecast originators
