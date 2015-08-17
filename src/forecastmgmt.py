@@ -5,8 +5,6 @@ from forecastmgmt.ui.masterdata_mask import MasterdataMask
 from forecastmgmt.ui.forecast_mask import ForecastMask
 from forecastmgmt.ui.publication_mask import PublicationMask
 
-from forecastmgmt.ui.forecast.forecast_new_dialog import ForecastNewDialog
-
 
 class MainWindow(Gtk.Window):
 
@@ -59,8 +57,6 @@ class MainWindow(Gtk.Window):
         toolbutton_master_data.connect("clicked", self.on_toolbutton_masterdata)
         toolbar.add(toolbutton_master_data)
         
-
-
         
         toolbutton_quit=Gtk.ToolButton(Gtk.STOCK_QUIT)
         toolbutton_quit.set_tooltip_text("quit")
