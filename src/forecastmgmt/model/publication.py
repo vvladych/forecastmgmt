@@ -8,7 +8,7 @@ from MDO import MDO
 
 class Publication(MDO):
 
-    sql_dict={"get_all":"SELECT sid, publisher_sid, uuid, publishing_date, title FROM fc_publication",
+    sql_dict={"get_all":"SELECT sid, publisher_sid, uuid, publishing_date, title, publication_url, publication_text FROM fc_publication",
               "delete":"DELETE FROM fc_publication WHERE sid=%s",
               "insert":"INSERT INTO fc_publication(publisher_sid,publishing_date,title,publication_url,publication_text) VALUES(%s,%s,%s,%s,%s) RETURNING sid",
               "load":"SELECT title, uuid FROM fc_publication WHERE sid=%s"}
