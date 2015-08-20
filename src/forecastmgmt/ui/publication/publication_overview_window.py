@@ -50,9 +50,9 @@ class PublicationOverviewWindow(Gtk.Grid):
         self.publication_date_month_textentry=Gtk.Entry()
         self.publication_date_year_textentry=Gtk.Entry()
         
-        publication_date_widget=DateWidget(self.publication_date_day_textentry, self.publication_date_month_textentry, self.publication_date_year_textentry)
+        self.publication_date_widget=DateWidget(self.publication_date_day_textentry, self.publication_date_month_textentry, self.publication_date_year_textentry)
         
-        self.attach(publication_date_widget, 1,row,1,1)
+        self.attach(self.publication_date_widget, 1,row,1,1)
 
         row+=1
 
@@ -123,6 +123,8 @@ class PublicationOverviewWindow(Gtk.Grid):
         self.publication_title_textentry.set_text(self.publication.title)
         self.publication_url_textentry.set_text(self.publication.publication_url)
         self.textview_widget.set_text(self.publication.publication_text)
+        self.publication_date_widget.set_date_from_string("%s" % self.publication.publishing_date)
+
     
     def add_publication_action(self, widget):
         print("still not implemented")
