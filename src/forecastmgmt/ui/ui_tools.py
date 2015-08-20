@@ -106,5 +106,9 @@ class TextViewWidget(Gtk.Grid):
         
     def get_textview_text(self):
         textbuffer=self.textview.get_buffer()
-        return textbuffer.get_text(textbuffer.get_start_iter(),textbuffer.get_end_iter(),True)        
+        return textbuffer.get_text(textbuffer.get_start_iter(),textbuffer.get_end_iter(),True)
+    
+    def set_text(self, text):
+        textbuffer=self.textview.get_buffer()
+        textbuffer.set_text(text)     
         
