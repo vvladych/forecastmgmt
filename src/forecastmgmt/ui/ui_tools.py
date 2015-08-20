@@ -1,5 +1,6 @@
 
 from gi.repository import Gtk
+import time
 
 class TreeviewColumn(object):
     
@@ -85,6 +86,14 @@ class DateWidget(Gtk.Grid):
         self.month_text_entry.set_text("%s" % month)
         self.year_text_entry.set_text("%s" % year)
         self.calendar_window.destroy() 
+        
+        
+    def set_date_from_string(self, date_as_string):
+        tm=time.strptime(date_as_string, "%Y-%m-%d")
+        self.day_text_entry.set_text("%s" % tm.tm_mday)
+        self.month_text_entry.set_text("%s" % tm.tm_mon)
+        self.year_text_entry.set_text("%s" % tm.tm_year)
+        
         
 class TextViewWidget(Gtk.Grid):
     
