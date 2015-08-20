@@ -3,6 +3,7 @@ from gi.repository import Gtk
 from abstract_mask import AbstractMask
 from ui_tools import add_column_to_treeview, show_info_dialog
 from forecastmgmt.model.publication import Publication
+from forecastmgmt.ui.publication.publication_overview_window import PublicationOverviewWindow
 
 
 
@@ -36,4 +37,25 @@ class PublicationMask(AbstractMask):
         #menu_item_delete_publication.connect("activate", self.on_menu_item_delete_forecast_click) 
         menu.append(menu_item_delete_publication)
         menu_item_delete_publication.show()
-        #self.overview_treeview.connect("button_press_event", self.on_treeview_button_press_event,menu)
+        self.overview_treeview.connect("button_press_event", self.on_treeview_button_press_event,menu)
+        
+        
+    def on_treeview_button_press_event(self,treeview,event,widget):
+        x = int(event.x)
+        y = int(event.y)
+        pthinfo=treeview.get_path_at_pos(x,y)
+        if event.button==1:
+            if pthinfo is not None:
+                treeview.get_selection().select_path(pthinfo[0])    
+                publication_sid=self.publications_treestore.get(self.publications_treestore.get_iter(pthinfo[0]),0)
+                self.publication=Publication(publication_sid)
+                self.publication.load()
+                self.clear_main_middle_pane()
+                self.main_middle_pane.pack_start(PublicationOverviewWindow(self,self.publication), False, False, 0)
+                self.main_middle_pane.show_all()
+        
+        if event.button==3:
+            if pthinfo is not None:
+                treeview.get_selection().select_path(pthinfo[0])    
+            widget.popup(None, None, None, None, event.button, event.time)    
+        return True
