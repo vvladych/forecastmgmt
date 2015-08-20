@@ -93,24 +93,15 @@ class PublicationOverviewWindow(Gtk.Grid):
         self.textview_widget=TextViewWidget(self.textview)
         self.attach(self.textview_widget,1,row,2,1)
 
-
-        #self.publication_text_button=Gtk.Button("Edit text...")
-        #parent_layout_grid.attach(self.publication_text_button,1,row,2,1)
-        #self.publication_text_button.connect("clicked", self.edit_publication_text)
         
         row+=1
         
-        self.add_publication_button=Gtk.Button("Add", Gtk.STOCK_ADD)
-        self.attach(self.add_publication_button,2,row,1,1)
-        self.add_publication_button.connect("clicked", self.add_publication_action)
+        self.save_publication_button=Gtk.Button("Save", Gtk.STOCK_SAVE)
+        self.attach(self.save_publication_button,1,row,1,1)
+        self.save_publication_button.connect("clicked", self.save_publication_action)
         
         row+=1
         
-        self.delete_button=Gtk.Button("Delete", Gtk.STOCK_DELETE)
-        self.delete_button.connect("clicked", self.delete_action)        
-        self.attach(self.delete_button,0,row,1,1)
-        
-        row+=1
         
     def populate_publisher_combobox_model(self):
         combobox_model=Gtk.ListStore(str,str)
@@ -119,14 +110,25 @@ class PublicationOverviewWindow(Gtk.Grid):
             combobox_model.append(["%s" % p.sid, p.common_name])
         return combobox_model  
     
+    def set_active_publisher(self, publisher_sid):
+        model_iter=self.publisher_model.get_iter_first()
+        while self.publisher_model.iter_next(model_iter):
+            if "%s" % int(publisher_sid)==self.publisher_model.get_value(model_iter,0):
+                self.publisher_combobox.set_active_iter(model_iter)
+            model_iter=self.publisher_model.iter_next(model_iter)
+        
+        
+    
     def load_publication(self):
         self.publication_title_textentry.set_text(self.publication.title)
         self.publication_url_textentry.set_text(self.publication.publication_url)
         self.textview_widget.set_text(self.publication.publication_text)
         self.publication_date_widget.set_date_from_string("%s" % self.publication.publishing_date)
+        self.publisher_combobox.set_active_id("%s" % self.publication.publisher_sid)
+        self.set_active_publisher(self.publication.publisher_sid)
 
     
-    def add_publication_action(self, widget):
+    def save_publication_action(self, widget):
         print("still not implemented")
         
     def delete_action(self, widget):
