@@ -46,10 +46,12 @@ class PublicationMask(AbstractMask):
         self.main_middle_pane.pack_start(PublicationOverviewWindow(self, publication=None, callback=self.populate_publications_treestore), False, False, 0)
         self.main_middle_pane.show_all()
         
+        
     def on_menu_item_delete_publication_click(self,widget):
         self.publication.delete()
         self.publication=None
         self.clear_main_middle_pane()
+        show_info_dialog("Publication deleted")
         self.populate_publications_treestore()
         
         
