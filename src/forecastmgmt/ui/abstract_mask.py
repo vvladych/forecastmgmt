@@ -34,8 +34,12 @@ class AbstractMask(Gtk.Grid):
     def create_main_left_pane(self):
         self.create_overview_treeview()
         self.add_context_menu_overview_treeview()
-        self.overview_treeview.set_size_request(200,300)
-        self.main_left_pane.pack_start(self.overview_treeview, False, False, 0)  
+        
+        scrolledwindow= Gtk.ScrolledWindow()
+        scrolledwindow.add(self.overview_treeview)
+        scrolledwindow.set_size_request(500,600)
+        
+        self.main_left_pane.pack_start(scrolledwindow, False, False, 0)  
         
     def clear_main_middle_pane(self):
         for child in self.main_middle_pane.get_children():
