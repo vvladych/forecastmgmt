@@ -8,18 +8,20 @@ from gi.repository import Gtk
 
 from forecastmgmt.ui.ui_tools import TreeviewColumn, show_info_dialog, DateWidget, TextViewWidget
 from forecastmgmt.model.publisher import Publisher
-
+from forecastmgmt.model.publication import Publication
+import datetime
 
 
 class PublicationOverviewWindow(Gtk.Grid):
     
-    def __init__(self, main_window, publication=None):
+    def __init__(self, main_window, publication=None, callback=None):
         Gtk.Grid.__init__(self)
         self.main_window=main_window
         self.publication=publication
         self.create_layout()
         if publication!=None:
             self.load_publication()
+        self.parent_callback=callback
         
     def create_layout(self):
         
@@ -121,7 +123,7 @@ class PublicationOverviewWindow(Gtk.Grid):
     
     def load_publication(self):
         self.publication_title_textentry.set_text(self.publication.title)
-        self.publication_url_textentry.set_text(self.publication.publication_url)
+        self.publication_url_textentry.set_text("%s" % self.publication.publication_url)
         self.textview_widget.set_text(self.publication.publication_text)
         self.publication_date_widget.set_date_from_string("%s" % self.publication.publishing_date)
         self.publisher_combobox.set_active_id("%s" % self.publication.publisher_sid)
@@ -129,7 +131,39 @@ class PublicationOverviewWindow(Gtk.Grid):
 
     
     def save_publication_action(self, widget):
-        print("still not implemented")
+        if self.publication!=None:
+            print("update")
+        else:
+            self.insert_new_publication_from_mask()
+            
+    def insert_new_publication_from_mask(self):
+        publisher_sid=self.get_active_publisher()
+        publication_title=self.publication_title_textentry.get_text()
+        publication_text=self.textview_widget.get_textview_text()
+        publication_url=self.publication_url_textentry.get_text()
+                
+        # insert publication
+        publication=Publication(None, None, publisher_sid, datetime.date(
+                                                                         int(self.publication_date_year_textentry.get_text()),
+                                                                         int(self.publication_date_month_textentry.get_text()),
+                                                                         int(self.publication_date_day_textentry.get_text())), 
+                                publication_title,
+                                publication_url,
+                                publication_text)
+        publication.insert()
+        show_info_dialog("Publication inserted")
+        self.parent_callback()
+        
+        
+    def get_active_publisher(self):
+        tree_iter = self.publisher_combobox.get_active_iter()
+        if tree_iter!=None:
+            model = self.publisher_combobox.get_model()
+            publisher_sid = model[tree_iter][:2]
+            return publisher_sid[0]
+        else:
+            print("please choose a publisher!")
+        
         
     def delete_action(self, widget):
         print("not implemented")
