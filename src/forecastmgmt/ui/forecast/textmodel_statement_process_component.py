@@ -7,7 +7,7 @@ from gi.repository import Gtk
 
 from forecastmgmt.ui.forecast.abstract_data_process_component import AbstractDataOverviewComponent, AbstractDataManipulationComponent, AbstractDataProcessComponent 
 
-from forecastmgmt.ui.ui_tools import TreeviewColumn, show_info_dialog, DateWidget
+from forecastmgmt.ui.ui_tools import TreeviewColumn, show_info_dialog, DateWidget, TextViewWidget
 
 import datetime
 
@@ -32,12 +32,10 @@ class TextmodelStatementManipulationComponent(AbstractDataManipulationComponent)
         statement_label=Gtk.Label("Statement")
         parent_layout_grid.attach(statement_label,0,row,1,1)
         
-        scrolledwindow= Gtk.ScrolledWindow()
-        scrolledwindow.set_hexpand(True)
-        scrolledwindow.set_vexpand(True)
         self.forecast_model_textview=Gtk.TextView()
-        scrolledwindow.add(self.forecast_model_textview)
-        parent_layout_grid.attach(scrolledwindow,1,row,2,1)
+        self.forecast_model_textview_widget=TextViewWidget(self.forecast_model_textview)
+        
+        parent_layout_grid.attach(self.forecast_model_textview_widget,1,row,2,1)
         
         
         row+=2
@@ -100,9 +98,7 @@ class TextmodelStatementManipulationComponent(AbstractDataManipulationComponent)
                                     int(self.state_end_date_day_textentry.get_text()))
         
     def get_textmodel_statement_text(self):
-        textbuffer=self.forecast_model_textview.get_buffer()
-        model_text=textbuffer.get_text(textbuffer.get_start_iter(),textbuffer.get_end_iter(),True)   
-        return model_text     
+        return self.forecast_model_textview_widget.get_textview_text()
     
     def add_statement_action(self, widget):
         FCTextmodelStatement(None,None,self.get_textmodel_statement_text(),self.get_point_in_time_begin(),self.get_point_in_time_end(), self.textmodel).insert()
