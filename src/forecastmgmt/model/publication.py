@@ -5,6 +5,7 @@ Created on 18.05.2015
 '''
 
 from MDO import MDO
+from publisher import Publisher
 
 class Publication(MDO):
 
@@ -20,6 +21,8 @@ class Publication(MDO):
         self.title=title
         self.publication_text=publication_text
         self.publication_url=publication_url
+        self.publisher=Publisher(self.publisher_sid)
+        self.publisher.load()
         
 
     def load_object_from_db(self,rec):
