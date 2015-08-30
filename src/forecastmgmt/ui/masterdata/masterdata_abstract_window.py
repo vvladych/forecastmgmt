@@ -200,8 +200,17 @@ class AbstractListMask(Gtk.Box):
 
         self.tree.connect("row-activated", self.on_row_select)
         
-        self.tree.set_size_request(200,300)
-        self.pack_start(self.tree, False, False, 0)        
+        
+        self.tree.set_hexpand(True)
+        self.tree.set_vexpand(True)
+        
+        scrolledwindow=Gtk.ScrolledWindow()
+        scrolledwindow.set_hexpand(True)
+        scrolledwindow.set_vexpand(True)
+        scrolledwindow.set_size_request(600,600)
+        scrolledwindow.add(self.tree)
+    
+        self.pack_start(scrolledwindow, False, False, 0)        
 
         self.populate_object_view_table()
         
