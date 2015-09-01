@@ -10,7 +10,9 @@ from gi.repository import Gtk
 from forecastmgmt.model.person import Person
 from forecastmgmt.model.person_namepart import Namepart
 from forecastmgmt.dao.dao_utils import enum_retrieve_valid_values
+from forecastmgmt.model.personrole import Personrole
 
+from forecastmgmt.ui.masterdata.personrole_add_dialog import PersonroleAddDialog
 
 
 from forecastmgmt.ui.ui_tools import add_column_to_treeview, DateWidget
@@ -105,6 +107,42 @@ class PersonAddMask(AbstractAddMask):
         # Row 4: treeview 
         self.create_namepart_treeview()
         self.attach(self.nameparts_treeview,0,row,4,1)
+        
+        
+        row+=1
+                
+        # Person roles
+        personrole_label = Gtk.Label("Person role")
+        self.attach(personrole_label,0,row,1,1)
+        
+        
+        self.personroles_model=Gtk.ListStore(int,str)
+
+        self.populate_personroles_model()
+        self.personroles_combobox=Gtk.ComboBox.new_with_model_and_entry(self.personroles_model)
+        self.personroles_combobox.set_entry_text_column(1)
+        self.personroles_combobox.set_active(0)
+        self.attach(self.personroles_combobox,1,row,1,1)
+        
+        personrole_add_button = Gtk.Button("Add", Gtk.STOCK_ADD)
+        personrole_add_button.connect("clicked", self.add_personrole)
+        self.attach(personrole_add_button,2,row,1,1)
+        
+
+        personrole_manage_button = Gtk.Button("Manage...")
+        personrole_manage_button.connect("clicked", self.manage_personrole)
+        self.attach(personrole_manage_button,3,row,1,1)
+        
+        row+=1
+        
+        self.personrole_day_text_entry=Gtk.Entry()
+        self.personrole_month_text_entry=Gtk.Entry()
+        self.personrole_year_text_entry=Gtk.Entry()
+        self.attach(DateWidget(self.personrole_day_text_entry,self.personrole_month_text_entry,self.personrole_year_text_entry),1,row,1,1)
+        row+=1
+        
+        self.create_personrole_treeview()
+        self.attach(self.personrole_treeview,0,row,4,1)
 
         row+=1
         # Row 5
@@ -148,6 +186,15 @@ class PersonAddMask(AbstractAddMask):
     def add_name(self,widget):
         name_role_id,name_role_value = self.get_active_name_role()
         self.namepart_treestore.append(None,[name_role_id,name_role_value,None])
+        
+    def add_personrole(self, widget):
+        print("in add_personrole")
+        
+    def manage_personrole(self, widget):
+        personroleDialog=PersonroleAddDialog(self, self.refresh_personroles_model())
+        personroleDialog.run()
+        personroleDialog.destroy()
+        self.refresh_personroles_model()
 
 
     def get_active_name_role(self):
@@ -253,13 +300,24 @@ class PersonAddMask(AbstractAddMask):
         self.nameparts_treeview.append_column(add_column_to_treeview("id", 0, True))
         self.nameparts_treeview.append_column(add_column_to_treeview("Role", 1, False))
         self.nameparts_treeview.append_column(add_column_to_treeview("Value", 2, False))
-        self.nameparts_treeview.set_size_request(200,300)
-        self.nameparts_treeview.connect("row-activated", self.on_row_selection)
+        self.nameparts_treeview.set_size_request(200,200)
+        self.nameparts_treeview.connect("row-activated", self.on_namepart_row_selection)
 
-    def on_row_selection(self,treeview,path,column):
+    def on_namepart_row_selection(self,treeview,path,column):
         model,treeiter=self.nameparts_treeview.get_selection().get_selected()
         self.namepart_role_combobox.set_active(model[treeiter][0])
         self.namepart_role_value_entry.set_text(model[treeiter][2])
+        
+        
+    def create_personrole_treeview(self):
+        self.personrole_treestore = Gtk.TreeStore(int,str,str)
+        self.personrole_treeview = Gtk.TreeView(self.personrole_treestore)
+        self.personrole_treeview.append_column(add_column_to_treeview("id", 0, True))
+        self.personrole_treeview.append_column(add_column_to_treeview("Role", 1, False))
+        self.personrole_treeview.append_column(add_column_to_treeview("Date", 2, False))
+        self.personrole_treeview.set_size_request(200,200)
+
+        print("in create_personrole_treeview")
         
 
     def populate_namepart_roles_model(self):
@@ -274,10 +332,22 @@ class PersonAddMask(AbstractAddMask):
 
     def populate_name_roles_model(self):
         name_roles_model = Gtk.ListStore(int,str)
-        nameroles_list = enum_retrieve_valid_values("t_person_name_role")
         counter=0
+        nameroles_list = enum_retrieve_valid_values("t_person_name_role")
         for namerole in nameroles_list:
             name_roles_model.append([counter,namerole])
             counter+=1
         return name_roles_model
+
+    def refresh_personroles_model(self):
+        self.personroles_model.clear()
+        self.populate_personroles_model()
+        
+
+
+    def populate_personroles_model(self):
+        personroles = Personrole().get_all()
+        for personrole in personroles:
+            self.personroles_model.append([personrole.sid,personrole.common_name])
+        
 

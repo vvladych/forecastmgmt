@@ -178,9 +178,6 @@ class OriginatorOverviewComponent(AbstractDataOverviewComponent):
         self.forecast=forecast
         super(OriginatorOverviewComponent, self).__init__(OriginatorOverviewComponent.treecolumns)
         
-
-
-    
     
     def populate_model(self):
         self.treemodel.clear()                        
