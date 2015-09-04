@@ -9,6 +9,7 @@ import psycopg2.extras
 from MDO import MDO
 
 from person_name import PersonName
+from person_personrole import PersonPersonrole
 
 class Person(MDO):
     
@@ -26,8 +27,10 @@ class Person(MDO):
         self.birth_place=birth_place
         if sid!=None:
             self.names=PersonName().get_all_for_foreign_key(self.sid)
+            self.personroles=PersonPersonrole().get_all_for_foreign_key(self.sid)
         else:
             self.names=[]
+            self.personroles=[]
 
        
     def load_object_from_db(self,rec):
@@ -36,6 +39,7 @@ class Person(MDO):
         self.birth_place=rec.birth_place
         self.uuid=rec.person_uuid
         self.names=PersonName().get_all_for_foreign_key(self.sid)
+        self.personroles=PersonPersonrole().get_all_for_foreign_key(self.sid)
 
        
     def get_insert_data(self):
@@ -47,11 +51,19 @@ class Person(MDO):
         for name in self.names:
             name.person_sid=self.sid
             name.insert()
+        for personrole in self.personroles:
+            personrole.person_sid=self.sid
+            personrole.insert()
+            print("personrole inserted")
         get_db_connection().commit()
         
     
     def add_name(self, person_name_sid, person_name_role, person_sid, namepart_list):
         self.names.append(PersonName(person_name_sid, person_name_role, person_sid, namepart_list))
+
+
+    def add_personrole(self, personrole_sid):
+        self.personroles.append(PersonPersonrole(None, self.sid, personrole_sid))
         
         
     def fabric_method(self,rec):
@@ -64,6 +76,12 @@ class Person(MDO):
         cur.execute(Person.sql_dict["update_person"],data)
         cur.close()
         
+        self.__update_names(other)   
+        self.__update_personroles(other)         
+        get_db_connection().commit()
+        
+        
+    def __update_names(self, other):
         # update person_names
         # delete outdated person_names
         for person_name in self.names:
@@ -73,8 +91,15 @@ class Person(MDO):
         for person_name in other.names:
             if person_name not in self.names:
                 person_name.insert()
-            
-        get_db_connection().commit()
         
-
+    def __update_personroles(self, other):
+        # update person_names
+        # delete outdated person_names
+        for personrole in self.personroles:
+            if personrole not in other.personroles:
+                personrole.delete()
+                
+        for personrole in other.personroles:
+            if personrole not in self.personroles:
+                personrole.insert()
 

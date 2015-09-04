@@ -20,6 +20,7 @@ class PersonName(MDO):
 
 
     def get_insert_data(self):
+        print("hier: %s" % self.person_sid)
         return (self.person_sid, self.name_role,)
     
     def insert(self):

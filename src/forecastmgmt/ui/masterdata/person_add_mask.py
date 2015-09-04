@@ -106,7 +106,11 @@ class PersonAddMask(AbstractAddMask):
         row+=1
         # Row 4: treeview 
         self.create_namepart_treeview()
-        self.attach(self.nameparts_treeview,0,row,4,1)
+        namepart_scrolledwindow=Gtk.ScrolledWindow()
+        namepart_scrolledwindow.set_hexpand(True)
+        namepart_scrolledwindow.set_vexpand(True)
+        namepart_scrolledwindow.add(self.nameparts_treeview)
+        self.attach(namepart_scrolledwindow,0,row,4,1)
         
         
         row+=1
@@ -134,12 +138,26 @@ class PersonAddMask(AbstractAddMask):
         self.attach(personrole_manage_button,3,row,1,1)
         
         row+=1
+
+        # Person roles
+        personrole_start_date_label = Gtk.Label("From")
+        self.attach(personrole_start_date_label,0,row,1,1)
         
-        self.personrole_day_text_entry=Gtk.Entry()
-        self.personrole_month_text_entry=Gtk.Entry()
-        self.personrole_year_text_entry=Gtk.Entry()
-        self.attach(DateWidget(self.personrole_day_text_entry,self.personrole_month_text_entry,self.personrole_year_text_entry),1,row,1,1)
+        self.personrole_start_day_text_entry=Gtk.Entry()
+        self.personrole_start_month_text_entry=Gtk.Entry()
+        self.personrole_start_year_text_entry=Gtk.Entry()
+        self.attach(DateWidget(self.personrole_start_day_text_entry,self.personrole_start_month_text_entry,self.personrole_start_year_text_entry),1,row,1,1)
         row+=1
+
+        personrole_end_date_label = Gtk.Label("To")
+        self.attach(personrole_end_date_label,0,row,1,1)
+
+        self.personrole_end_day_text_entry=Gtk.Entry()
+        self.personrole_end_month_text_entry=Gtk.Entry()
+        self.personrole_end_year_text_entry=Gtk.Entry()
+        self.attach(DateWidget(self.personrole_end_day_text_entry,self.personrole_end_month_text_entry,self.personrole_end_year_text_entry),1,row,1,1)
+        row+=1
+
         
         self.create_personrole_treeview()
         self.attach(self.personrole_treeview,0,row,4,1)
@@ -154,11 +172,7 @@ class PersonAddMask(AbstractAddMask):
         back_button.connect("clicked", self.parent_callback_func, self.reset_callback)
         self.attach(back_button,2,row,1,1)
         
-        
-
-
-        
-        
+                
     def fill_mask_from_current_object(self):
         if self.current_object!=None:
             self.uuid_text_entry.set_text(self.current_object.uuid)
@@ -173,6 +187,13 @@ class PersonAddMask(AbstractAddMask):
                 tree_iter=self.namepart_treestore.append(None,[name.sid, name.name_role, None])
                 for namepart in name.nameparts:
                     self.namepart_treestore.append(tree_iter,[namepart.sid, namepart.namepart_role, namepart.namepart_value])
+            self.personrole_treestore.clear()
+            for personrole in self.current_object.personroles:
+                roleview=Personrole(personrole.personrole_sid)
+                roleview.load()
+                print("guck: %s " % personrole.personrole_sid)
+                print(roleview)
+                tree_iter=self.personrole_treestore.append(None,[personrole.personrole_sid,roleview.common_name,None])
         else:
             self.uuid_text_entry.set_text("")
             self.common_name_text_entry.set_text("")
@@ -181,6 +202,7 @@ class PersonAddMask(AbstractAddMask):
             self.birth_date_month_text_entry.set_text("")
             self.birth_date_year_text_entry.set_text("")
             self.namepart_treestore.clear()
+            self.personrole_treestore.clear()
 
 
     def add_name(self,widget):
@@ -188,7 +210,10 @@ class PersonAddMask(AbstractAddMask):
         self.namepart_treestore.append(None,[name_role_id,name_role_value,None])
         
     def add_personrole(self, widget):
-        print("in add_personrole")
+        (personrole_id,personrole)=self.get_active_personrole()
+        print(personrole_id)
+        print(personrole)
+        self.personrole_treestore.append(None,[personrole_id,personrole,None])
         
     def manage_personrole(self, widget):
         personroleDialog=PersonroleAddDialog(self, self.refresh_personroles_model())
@@ -250,6 +275,13 @@ class PersonAddMask(AbstractAddMask):
             
             person.add_name(person_name_sid, person_name_role, self.current_object.sid, namepart_list)
             name_iter=self.namepart_treestore.iter_next(name_iter)
+            
+        personrole_iter=self.personrole_treestore.get_iter_first()
+        while personrole_iter:
+            (personrole_sid)=self.personrole_treestore[personrole_iter][0]
+            print("hier personrole_sid: %s" % personrole_sid)
+            person.add_personrole(personrole_sid)
+            personrole_iter=self.personrole_treestore.iter_next(personrole_iter)
             
         return person
 
@@ -349,5 +381,12 @@ class PersonAddMask(AbstractAddMask):
         personroles = Personrole().get_all()
         for personrole in personroles:
             self.personroles_model.append([personrole.sid,personrole.common_name])
+            
+    def get_active_personrole(self):
+        personrole_combobox_iter = self.personroles_combobox.get_active_iter()
+        if personrole_combobox_iter!=None:
+            personrole = self.personroles_model[personrole_combobox_iter][:2]
+            print(personrole)
+        return personrole
         
 

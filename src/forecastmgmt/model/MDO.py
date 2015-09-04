@@ -28,7 +28,7 @@ class MDO(object):
         return not self==other
     
     def insert(self):
-        cur = get_db_connection().cursor()        
+        cur = get_db_connection().cursor()   
         cur.execute(self.sql_dict["insert"],self.get_insert_data())
         self.sid=cur.fetchone()[0]
         cur.close()
@@ -51,6 +51,8 @@ class MDO(object):
         cur=get_db_connection().cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
         data=(self.sid,)
         cur.execute(self.sql_dict["load"],data)
+        print("lade: %s" % self.sql_dict["load"])
+        print("with: %s" % data)
         for p in cur.fetchall():
             self.load_object_from_db(p)
         cur.close()
