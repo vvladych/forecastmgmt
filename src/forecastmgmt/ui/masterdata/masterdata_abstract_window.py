@@ -21,7 +21,11 @@ class  MasterdataAbstractWindow(Gtk.Box):
         self.pack_start(self.action_area, False, False, 0)
 
         self.working_area=Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.pack_start(self.working_area, False, False, 0)
+        scrolled_window=Gtk.ScrolledWindow()
+
+        scrolled_window.add(self.working_area)
+        
+        self.pack_start(scrolled_window, True, True, 0)
 
         self.add_action_area_box()
         self.add_working_area()

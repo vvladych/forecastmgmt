@@ -30,9 +30,10 @@ class MasterdataMask(Gtk.Grid):
         # the middle pane: working area
         self.main_middle_pane = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         self.main_middle_pane.set_vexpand(True)
-                       
+        self.main_middle_pane.set_hexpand(True)
+                               
         self.main_working_pane.pack_start(self.main_left_pane, False, False, 0)
-        self.main_working_pane.pack_start(self.main_middle_pane, False, False, 0)
+        self.main_working_pane.pack_start(self.main_middle_pane, True, True, 0)
         
         self.create_main_left_pane()
         
@@ -61,16 +62,16 @@ class MasterdataMask(Gtk.Grid):
     def set_main_area(self, main_area_type="person"):
         self.main_working_pane.remove(self.main_middle_pane)
         self.main_middle_pane = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        self.main_working_pane.pack_start(self.main_middle_pane, False, False, 0)
+        self.main_working_pane.pack_start(self.main_middle_pane, True, True, 0)
 
         if main_area_type=="person":
-            self.main_middle_pane.pack_start(PersonWindow(self.main_window), False, False, 0)
+            self.main_middle_pane.pack_start(PersonWindow(self.main_window), True, True, 0)
         elif main_area_type=="organisation":
-            self.main_middle_pane.pack_start(OrganisationWindow(self.main_window), False, False, 0)
+            self.main_middle_pane.pack_start(OrganisationWindow(self.main_window), True, True, 0)
         elif main_area_type=="publisher":
-            self.main_middle_pane.pack_start(PublisherWindow(self.main_window), False, False, 0)
+            self.main_middle_pane.pack_start(PublisherWindow(self.main_window), True, True, 0)
         elif main_area_type=="fcobject":
-            self.main_middle_pane.pack_start(FCObjectWindow(self.main_window), False, False, 0)
+            self.main_middle_pane.pack_start(FCObjectWindow(self.main_window), True, True, 0)
         else:
             print("unimplemented")
         self.main_working_pane.show_all()
