@@ -160,7 +160,11 @@ class PersonAddMask(AbstractAddMask):
 
         
         self.create_personrole_treeview()
-        self.attach(self.personrole_treeview,0,row,4,1)
+        personrole_scrolledwindow=Gtk.ScrolledWindow()
+        personrole_scrolledwindow.set_hexpand(True)
+        personrole_scrolledwindow.set_vexpand(True)
+        personrole_scrolledwindow.add(self.personrole_treeview)
+        self.attach(personrole_scrolledwindow,0,row,4,1)
 
         row+=1
         # Row 5
@@ -189,11 +193,9 @@ class PersonAddMask(AbstractAddMask):
                     self.namepart_treestore.append(tree_iter,[namepart.sid, namepart.namepart_role, namepart.namepart_value])
             self.personrole_treestore.clear()
             for personrole in self.current_object.personroles:
-                roleview=Personrole(personrole.personrole_sid)
+                roleview=Personrole(sid=personrole.personrole_sid)
                 roleview.load()
-                print("guck: %s " % personrole.personrole_sid)
-                print(roleview)
-                tree_iter=self.personrole_treestore.append(None,[personrole.personrole_sid,roleview.common_name,None])
+                self.personrole_treestore.append(None,[personrole.personrole_sid,roleview.common_name,None])
         else:
             self.uuid_text_entry.set_text("")
             self.common_name_text_entry.set_text("")
@@ -211,8 +213,6 @@ class PersonAddMask(AbstractAddMask):
         
     def add_personrole(self, widget):
         (personrole_id,personrole)=self.get_active_personrole()
-        print(personrole_id)
-        print(personrole)
         self.personrole_treestore.append(None,[personrole_id,personrole,None])
         
     def manage_personrole(self, widget):
@@ -255,6 +255,16 @@ class PersonAddMask(AbstractAddMask):
                       self.uuid_text_entry.get_text())
                 
 
+        self.__read_person_names_from_mask(person)
+        self.__read_personroles_from_mask(person)
+
+        if self.current_object!=None:
+            person_sid=self.current_object.sid
+        
+        return person
+    
+    
+    def __read_person_names_from_mask(self, person):
         # insert person names
         # iterate over names treestore
         name_iter=self.namepart_treestore.get_iter_first()
@@ -274,19 +284,15 @@ class PersonAddMask(AbstractAddMask):
             person.add_name(person_name_sid, person_name_role, self.current_object.sid, namepart_list)
             name_iter=self.namepart_treestore.iter_next(name_iter)
             
+        
+    def __read_personroles_from_mask(self, person):
         personrole_iter=self.personrole_treestore.get_iter_first()
+        
         while personrole_iter:
             (personrole_sid)=self.personrole_treestore[personrole_iter][0]
-            print("hier personrole_sid: %s" % personrole_sid)
             person.add_personrole(personrole_sid)
             personrole_iter=self.personrole_treestore.iter_next(personrole_iter)
-
-        if self.current_object!=None:
-            person_sid=self.current_object.sid
-
-            
-        return person
-
+        
 
     def get_active_name_treestore(self):
         model,tree_iter=self.nameparts_treeview.get_selection().get_selected()
@@ -350,8 +356,6 @@ class PersonAddMask(AbstractAddMask):
         self.personrole_treeview.append_column(add_column_to_treeview("Role", 1, False))
         self.personrole_treeview.append_column(add_column_to_treeview("Date", 2, False))
         self.personrole_treeview.set_size_request(200,200)
-
-        print("in create_personrole_treeview")
         
 
     def populate_namepart_roles_model(self):
