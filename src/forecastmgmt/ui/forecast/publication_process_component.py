@@ -7,13 +7,11 @@ from gi.repository import Gtk
 
 from forecastmgmt.ui.forecast.abstract_data_process_component import AbstractDataOverviewComponent, AbstractDataManipulationComponent, AbstractDataProcessComponent 
 
-from forecastmgmt.ui.ui_tools import TreeviewColumn, show_info_dialog, DateWidget, TextViewWidget
+from forecastmgmt.ui.ui_tools import TreeviewColumn, show_info_dialog
 
 from forecastmgmt.dao.db_connection import get_db_connection
 import psycopg2.extras
 
-
-import datetime
 
 from forecastmgmt.model.publication import Publication
 from forecastmgmt.model.forecast_publication import ForecastPublication
