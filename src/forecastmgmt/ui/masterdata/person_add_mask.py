@@ -253,7 +253,6 @@ class PersonAddMask(AbstractAddMask):
                       self.__get_birth_date_from_mask(),
                       self.birth_place_text_entry.get_text(),
                       self.uuid_text_entry.get_text())
-                
 
         self.__read_person_names_from_mask(person)
         self.__read_personroles_from_mask(person)
