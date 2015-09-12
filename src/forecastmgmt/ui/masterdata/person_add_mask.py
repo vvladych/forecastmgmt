@@ -247,8 +247,6 @@ class PersonAddMask(AbstractAddMask):
             return
         
         person_sid=None
-        if self.current_object!=None:
-            person_sid=self.current_object.sid
         
         person=Person(person_sid, 
                       self.common_name_text_entry.get_text(), 
@@ -282,6 +280,10 @@ class PersonAddMask(AbstractAddMask):
             print("hier personrole_sid: %s" % personrole_sid)
             person.add_personrole(personrole_sid)
             personrole_iter=self.personrole_treestore.iter_next(personrole_iter)
+
+        if self.current_object!=None:
+            person_sid=self.current_object.sid
+
             
         return person
 
