@@ -60,5 +60,5 @@ class ForecastNewDialog(Gtk.Dialog):
         layout_grid.attach(textview_widget,1,row,1,1)        
         
         
-        
+
         

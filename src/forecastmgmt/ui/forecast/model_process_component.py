@@ -11,6 +11,8 @@ from forecastmgmt.ui.ui_tools import TreeviewColumn, show_info_dialog
 
 from forecastmgmt.model.fc_model import FCModel
 from model_state_add_dialog import  ModelStateAddDialog
+from abstract_add_dialog import AbstractAddDialog
+
 
 
 class ModelProcessComponent(AbstractDataProcessComponent):
@@ -119,4 +121,11 @@ class ModelOverviewComponent(AbstractDataOverviewComponent):
         model,tree_iter=self.treeview.get_selection().get_selected()
         model_sid=model.get(tree_iter, 1)
         return model_sid
+    
+
+class ModelAddDialog(AbstractAddDialog):
+    
+    def __init__(self, parent, forecast):
+        super(ModelAddDialog,self).__init__(parent, forecast, "Model dialog", ModelProcessComponent(forecast))        
+
     

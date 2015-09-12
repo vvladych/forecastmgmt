@@ -11,7 +11,7 @@ from publication_process_component import PublicationOverviewComponent
 from originator_add_dialog import OriginatorAddDialog
 from originator_process_component import OriginatorOverviewComponent
 from rawtext_add_dialog import RawTextAddDialog
-from model_add_dialog import ModelAddDialog
+from model_process_component import ModelAddDialog
 from textmodel_add_dialog import TextModelAddDialog
 from forecastmgmt.ui.ui_tools import TextViewWidget
 

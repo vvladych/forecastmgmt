@@ -13,10 +13,10 @@ setup (
 
   # Fill in these to make your Egg ready for upload to
   # PyPI
-  author = 'vklein',
+  author = 'vvladych',
   author_email = '',
 
-  summary = 'Just another Python package for the cheese shop',
+  summary = 'Python package for the forecast/predictions management',
   url = '',
   license = '',
   long_description= 'Long description of the package',
