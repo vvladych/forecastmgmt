@@ -54,7 +54,6 @@ class Person(MDO):
         for personrole in self.personroles:
             personrole.person_sid=self.sid
             personrole.insert()
-            print("personrole inserted")
         get_db_connection().commit()
         
     
@@ -63,7 +62,7 @@ class Person(MDO):
 
 
     def add_personrole(self, personrole_sid):
-        self.personroles.append(PersonPersonrole(None, self.sid, personrole_sid))
+        self.personroles.append(PersonPersonrole(sid=None, person_sid=self.sid, personrole_sid=personrole_sid))
         
         
     def fabric_method(self,rec):
@@ -90,7 +89,10 @@ class Person(MDO):
                 
         for person_name in other.names:
             if person_name not in self.names:
+                if person_name.person_sid==None:
+                    person_name.person_sid=self.sid
                 person_name.insert()
+                
         
     def __update_personroles(self, other):
         # update person_names
@@ -101,5 +103,7 @@ class Person(MDO):
                 
         for personrole in other.personroles:
             if personrole not in self.personroles:
+                if personrole.person_sid==None:
+                    personrole.person_sid=self.sid
                 personrole.insert()
 
