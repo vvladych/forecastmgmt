@@ -95,8 +95,8 @@ class Person(MDO):
                 
         
     def __update_personroles(self, other):
-        # update person_names
-        # delete outdated person_names
+        # update person_roles
+        # delete outdated person_roles
         for personrole in self.personroles:
             if personrole not in other.personroles:
                 personrole.delete()
