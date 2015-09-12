@@ -20,7 +20,6 @@ class Personrole(MDO):
 
     def load_object_from_db(self,rec):
         self.common_name=rec.common_name
-        print("set common_name: %s" % rec.common_name)
         self.uuid=rec.uuid
         
     def get_insert_data(self):
