@@ -4,8 +4,8 @@ Created on 02.05.2015
 @author: vvladych
 '''
 from gi.repository import Gtk
-from masterdata_abstract_window import AbstractListMask
-from forecastmgmt.model.organisation import Organisation
+from src.forecastmgmt.ui.masterdata.masterdata_abstract_window import AbstractListMask
+from src.forecastmgmt.model.organisation import Organisation
 
 class OrganisationListMask(AbstractListMask):
 

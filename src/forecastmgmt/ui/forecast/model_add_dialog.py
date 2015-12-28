@@ -5,7 +5,7 @@ Created on 27.05.2015
 '''
 from gi.repository import Gtk
 
-from model_process_component import ModelProcessComponent
+from src.forecastmgmt.ui.forecast.model_process_component import ModelProcessComponent
 
 class ModelAddDialog(Gtk.Dialog):
     

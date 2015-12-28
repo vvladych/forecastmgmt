@@ -5,10 +5,10 @@ Created on 04.05.2015
 '''
 from gi.repository import Gtk
 
-from masterdata_abstract_window import MasterdataAbstractWindow
+from src.forecastmgmt.ui.masterdata.masterdata_abstract_window import MasterdataAbstractWindow
 
-from publisher_add_mask import PublisherAddMask
-from publisher_list_mask import PublisherListMask
+from src.forecastmgmt.ui.masterdata.publisher_add_mask import PublisherAddMask
+from src.forecastmgmt.ui.masterdata.publisher_list_mask import PublisherListMask
 
 class PublisherWindow(MasterdataAbstractWindow):
 

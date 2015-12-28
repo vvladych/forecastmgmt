@@ -6,9 +6,9 @@ Created on 20.08.2015
 
 from gi.repository import Gtk
 
-from forecastmgmt.ui.ui_tools import TreeviewColumn, show_info_dialog, DateWidget, TextViewWidget
-from forecastmgmt.model.publisher import Publisher
-from forecastmgmt.model.publication import Publication
+from src.forecastmgmt.ui.ui_tools import TreeviewColumn, show_info_dialog, DateWidget, TextViewWidget
+from src.forecastmgmt.model.publisher import Publisher
+from src.forecastmgmt.model.publication import Publication
 import datetime
 
 

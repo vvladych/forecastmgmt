@@ -5,18 +5,18 @@ Created on 20.05.2015
 '''
 from gi.repository import Gtk
 
-from forecastmgmt.ui.forecast.abstract_data_process_component import AbstractDataOverviewComponent, AbstractDataManipulationComponent, AbstractDataProcessComponent 
+from src.forecastmgmt.ui.forecast.abstract_data_process_component import AbstractDataOverviewComponent, AbstractDataManipulationComponent, AbstractDataProcessComponent
 
-from forecastmgmt.ui.ui_tools import TreeviewColumn, show_info_dialog, DateWidget, TextViewWidget
+from src.forecastmgmt.ui.ui_tools import TreeviewColumn, show_info_dialog, DateWidget, TextViewWidget
 
-from forecastmgmt.dao.db_connection import get_db_connection
+from src.forecastmgmt.dao.db_connection import get_db_connection
 import psycopg2.extras
 
 
 import datetime
 
-from forecastmgmt.model.publication import Publication
-from forecastmgmt.model.forecast_publication import ForecastPublication
+from src.forecastmgmt.model.publication import Publication
+from src.forecastmgmt.model.forecast_publication import ForecastPublication
 
 
 

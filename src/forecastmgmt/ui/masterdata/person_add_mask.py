@@ -7,16 +7,16 @@ from gi.repository import Gtk
 
 
 
-from forecastmgmt.model.person import Person
-from forecastmgmt.model.person_namepart import Namepart
-from forecastmgmt.dao.dao_utils import enum_retrieve_valid_values
+from src.forecastmgmt.model.person import Person
+from src.forecastmgmt.model.person_namepart import Namepart
+from src.forecastmgmt.dao.dao_utils import enum_retrieve_valid_values
 
 
 
-from forecastmgmt.ui.ui_tools import add_column_to_treeview, DateWidget
+from src.forecastmgmt.ui.ui_tools import add_column_to_treeview, DateWidget
 import datetime
 
-from masterdata_abstract_window import AbstractAddMask
+from src.forecastmgmt.ui.masterdata.masterdata_abstract_window import AbstractAddMask
 
 class PersonAddMask(AbstractAddMask):
 

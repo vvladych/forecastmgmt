@@ -4,8 +4,8 @@ Created on 21.03.2015
 @author: vvladych
 '''
 
-from forecastmgmt.model.fc_project import FcProject
-from forecastmgmt.ui.ui_tools import TextViewWidget
+from src.forecastmgmt.model.fc_project import FcProject
+from src.forecastmgmt.ui.ui_tools import TextViewWidget
 
 from gi.repository import Gtk
 

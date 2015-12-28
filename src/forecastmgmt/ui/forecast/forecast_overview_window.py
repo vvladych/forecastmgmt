@@ -6,14 +6,14 @@ Created on 14.03.2015
 
 from gi.repository import Gtk
 
-from publication_add_dialog import PublicationAddDialog
-from publication_process_component import PublicationOverviewComponent
-from originator_add_dialog import OriginatorAddDialog
-from originator_process_component import OriginatorOverviewComponent
-from rawtext_add_dialog import RawTextAddDialog
-from model_add_dialog import ModelAddDialog
-from textmodel_add_dialog import TextModelAddDialog
-from forecastmgmt.ui.ui_tools import TextViewWidget
+from src.forecastmgmt.ui.forecast.publication_add_dialog import PublicationAddDialog
+from src.forecastmgmt.ui.forecast.publication_process_component import PublicationOverviewComponent
+from src.forecastmgmt.ui.forecast.originator_add_dialog import OriginatorAddDialog
+from src.forecastmgmt.ui.forecast.originator_process_component import OriginatorOverviewComponent
+from src.forecastmgmt.ui.forecast.rawtext_add_dialog import RawTextAddDialog
+from src.forecastmgmt.ui.forecast.model_add_dialog import ModelAddDialog
+from src.forecastmgmt.ui.forecast.textmodel_add_dialog import TextModelAddDialog
+from src.forecastmgmt.ui.ui_tools import TextViewWidget
 
 
 class ForecastOverviewWindow(Gtk.Grid):

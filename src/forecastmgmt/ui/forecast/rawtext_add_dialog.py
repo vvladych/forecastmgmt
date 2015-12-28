@@ -5,7 +5,7 @@ Created on 27.05.2015
 '''
 from gi.repository import Gtk
 
-from rawtext_process_component import RawTextProcessComponent
+from src.forecastmgmt.ui.forecast.rawtext_process_component import RawTextProcessComponent
 
 class RawTextAddDialog(Gtk.Dialog):
     

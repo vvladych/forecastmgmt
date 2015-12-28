@@ -1,8 +1,8 @@
 
-from MDO import MDO
-from fc_object_property import FCObjectProperty
+from src.forecastmgmt.model.MDO import MDO
+from src.forecastmgmt.model.fc_object_property import FCObjectProperty
 
-from forecastmgmt.dao.db_connection import get_db_connection
+from src.forecastmgmt.dao.db_connection import get_db_connection
 import psycopg2.extras
 
 

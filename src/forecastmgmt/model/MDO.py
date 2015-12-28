@@ -6,7 +6,7 @@ Created on 05.05.2015
 # Master Data Object, abstract class
 
 
-from forecastmgmt.dao.db_connection import get_db_connection
+from src.forecastmgmt.dao.db_connection import get_db_connection
 import psycopg2.extras
 
 

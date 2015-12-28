@@ -17,7 +17,7 @@ dbInstance=None
 def get_db_connection():
     global dbInstance
     if dbInstance is None:
-        dbInstance=psycopg2.connect("dbname=forecast user=vklein password=vklein34")
+        dbInstance=psycopg2.connect("dbname=predictor user=vvladych password=vvladych")
     return dbInstance
 
 

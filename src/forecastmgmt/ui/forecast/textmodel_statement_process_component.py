@@ -5,13 +5,13 @@ Created on 29.07.2015
 '''
 from gi.repository import Gtk
 
-from forecastmgmt.ui.forecast.abstract_data_process_component import AbstractDataOverviewComponent, AbstractDataManipulationComponent, AbstractDataProcessComponent 
+from src.forecastmgmt.ui.forecast.abstract_data_process_component import AbstractDataOverviewComponent, AbstractDataManipulationComponent, AbstractDataProcessComponent
 
-from forecastmgmt.ui.ui_tools import TreeviewColumn, show_info_dialog, DateWidget, TextViewWidget
+from src.forecastmgmt.ui.ui_tools import TreeviewColumn, show_info_dialog, DateWidget, TextViewWidget
 
 import datetime
 
-from forecastmgmt.model.fc_textmodel_statement import FCTextmodelStatement
+from src.forecastmgmt.model.fc_textmodel_statement import FCTextmodelStatement
 
 class TextmodelStatementProcessComponent(AbstractDataProcessComponent):
     

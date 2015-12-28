@@ -5,9 +5,9 @@ Created on 26.04.2015
 '''
 from gi.repository import Gtk
 
-from masterdata_abstract_window import MasterdataAbstractWindow
-from organisation_list_mask import OrganisationListMask
-from organisation_add_mask import OrganisationAddMask
+from src.forecastmgmt.ui.masterdata.masterdata_abstract_window import MasterdataAbstractWindow
+from src.forecastmgmt.ui.masterdata.organisation_list_mask import OrganisationListMask
+from src.forecastmgmt.ui.masterdata.organisation_add_mask import OrganisationAddMask
 
 
 class OrganisationWindow(MasterdataAbstractWindow):

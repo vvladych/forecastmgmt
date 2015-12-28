@@ -4,7 +4,7 @@ Created on 29.07.2015
 @author: vvladych
 '''
 
-from MDO import MDO
+from src.forecastmgmt.model.MDO import MDO
 
 class FCTextmodelStatement(MDO):
     sql_dict={

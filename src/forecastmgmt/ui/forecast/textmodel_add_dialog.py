@@ -5,7 +5,7 @@ Created on 27.05.2015
 '''
 from gi.repository import Gtk
 
-from textmodel_process_component import TextModelProcessComponent
+from src.forecastmgmt.ui.forecast.textmodel_process_component import TextModelProcessComponent
 
 class TextModelAddDialog(Gtk.Dialog):
     

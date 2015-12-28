@@ -6,13 +6,13 @@ Created on 14.03.2015
 
 from gi.repository import Gtk
 
-from forecastmgmt.ui.forecast.forecast_overview_window import ForecastOverviewWindow
+from src.forecastmgmt.ui.forecast.forecast_overview_window import ForecastOverviewWindow
 
-from forecastmgmt.ui.forecast.forecast_new_dialog import ForecastNewDialog
+from src.forecastmgmt.ui.forecast.forecast_new_dialog import ForecastNewDialog
 
-from ui_tools import add_column_to_treeview, show_info_dialog
-from forecastmgmt.model.fc_project import FcProject
-from abstract_mask import AbstractMask
+from src.forecastmgmt.ui.ui_tools import add_column_to_treeview, show_info_dialog
+from src.forecastmgmt.model.fc_project import FcProject
+from src.forecastmgmt.ui.abstract_mask import AbstractMask
 
 class ForecastMask(AbstractMask):
     

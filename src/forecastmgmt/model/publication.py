@@ -4,8 +4,8 @@ Created on 18.05.2015
 @author: vvladych
 '''
 
-from MDO import MDO
-from publisher import Publisher
+from src.forecastmgmt.model.MDO import MDO
+from src.forecastmgmt.model.publisher import Publisher
 
 class Publication(MDO):
 

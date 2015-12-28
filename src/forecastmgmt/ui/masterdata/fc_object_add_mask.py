@@ -5,10 +5,10 @@ Created on 04.05.2015
 '''
 from gi.repository import Gtk
 
-from forecastmgmt.model.fc_object import FCObject
-from masterdata_abstract_window import AbstractAddMask
+from src.forecastmgmt.model.fc_object import FCObject
+from src.forecastmgmt.ui.masterdata.masterdata_abstract_window import AbstractAddMask
 
-from forecastmgmt.ui.ui_tools import add_column_to_treeview
+from src.forecastmgmt.ui.ui_tools import add_column_to_treeview
 
 
 class FCObjectAddMask(AbstractAddMask):

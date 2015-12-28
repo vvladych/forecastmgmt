@@ -6,7 +6,7 @@ Created on 19.05.2015
 
 from gi.repository import Gtk
 
-from forecastmgmt.ui.ui_tools import add_column_to_treeview
+from src.forecastmgmt.ui.ui_tools import add_column_to_treeview
 
 
 class AbstractDataProcessComponent(object):

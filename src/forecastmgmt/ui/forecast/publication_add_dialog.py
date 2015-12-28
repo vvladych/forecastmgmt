@@ -6,7 +6,7 @@ Created on 20.05.2015
 
 from gi.repository import Gtk
 
-from publication_process_component import PublicationProcessComponent
+from src.forecastmgmt.ui.forecast.publication_process_component import PublicationProcessComponent
 
 class PublicationAddDialog(Gtk.Dialog):
     

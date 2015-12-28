@@ -1,9 +1,9 @@
 from gi.repository import Gtk
 
-from abstract_mask import AbstractMask
-from ui_tools import add_column_to_treeview, show_info_dialog
-from forecastmgmt.model.publication import Publication
-from forecastmgmt.ui.publication.publication_overview_window import PublicationOverviewWindow
+from src.forecastmgmt.ui.abstract_mask import AbstractMask
+from src.forecastmgmt.ui.ui_tools import add_column_to_treeview, show_info_dialog
+from src.forecastmgmt.model.publication import Publication
+from src.forecastmgmt.ui.publication.publication_overview_window import PublicationOverviewWindow
 
 
 

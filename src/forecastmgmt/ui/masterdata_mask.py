@@ -5,10 +5,12 @@ Created on 14.03.2015
 '''
 from gi.repository import Gtk
 
-from masterdata.person_window import PersonWindow
-from masterdata.organisation_window import OrganisationWindow 
-from masterdata.publisher_window import PublisherWindow 
-from masterdata.fc_object_window import FCObjectWindow 
+
+
+from src.forecastmgmt.ui.masterdata.person_window import PersonWindow
+from src.forecastmgmt.ui.masterdata.organisation_window import OrganisationWindow
+from src.forecastmgmt.ui.masterdata.publisher_window import PublisherWindow
+from src.forecastmgmt.ui.masterdata.fc_object_window import FCObjectWindow
 
 
 class MasterdataMask(Gtk.Grid):

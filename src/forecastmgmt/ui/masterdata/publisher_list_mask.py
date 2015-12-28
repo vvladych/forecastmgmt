@@ -4,8 +4,8 @@ Created on 04.05.2015
 @author: vvladych
 '''
 from gi.repository import Gtk
-from masterdata_abstract_window import AbstractListMask
-from forecastmgmt.model.publisher import Publisher
+from src.forecastmgmt.ui.masterdata.masterdata_abstract_window import AbstractListMask
+from src.forecastmgmt.model.publisher import Publisher
 
 class PublisherListMask(AbstractListMask):
 

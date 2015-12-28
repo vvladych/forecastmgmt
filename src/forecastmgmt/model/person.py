@@ -3,12 +3,12 @@ __author__="vvladych"
 __date__ ="$09.10.2014 23:01:15$"
 
 
-from forecastmgmt.dao.db_connection import get_db_connection
+from src.forecastmgmt.dao.db_connection import get_db_connection
 import psycopg2.extras
 
-from MDO import MDO
+from src.forecastmgmt.model.MDO import MDO
 
-from person_name import PersonName
+from src.forecastmgmt.model.person_name import PersonName
 
 class Person(MDO):
     

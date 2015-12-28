@@ -1,9 +1,8 @@
 from gi.repository import Gtk
 
-
-from forecastmgmt.ui.masterdata_mask import MasterdataMask
-from forecastmgmt.ui.forecast_mask import ForecastMask
-from forecastmgmt.ui.publication_mask import PublicationMask
+from src.forecastmgmt.ui.masterdata_mask import MasterdataMask
+from src.forecastmgmt.ui.forecast_mask import ForecastMask
+from src.forecastmgmt.ui.publication_mask import PublicationMask
 
 
 class MainWindow(Gtk.Window):

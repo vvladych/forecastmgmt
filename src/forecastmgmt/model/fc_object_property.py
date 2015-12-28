@@ -1,6 +1,6 @@
 
 
-from MDO import MDO
+from src.forecastmgmt.model.MDO import MDO
 
 
 class FCObjectProperty(MDO):

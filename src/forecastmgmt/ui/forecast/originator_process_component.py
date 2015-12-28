@@ -6,20 +6,20 @@ Created on 19.05.2015
 
 from gi.repository import Gtk
 
-from forecastmgmt.ui.forecast.abstract_data_process_component import AbstractDataOverviewComponent, AbstractDataManipulationComponent, AbstractDataProcessComponent 
+from src.forecastmgmt.ui.forecast.abstract_data_process_component import AbstractDataOverviewComponent, AbstractDataManipulationComponent, AbstractDataProcessComponent
 
-from forecastmgmt.ui.ui_tools import TreeviewColumn, show_info_dialog
+from src.forecastmgmt.ui.ui_tools import TreeviewColumn, show_info_dialog
 
-from forecastmgmt.model.person import Person
-from forecastmgmt.model.organisation import Organisation
-from forecastmgmt.model.originator import Originator
-from forecastmgmt.model.forecast_originator import ForecastOriginator
-from forecastmgmt.model.originator_person import OriginatorPerson
-from forecastmgmt.model.originator_organisation import OriginatorOrganisation
+from src.forecastmgmt.model.person import Person
+from src.forecastmgmt.model.organisation import Organisation
+from src.forecastmgmt.model.originator import Originator
+from src.forecastmgmt.model.forecast_originator import ForecastOriginator
+from src.forecastmgmt.model.originator_person import OriginatorPerson
+from src.forecastmgmt.model.originator_organisation import OriginatorOrganisation
 
 
 
-from forecastmgmt.dao.db_connection import get_db_connection
+from src.forecastmgmt.dao.db_connection import get_db_connection
 import psycopg2.extras
 
 

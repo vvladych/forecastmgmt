@@ -5,12 +5,12 @@ Created on 27.05.2015
 '''
 from gi.repository import Gtk
 
-from forecastmgmt.ui.forecast.abstract_data_process_component import AbstractDataOverviewComponent, AbstractDataManipulationComponent, AbstractDataProcessComponent 
+from src.forecastmgmt.ui.forecast.abstract_data_process_component import AbstractDataOverviewComponent, AbstractDataManipulationComponent, AbstractDataProcessComponent
 
-from forecastmgmt.ui.ui_tools import TreeviewColumn, show_info_dialog
+from src.forecastmgmt.ui.ui_tools import TreeviewColumn, show_info_dialog
 
-from forecastmgmt.model.fc_model import FCModel
-from model_state_add_dialog import  ModelStateAddDialog
+from src.forecastmgmt.model.fc_model import FCModel
+from src.forecastmgmt.ui.forecast.model_state_add_dialog import  ModelStateAddDialog
 
 
 class ModelProcessComponent(AbstractDataProcessComponent):

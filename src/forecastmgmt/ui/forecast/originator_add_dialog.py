@@ -6,7 +6,7 @@ Created on 14.05.2015
 
 from gi.repository import Gtk
 
-from originator_process_component import OriginatorProcessComponent
+from src.forecastmgmt.ui.forecast.originator_process_component import OriginatorProcessComponent
 
 
 class OriginatorAddDialog(Gtk.Dialog):

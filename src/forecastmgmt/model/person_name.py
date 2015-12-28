@@ -1,8 +1,8 @@
 
 
-from MDO import MDO
+from src.forecastmgmt.model.MDO import MDO
 
-from person_namepart import Namepart
+from src.forecastmgmt.model.person_namepart import Namepart
 
 class PersonName(MDO):
     sql_dict={

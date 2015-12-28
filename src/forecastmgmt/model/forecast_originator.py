@@ -4,7 +4,7 @@ Created on 14.05.2015
 @author: vvladych
 '''
 
-from MDO import MDO
+from src.forecastmgmt.model.MDO import MDO
 
 class ForecastOriginator(MDO):
     

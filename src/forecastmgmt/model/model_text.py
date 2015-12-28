@@ -3,9 +3,9 @@ Created on 31.05.2015
 
 @author: vvladych
 '''
-from MDO import MDO
+from src.forecastmgmt.model.MDO import MDO
 
-from forecastmgmt.dao.db_connection import get_db_connection
+from src.forecastmgmt.dao.db_connection import get_db_connection
 import psycopg2.extras
 
 

@@ -1,5 +1,5 @@
 
-from MDO import MDO
+from src.forecastmgmt.model.MDO import MDO
 
 class Namepart(MDO):
     
